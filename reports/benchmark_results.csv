@@ -1,0 +1,6 @@
+Model,PR-AUC,ROC-AUC,Recall,Precision,F1-Score,TP,FP,TN,FN,Financial Loss ($)
+Logistic Regression (Balanced),1.0,1.0,1.0,1.0,1.0,17,0,9983,0,0.0
+Random Forest (Balanced),1.0,1.0,1.0,1.0,1.0,17,0,9983,0,0.0
+SMOTE + Random Forest,1.0,1.0,1.0,1.0,1.0,17,0,9983,0,0.0
+XGBoost (Cost-Sensitive),0.9967,1.0,0.9412,0.9412,0.9412,16,1,9982,1,265.0
+LightGBM (Balanced),0.9903,1.0,0.9412,0.9412,0.9412,16,1,9982,1,265.0
