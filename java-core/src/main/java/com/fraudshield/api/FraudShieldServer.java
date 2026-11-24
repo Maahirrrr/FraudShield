@@ -306,6 +306,10 @@ public class FraudShieldServer {
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        // Security hardening headers (Hunt Host Header & Web Security Guardrails)
+        exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
+        exchange.getResponseHeaders().set("X-Frame-Options", "SAMEORIGIN");
+        exchange.getResponseHeaders().set("X-XSS-Protection", "1; mode=block");
     }
 
     private void sendJsonResponse(HttpExchange exchange, int statusCode, Object data) throws IOException {

@@ -1466,17 +1466,26 @@
                 </div>
 
                 <div class="card" style="margin-bottom: 1.5rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
-                        <input type="text" id="skillaSearchInput" placeholder="🔍 Search by skill name, category, or tag (e.g., fraud, security, pci, react)..." 
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom: 1rem;">
+                        <input type="text" id="skillaSearchInput" placeholder="🔍 Search 2,933 skills by name, tag, or domain..." 
                                oninput="filterSkills()"
                                style="flex:1; min-width:280px; padding:0.6rem 1rem; border:1px solid var(--border); border-radius:8px; font-size:0.875rem;">
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;" id="categoryFilterButtons">
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;" id="categoryFilterButtons">
                             <button class="badge" style="background:var(--primary); color:white; border:none; cursor:pointer;" onclick="setSkillCategory('all', this)">All (2,933)</button>
-                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('security', this)">Security (740+)</button>
-                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('ai-ml', this)">AI / ML (410+)</button>
-                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('development', this)">Development (820+)</button>
-                            <button class="badge" style="background:#fef3c7; color:#92400e; border:none; cursor:pointer;" onclick="setSkillCategory('master', this)">Master Playbooks</button>
+                            <button class="badge" style="background:#fef3c7; color:#92400e; border:none; cursor:pointer; font-weight:700;" onclick="setSkillCategory('bundle', this)">⭐ Top 21 Bundle</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('frontend', this)">🎨 Frontend &amp; UI</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('development', this)">⚙️ Development</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('security', this)">🛡️ Security</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('devops', this)">☁️ DevOps</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('ai-ml', this)">🤖 AI &amp; ML</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('data', this)">📊 Data &amp; DB</button>
                         </div>
+                    </div>
+                    <div style="background:#f8fafc; border-left:4px solid var(--primary); padding:0.75rem 1rem; border-radius:6px; font-size:0.82rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div>
+                            <strong>Skilla Master Bundle Active:</strong> All 21 top-performing agent playbooks cloned into <code>/skills</code> directory and integrated with FraudShield.
+                        </div>
+                        <span style="background:#e0e7ff; color:var(--primary); padding:2px 8px; border-radius:4px; font-weight:600; font-size:0.75rem;">21/21 Installed</span>
                     </div>
                 </div>
 
@@ -1953,12 +1962,32 @@
             filterSkills();
         }
 
+        const TOP_21_BUNDLE_IDS = [
+            'ecc-monolith', 'frontend-design', 'ui-ux-pro-max', 'taste-skill', 'rayden-code',
+            'hunt-host-header', 'firmware-analyst', 'opentofu-migration', 'logbrew-debug-production',
+            'docker-management', 'multi-agent-brainstorming', 'claude-api', 'context-management-context-save',
+            'awesome-claude-code', 'conductor-manage', 'closed-loop-delivery', 'sql-pro',
+            'database-cloud-optimization-cost-optimize', 'weaviate', 'react-best-practices', 'web-design-guidelines'
+        ];
+
         function filterSkills() {
             const query = (document.getElementById('skillaSearchInput')?.value || '').toLowerCase().trim();
             filteredSkills = allSkills.filter(skill => {
-                const matchesCat = currentSkillCategory === 'all' ? true :
-                    currentSkillCategory === 'master' ? (skill.badge?.includes('CORE') || skill.tags?.includes('master') || skill.category === 'development') :
-                    skill.category?.toLowerCase() === currentSkillCategory.toLowerCase();
+                let matchesCat = true;
+                if (currentSkillCategory === 'bundle') {
+                    const sid = (skill.id || '').toLowerCase();
+                    const sname = (skill.name || '').toLowerCase();
+                    matchesCat = TOP_21_BUNDLE_IDS.some(b => sid.includes(b) || b.includes(sid)) ||
+                                 skill.badge?.includes('CORE') || (skill.stars && skill.stars > 30000);
+                } else if (currentSkillCategory === 'frontend') {
+                    matchesCat = skill.category === 'design' || skill.category === 'ui' || (skill.tags && skill.tags.some(t => t.includes('frontend') || t.includes('ui') || t.includes('css')));
+                } else if (currentSkillCategory === 'devops') {
+                    matchesCat = skill.category === 'devops' || (skill.tags && skill.tags.some(t => t.includes('docker') || t.includes('cloud') || t.includes('terraform') || t.includes('infra')));
+                } else if (currentSkillCategory === 'data') {
+                    matchesCat = skill.category === 'data' || (skill.tags && skill.tags.some(t => t.includes('sql') || t.includes('database') || t.includes('vector') || t.includes('analytics')));
+                } else if (currentSkillCategory !== 'all') {
+                    matchesCat = skill.category?.toLowerCase() === currentSkillCategory.toLowerCase();
+                }
                 
                 const matchesQuery = !query ||
                     skill.name?.toLowerCase().includes(query) ||

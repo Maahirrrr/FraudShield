@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  fraudshield:
+    build: .
+    container_name: fraudshield-platform
+    restart: unless-stopped
+    ports:
+      - "5000:5000"   # Frontend Web Dashboard
+      - "8000:8000"   # Python AI Inference Microservice
+      - "8085:8085"   # Java Core REST Engine
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - ENVIRONMENT=production
+      - SERVER_PORT=8085
+      - MODEL_SERVICE_URL=http://localhost:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
