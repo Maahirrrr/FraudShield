@@ -962,6 +962,10 @@
                 <span class="nav-icon">🛡️</span>
                 <span class="nav-label">Compliance</span>
             </button>
+            <button class="nav-item" onclick="switchTab('skilla', this)">
+                <span class="nav-icon">🧠</span>
+                <span class="nav-label">Skilla Registry</span>
+            </button>
         </div>
 
         <div class="sidebar-footer">
@@ -1430,6 +1434,63 @@
             </div>
         </div><!-- /legal -->
 
+        <!-- ==== TAB 6: SKILLA AGENT SKILLS REGISTRY ==== -->
+        <div id="skilla" class="tab-content">
+            <div class="page-body">
+                <div class="section-header">
+                    <h2>🧠 Skilla — 3D AI Agent Skills & Playbooks Archive</h2>
+                    <p>Live registry of 2,933+ verified AI Agent Skills, security playbooks, and engineering recipes powering FraudShield.</p>
+                </div>
+
+                <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+                    <div class="kpi-card" style="border-left-color: #6366f1;">
+                        <div class="kpi-title">TOTAL VERIFIED SKILLS</div>
+                        <div class="kpi-value" id="skillaTotalCount">2,933</div>
+                        <div class="kpi-sub" style="color:var(--primary);">Indexed from Skilla GitHub</div>
+                    </div>
+                    <div class="kpi-card" style="border-left-color: #10b981;">
+                        <div class="kpi-title">LOCAL MASTER PLAYBOOKS</div>
+                        <div class="kpi-value">22 Active</div>
+                        <div class="kpi-sub" style="color:var(--success);">Installed in /skills directory</div>
+                    </div>
+                    <div class="kpi-card" style="border-left-color: #f59e0b;">
+                        <div class="kpi-title">FINTECH &amp; SECURITY SKILLS</div>
+                        <div class="kpi-value">584</div>
+                        <div class="kpi-sub" style="color:var(--warning);">Fraud, PCI &amp; Threat Modeling</div>
+                    </div>
+                    <div class="kpi-card" style="border-left-color: #06b6d4;">
+                        <div class="kpi-title">ANTI-SLOP UI/UX SKILLS</div>
+                        <div class="kpi-value">Active</div>
+                        <div class="kpi-sub" style="color:#06b6d4;">Swiss Modernist &amp; Clean Specs</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+                        <input type="text" id="skillaSearchInput" placeholder="🔍 Search by skill name, category, or tag (e.g., fraud, security, pci, react)..." 
+                               oninput="filterSkills()"
+                               style="flex:1; min-width:280px; padding:0.6rem 1rem; border:1px solid var(--border); border-radius:8px; font-size:0.875rem;">
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;" id="categoryFilterButtons">
+                            <button class="badge" style="background:var(--primary); color:white; border:none; cursor:pointer;" onclick="setSkillCategory('all', this)">All (2,933)</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('security', this)">Security (740+)</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('ai-ml', this)">AI / ML (410+)</button>
+                            <button class="badge" style="background:#f1f5f9; color:var(--dark); border:none; cursor:pointer;" onclick="setSkillCategory('development', this)">Development (820+)</button>
+                            <button class="badge" style="background:#fef3c7; color:#92400e; border:none; cursor:pointer;" onclick="setSkillCategory('master', this)">Master Playbooks</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="skillsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1rem;">
+                    <div style="padding:2rem; text-align:center; color:var(--text-muted); grid-column: 1 / -1;">
+                        Loading Skilla 2,900+ database...
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:1.5rem;">
+                    <button id="loadMoreSkillsBtn" class="btn-primary" style="width:auto; padding:0.6rem 2rem; display:none;" onclick="loadMoreSkills()">Load More Skills</button>
+                </div>
+            </div>
+        </div><!-- /skilla -->
+
     </div><!-- /main -->
 
     <!-- OTP MODAL -->
@@ -1464,6 +1525,7 @@
             document.getElementById(tabId).classList.add('active');
             if (btn) btn.classList.add('active');
             if (tabId === 'analytics') animateBenchBars();
+            if (tabId === 'skilla') ensureSkillsLoaded();
         }
 
         // ==========================================
@@ -1857,16 +1919,115 @@
         }
 
         // ==========================================
-        // BENCH BAR ANIMATION
+        // SKILLA AGENT SKILLS REGISTRY LOGIC
         // ==========================================
-        let benchAnimated = false;
-        function animateBenchBars() {
-            if (benchAnimated) return;
-            benchAnimated = true;
-            document.querySelectorAll('.bench-bar-fill').forEach(bar => {
-                const target = parseFloat(bar.dataset.target);
-                setTimeout(() => { bar.style.width = target + '%'; }, 100);
+        let allSkills = [];
+        let filteredSkills = [];
+        let currentSkillCategory = 'all';
+        let renderedSkillCount = 0;
+        const SKILLS_PAGE_SIZE = 24;
+
+        async function ensureSkillsLoaded() {
+            if (allSkills.length > 0) return;
+            const grid = document.getElementById('skillsGrid');
+            try {
+                const res = await fetch('skills_data.json');
+                allSkills = await res.json();
+                document.getElementById('skillaTotalCount').textContent = allSkills.length.toLocaleString();
+                filterSkills();
+            } catch (err) {
+                grid.innerHTML = '<div style="color:var(--danger); padding:2rem; grid-column:1/-1; text-align:center;">Failed to load skills_data.json. Ensure it exists in the web directory.</div>';
+            }
+        }
+
+        function setSkillCategory(cat, btn) {
+            currentSkillCategory = cat;
+            document.querySelectorAll('#categoryFilterButtons button').forEach(b => {
+                b.style.background = '#f1f5f9';
+                b.style.color = 'var(--dark)';
             });
+            if (btn) {
+                btn.style.background = 'var(--primary)';
+                btn.style.color = 'white';
+            }
+            filterSkills();
+        }
+
+        function filterSkills() {
+            const query = (document.getElementById('skillaSearchInput')?.value || '').toLowerCase().trim();
+            filteredSkills = allSkills.filter(skill => {
+                const matchesCat = currentSkillCategory === 'all' ? true :
+                    currentSkillCategory === 'master' ? (skill.badge?.includes('CORE') || skill.tags?.includes('master') || skill.category === 'development') :
+                    skill.category?.toLowerCase() === currentSkillCategory.toLowerCase();
+                
+                const matchesQuery = !query ||
+                    skill.name?.toLowerCase().includes(query) ||
+                    skill.description?.toLowerCase().includes(query) ||
+                    (skill.tags && skill.tags.some(t => t.toLowerCase().includes(query)));
+
+                return matchesCat && matchesQuery;
+            });
+
+            renderedSkillCount = 0;
+            const grid = document.getElementById('skillsGrid');
+            grid.innerHTML = '';
+            loadMoreSkills();
+        }
+
+        function loadMoreSkills() {
+            const grid = document.getElementById('skillsGrid');
+            const btn = document.getElementById('loadMoreSkillsBtn');
+            const nextBatch = filteredSkills.slice(renderedSkillCount, renderedSkillCount + SKILLS_PAGE_SIZE);
+
+            if (nextBatch.length === 0 && renderedSkillCount === 0) {
+                grid.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted); grid-column:1/-1;">No matching skills found in the archive.</div>';
+                if (btn) btn.style.display = 'none';
+                return;
+            }
+
+            nextBatch.forEach(skill => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.margin = '0';
+                card.style.padding = '1.25rem';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.justifyContent = 'space-between';
+                card.style.borderTop = '3px solid ' + (
+                    skill.category === 'security' ? '#ef4444' :
+                    skill.category === 'ai-ml' ? '#6366f1' :
+                    skill.category === 'development' ? '#10b981' : '#f59e0b'
+                );
+
+                const tagsHtml = (skill.tags || []).slice(0, 3).map(t => 
+                    `<span style="background:#f1f5f9; color:#475569; font-size:0.7rem; padding:2px 6px; border-radius:4px;">#${t}</span>`
+                ).join(' ');
+
+                card.innerHTML = `
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+                            <span class="badge" style="background:#eef2ff; color:var(--primary); font-size:0.7rem; font-weight:700;">${skill.badge || (skill.category || 'SKILL').toUpperCase()}</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">★ ${skill.stars ? skill.stars.toLocaleString() : 'Verified'}</span>
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--dark); margin-bottom:0.4rem;">${skill.name}</h4>
+                        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:0.75rem;">${skill.description || 'Verified autonomous agent playbook.'}</p>
+                    </div>
+                    <div>
+                        <div style="display:flex; gap:0.3rem; flex-wrap:wrap; margin-bottom:0.75rem;">${tagsHtml}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; border-top:1px solid var(--border); padding-top:0.5rem;">
+                            <span style="color:var(--text-muted);">Author: <strong>@${skill.author || 'community'}</strong></span>
+                            <a href="${skill.repo_url || 'https://github.com/Maahirrrr/Skilla'}" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">Inspect ↗</a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            renderedSkillCount += nextBatch.length;
+            if (btn) {
+                btn.style.display = renderedSkillCount < filteredSkills.length ? 'inline-block' : 'none';
+                btn.textContent = `Load More (${filteredSkills.length - renderedSkillCount} remaining)`;
+            }
         }
     </script>
 </body>
