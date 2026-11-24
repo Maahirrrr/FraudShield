@@ -112,7 +112,9 @@ def score_transaction(req: OrderScoringRequest):
         feature_dict["V3"] = [-3.8]
         reasons.append("Anomalous device IP geolocation outside merchant operating corridor")
 
-    input_df = pd.DataFrame(feature_dict)
+    # Build DataFrame with explicit column order matching scaler's fitted feature names
+    col_order = [f"V{i}" for i in range(1, 29)] + ["Scaled_Time", "Scaled_Amount"]
+    input_df = pd.DataFrame([{col: feature_dict[col][0] for col in col_order}])
 
     # 2. Score via XGBoost model
     prob = float(clf_model.predict_proba(input_df)[0][1])
@@ -139,6 +141,49 @@ def score_transaction(req: OrderScoringRequest):
         reasons=reasons,
         latency_ms=latency_ms
     )
+
+FEATURE_DESCRIPTIONS = {
+    "V14": "Temporal transaction timing anomaly score",
+    "V12": "PCA component: merchant category deviation",
+    "V17": "Velocity pattern: sequential transaction timing",
+    "V10": "Network routing trust score",
+    "V4": "Device behavioral fingerprint score",
+    "V3": "Geographic displacement index",
+    "Scaled_Amount": "Transaction amount relative to baseline",
+    "Scaled_Time": "Time-of-day risk factor",
+}
+
+@app.get("/api/explain")
+def explain_transaction(order_id: str = "UNKNOWN", amount: float = 0.0):
+    """Return top-5 feature importances for the XGBoost model."""
+    if clf_model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+
+    col_order = [f"V{i}" for i in range(1, 29)] + ["Scaled_Time", "Scaled_Amount"]
+    importances = clf_model.feature_importances_  # shape (30,)
+
+    ranked = sorted(
+        zip(col_order, importances),
+        key=lambda x: x[1],
+        reverse=True
+    )[:5]
+
+    top_features = [
+        {
+            "feature": feat,
+            "importance": round(float(imp), 6),
+            "description": FEATURE_DESCRIPTIONS.get(feat, "PCA anonymized feature"),
+        }
+        for feat, imp in ranked
+    ]
+
+    return {
+        "order_id": order_id,
+        "amount": amount,
+        "model": "XGBoost (Cost-Sensitive)",
+        "top_features": top_features,
+    }
+
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=False)

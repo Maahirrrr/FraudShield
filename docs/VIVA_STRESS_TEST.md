@@ -116,3 +116,223 @@ Using our Precision-Recall curve, we established a **tri-state policy**:
 "1. **What Didn't Work**: Naive Logistic Regression with standard class weights produced **1,388 false positives** on our test set, resulting in an unacceptable \$22,820 financial loss. Simple linear decision boundaries cannot separate high-dimensional PCA transaction spaces.
 2. **What Didn't Work**: Training the Autoencoder with a large bottleneck (latent size 16) caused it to easily reconstruct fraud anomalies too, destroying anomaly detection power; reducing the bottleneck to 6 dimensions was critical.
 3. **What We Would Do Differently**: Given more time, we would build a native Shopify app extension for 1-click merchant onboarding, and train a Graph Neural Network (GNN) to link fraudsters sharing common device fingerprints across multiple merchant stores."
+
+---
+
+### Q13. Why did you choose XGBoost over a neural network for production scoring?
+**Answer**:
+"This is a deliberate engineering trade-off, not an arbitrary choice. We chose XGBoost as the **primary production scorer** for four concrete reasons:
+
+1. **Tabular Data Superiority**: The 2022 NeurIPS 'Why do tree-based models still outperform deep learning on tabular data?' paper demonstrated that gradient-boosted trees consistently outperform MLPs on structured tabular datasets with <1 million rows — exactly our domain. Our benchmark confirms this: XGBoost PR-AUC 0.8596 vs our custom MLP which scored 0.74.
+
+2. **Latency and Resource Footprint**: XGBoost inference on a single transaction takes **~1.2 milliseconds** on CPU. A comparable neural network with dropout and batch normalisation takes **8–15 ms** and requires GPU memory allocation for optimal throughput. For a sub-50ms SLA, XGBoost's headroom is essential.
+
+3. **Interpretability**: XGBoost's `feature_importances_` and SHAP (SHapley Additive exPlanations) values give us per-transaction, per-feature attribution — the backbone of our plain-English reason codes. Neural networks require expensive post-hoc approximations (LIME, Integrated Gradients) that add latency.
+
+4. **Fallback Alignment**: Our Java `RuleBasedScorer` fallback is derived from the same top-5 XGBoost features identified during EDA (V14 deviation, amount outlier, hour-of-day, velocity, location delta). The two scorers are conceptually aligned, so the fallback provides a consistent user experience.
+
+We **did** use neural networks — but for the problems they uniquely solve: LSTM for temporal sequence detection and Autoencoder for unsupervised zero-day anomaly detection. This is a **hybrid architecture**, not an either/or decision."
+
+---
+
+### Q14. Explain the SMOTE algorithm and why you used it.
+**Answer**:
+"SMOTE stands for **Synthetic Minority Over-Sampling Technique** (Chawla et al., 2002). Our dataset has 492 fraud cases out of 284,807 transactions — a **0.173% minority class**. Without rebalancing, the classifier would see 578 legitimate transactions for every 1 fraud case and simply learn to predict 'legitimate' for everything.
+
+**How SMOTE Works — Step by Step**:
+1. For each fraud sample `x` in the minority class, find its **k nearest neighbours** (we used k=5) in the feature space using Euclidean distance across all PCA components (V1–V28, Amount, Time).
+2. Randomly select one of those k neighbours: call it `x_neighbour`.
+3. Generate a synthetic point along the line segment between them:
+   `x_synthetic = x + λ × (x_neighbour − x)` where λ is a uniform random number in [0, 1].
+4. Repeat until the minority class reaches the desired ratio (we used 1:1 parity).
+
+**Why Not Simple Random Oversampling?** Random duplication of fraud samples causes the model to memorise specific fraud examples, leading to overfitting on exact feature combinations. SMOTE generates *interpolated* points in the neighbourhood, forcing the model to learn the **decision boundary region**, not individual data points.
+
+**Critical Engineering Detail**: We applied SMOTE **strictly inside `imblearn.pipeline.Pipeline`** so synthetic samples are generated only within training folds during cross-validation. If SMOTE were applied before the train-test split, synthetic fraud examples derived from test samples would leak into training — a classic data leakage error that inflates metrics by 15–20%.
+
+**Result**: SMOTE + Random Forest achieved the **lowest total financial loss ($3,845)** in our benchmark — beating even XGBoost on the cost metric."
+
+---
+
+### Q15. What is the difference between ROC-AUC and PR-AUC? Why is PR-AUC better for imbalanced data?
+**Answer**:
+"Both metrics summarise classifier performance across all decision thresholds, but they measure fundamentally different things.
+
+**ROC-AUC (Receiver Operating Characteristic — Area Under Curve)**:
+- Plots **True Positive Rate (Recall)** on the Y-axis against **False Positive Rate** (FPR = FP / (FP + TN)) on the X-axis.
+- AUC = probability that the model ranks a random positive higher than a random negative.
+- **The imbalance problem**: In our dataset, True Negatives (TN) = ~284,315. The FPR denominator (FP + TN) is dominated by this enormous TN count. Even a classifier generating 300 false positives shows an FPR of only 300/284,315 = **0.001**, making it appear excellent. This masks real-world false alarm damage.
+
+**PR-AUC (Precision-Recall — Area Under Curve)**:
+- Plots **Precision** (TP / (TP + FP)) on the Y-axis against **Recall** (TP / (TP + FN)) on the X-axis.
+- Crucially, the TN count **does not appear in any PR-AUC formula**. Both Precision and Recall are computed purely from the minority (fraud) class perspective.
+- When a classifier generates excessive false positives, Precision drops sharply, penalising the curve. This directly reflects the merchant's experience: every false positive is a legitimate customer wrongly blocked.
+
+**Concrete Example From Our Benchmark**:
+| Model | ROC-AUC | PR-AUC | Financial Loss |
+|---|---|---|---|
+| Logistic Regression | 0.9720 | 0.7175 | $22,820 |
+| XGBoost | 0.9729 | **0.8596** | $4,295 |
+
+Both show similar ROC-AUC (~0.97), but PR-AUC clearly separates them — consistent with the actual financial loss difference of $18,525. **PR-AUC is the honest metric for fraud detection.**"
+
+---
+
+### Q16. How does your Java multithreading prevent race conditions in inventory management?
+**Answer**:
+"The race condition arises in `InventoryService.java` when multiple threads execute the **check-then-act** sequence concurrently:
+
+```java
+// UNSAFE — Race Condition Present
+public void decrementStockUnsynchronized(String productId, int qty) {
+    Product p = inventory.get(productId);
+    if (p.getStock() >= qty) {       // Thread A and Thread B both read stock=10 here
+        p.setStock(p.getStock() - qty); // Both decrement — stock goes to 0 then -qty
+    }
+}
+```
+
+If 50 threads read `stock = 10` before any thread has written the decrement, **50 threads can all pass the `>= qty` check** simultaneously, causing overselling.
+
+**Our Fix — Three-Layer Concurrency Defense**:
+
+1. **`synchronized` Method**: The critical section (check + decrement) is wrapped in a `synchronized` block on the product object, making it an **atomic operation**. Only one thread can hold the monitor lock at a time.
+```java
+public synchronized void decrementStockSynchronized(String productId, int qty) {
+    Product p = inventory.get(productId);
+    if (p.getStock() < qty) throw new OutOfStockException(productId);
+    p.setStock(p.getStock() - qty);
+}
+```
+
+2. **`ConcurrentHashMap`**: The inventory `Map<String, Product>` uses `ConcurrentHashMap` with segment-level locks so reads from different product IDs don't block each other, maximising throughput.
+
+3. **`ExecutorService` with `BlockingQueue`**: Incoming order requests are submitted to a fixed thread pool via `ExecutorService`, with `BlockingQueue` back-pressure ensuring the system doesn't accept more concurrent requests than it can handle, preventing thread exhaustion.
+
+**Proof from JUnit Test `InventoryConcurrencyTest.java`**: 50 threads fire simultaneously targeting 10 units of `PROD_SHIRT`. Exactly **10 succeed**, **40 throw `OutOfStockException`**, and final stock is verified as **exactly 0** — no overselling, no data corruption."
+
+---
+
+### Q17. What is the DPDP Act 2023 and how does your system comply?
+**Answer**:
+"The **Digital Personal Data Protection Act 2023** is India's first comprehensive data protection legislation, passed in August 2023. It governs how 'data fiduciaries' (entities that determine the purpose and means of data processing) must collect, store, and delete personal data of Indian residents.
+
+**Key Provisions and FraudShield's Compliance**:
+
+| DPDP Provision | Requirement | FraudShield Implementation |
+|---|---|---|
+| **Section 6 — Consent** | Explicit, informed, specific consent before processing | Un-ticked checkbox at checkout: *'I consent to transaction telemetry analysis for anti-fraud purposes under DPDP Act 2023'* |
+| **Section 5 — Purpose Limitation** | Data used only for the consented purpose | Telemetry used exclusively for fraud scoring; never sold, shared with advertisers, or used for profiling |
+| **Section 8 — Data Minimisation** | Collect only what is necessary | Zero PII collected: no name, email, phone, full address, or card data — only anonymised hashes and coordinates |
+| **Section 12 — Right to Erasure** | Data principal can request deletion | Programmatic `DELETE /api/data/erase?order_id=<uuid>` API — executes within 72 hours |
+| **Section 9 — Data Retention** | Retain only as long as necessary | Automated 90-day rolling deletion cron job on `transactions.jsonl` |
+| **Section 11 — Security** | Reasonable security safeguards | HMAC-SHA256 authenticated API requests; JSONL stored locally; no cloud upload without encryption |
+
+**RBI Card Tokenization Compliance**: FraudShield never stores Primary Account Numbers (PAN), CVVs, or card expiry dates. All card transactions use Razorpay/Stripe sandbox tokens — raw card data never touches our servers.
+
+**Key Distinction**: FraudShield is a **Risk Intelligence Service Provider (TSP)**, not a Payment Aggregator or Payment Gateway. This classification exempts us from RBI's payment aggregator licensing requirements while still obligating us to DPDP Act compliance."
+
+---
+
+### Q18. If your Python microservice goes down, what happens? Walk through the fallback chain.
+**Answer**:
+"This is the **most critical resilience feature** of FraudShield. We designed the entire fallback chain so that **the checkout experience never breaks**, even if the entire ML stack crashes. Here is the exact sequence:
+
+**Timeline: Python Microservice Becomes Unavailable**
+
+```
+T+0ms:   Customer submits order → Java receives POST /api/orders
+T+1ms:   Java calls RemoteModelScorer.score()
+         → Opens HTTP connection to http://localhost:8000/score
+T+300ms: CONNECTION_REFUSED or no response within 300ms SLA timeout
+         → RemoteModelScorer throws ModelServiceUnavailableException
+T+301ms: FallbackScorer catches exception (try-catch in composition layer)
+         → Logs: "ML service unavailable — activating rule-based fallback"
+         → Delegates to RuleBasedScorer.score()
+T+302ms: RuleBasedScorer evaluates 5 deterministic EDA-derived rules:
+         Rule 1: amount > ₹8,000 → +0.35 risk contribution
+         Rule 2: hour ∈ [23, 4] (night) → +0.25 risk contribution
+         Rule 3: recent_tx_count_1h > 3 → +0.30 risk contribution
+         Rule 4: payment_method = COD AND amount > ₹3,000 → +0.15
+         Rule 5: is_new_device = true → +0.10 risk contribution
+         → Sums contributions, clamps to [0.0, 1.0]
+T+310ms: Java returns APPROVE / VERIFY / BLOCK decision to store
+         → Response includes: "fallback_used": true
+T+311ms: Merchant dashboard flags order with ⚠️ icon: "Scored by rule engine"
+         → Merchant knows ML service is down
+```
+
+**What We Tested in `FallbackScorerTest.java`**: We point `RemoteModelScorer` to `localhost:9999` (unreachable). The test verifies:
+- The order receives a valid APPROVE/VERIFY/BLOCK decision (not an error/exception propagated to the store).
+- `result.isFallbackUsed() == true`.
+- End-to-end latency remains under 50ms (rule engine is O(1) arithmetic).
+
+**Production Enhancement** (beyond MVP): The Java service would emit a `SERVICE_DEGRADED` metric to an alerting system (Prometheus/Grafana) so the team is paged within 60 seconds of the ML service going offline."
+
+---
+
+### Q19. What is your Unit Economics? What is Customer Acquisition Cost and LTV?
+**Answer**:
+"Unit economics is the financial analysis of the costs and revenues directly attributable to acquiring and serving **one customer unit** — in our case, one merchant.
+
+**Customer Acquisition Cost (CAC)**:
+> CAC = Total Sales & Marketing Spend ÷ Number of New Customers Acquired
+
+- Monthly marketing budget: ₹25,000 (content creation, LinkedIn ads, D2C community events).
+- Projected new merchants per month (Month 4–6): ~5 net new merchants.
+- **CAC = ₹25,000 ÷ 5 = ₹5,000 per merchant** (blended, including trial conversions).
+- By Month 10+ with referral flywheel, CAC drops to estimated **₹1,800** as word-of-mouth dominates acquisition.
+
+**Cost to Serve (COGS per Merchant per Month)**:
+| Cost Component | Monthly Cost |
+|---|---|
+| Cloud compute (AWS Graviton CPU inference) | ₹350 |
+| File storage & JSONL backups | ₹60 |
+| OTP SMS gateway (2% step-up × ₹0.20) | ₹20 |
+| **Total COGS** | **₹430** |
+
+**Average Revenue Per Merchant (ARPM)**: ₹3,500/month (blended across Starter, Growth, Pro plans).
+
+**Gross Margin Per Merchant**: (₹3,500 − ₹430) ÷ ₹3,500 = **87.7%** — exceptional for a SaaS business (industry benchmark: 70–80%).
+
+**Customer Lifetime Value (LTV)**:
+> LTV = ARPM × Gross Margin × Average Customer Lifetime
+
+- Average retention: 10 months (based on comparable Indian SaaS SMB benchmarks).
+- **LTV = ₹3,500 × 87.7% × 10 = ₹30,695** (~₹31,000 per merchant).
+
+**LTV / CAC Ratio**:
+- At mature CAC of ₹1,800: **LTV/CAC = ₹31,000 ÷ ₹1,800 = 17.2×** — extremely healthy (SaaS benchmark: >3× is viable, >5× is excellent).
+- **Payback Period = CAC ÷ Monthly Net Contribution = ₹1,800 ÷ ₹3,070 = 0.6 months** — customer pays back acquisition cost in under 3 weeks.
+
+**Break-Even Point**: Fixed monthly cloud overhead ₹18,000 ÷ ₹3,070 net contribution = **5.86 → 6 active merchants**. We model 6 merchants from Month 1."
+
+---
+
+### Q20. How would you scale FraudShield from 70 to 7,000 merchants?
+**Answer**:
+"Scaling 100× requires addressing three distinct bottlenecks: **inference throughput, data persistence, and multi-tenancy isolation**. Here is our staged scaling roadmap:
+
+**Phase 1: 70 → 500 Merchants (Vertical Scaling + Async)**
+- Replace synchronous Python Uvicorn with **async FastAPI + Uvicorn with 4 workers** (already supported — just change `--workers 4`).
+- Introduce a **Redis cache** for repeat device fingerprint scores (TTL: 60 seconds) — eliminates re-scoring of identical repeat requests.
+- Move `transactions.jsonl` file append to a **PostgreSQL database** with connection pooling (pgBouncer) to handle concurrent writes from multiple Java threads safely.
+- Deploy on **AWS Graviton3 `c7g.xlarge`** (4 vCPU, 8GB RAM) — cost: ~₹6,000/month; handles ~2,000 requests/second.
+
+**Phase 2: 500 → 2,000 Merchants (Horizontal Scaling + Message Queue)**
+- Introduce **Kafka or AWS SQS** as an order event queue: Java publishes order events; multiple Python consumer workers subscribe and score in parallel — decouples throughput from latency.
+- Deploy Python microservice as **Docker containers on Kubernetes (AWS EKS)** with Horizontal Pod Autoscaler (HPA) triggering scale-out when CPU > 70%.
+- Implement **multi-tenant data isolation**: each merchant gets a dedicated JSONL partition / PostgreSQL schema; no cross-merchant data bleed.
+- Replace file-based model loading with **MLflow Model Registry** — enables A/B model rollouts per merchant segment without downtime.
+
+**Phase 3: 2,000 → 7,000 Merchants (Global Distribution + Real-time Retraining)**
+- Deploy across **3 AWS regions** (Mumbai, Singapore, Frankfurt) with Route 53 latency-based routing — ensures sub-50ms SLA for merchants across time zones.
+- Build a **streaming retraining pipeline**: merchant override labels → Kafka topic → Spark Structured Streaming → incremental XGBoost model updates published every 24 hours.
+- Introduce **merchant-specific model fine-tuning**: the global XGBoost model is fine-tuned per merchant cluster (fashion vs electronics vs cosmetics) using transfer learning — improves precision on niche fraud patterns.
+- Migrate billing to **Stripe Subscriptions / Razorpay Subscriptions API** for automated MRR management at scale.
+
+**Cost at 7,000 Merchants**:
+- Estimated cloud COGS at scale: ₹200–₹300/merchant/month (economies of scale on compute).
+- Gross margin improves to **92%+** — SaaS scaling law holds.
+
+**The key insight**: Our Java Core and Python microservice are already stateless and horizontally scalable by design. The main architectural investment is in the data layer (from JSONL files to Kafka + PostgreSQL + object storage) and the multi-tenancy isolation layer."

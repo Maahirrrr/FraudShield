@@ -3,6 +3,7 @@ com/fraudshield/model/OrderItem.class
 com/fraudshield/fraud/FraudScorer.class
 com/fraudshield/api/FraudShieldServer.class
 com/fraudshield/fraud/RuleBasedScorer.class
+com/fraudshield/api/FraudShieldServer$MetricsHandler.class
 com/fraudshield/Main.class
 com/fraudshield/payment/CardPayment.class
 com/fraudshield/service/PaymentService.class
@@ -24,6 +25,8 @@ com/fraudshield/exception/InvalidInputException.class
 com/fraudshield/payment/UpiPayment.class
 com/fraudshield/model/Transaction.class
 com/fraudshield/exception/ScoringException.class
+com/fraudshield/api/FraudShieldServer$OverrideHandler.class
+com/fraudshield/api/FraudShieldServer$RecentOrdersHandler.class
 com/fraudshield/exception/PaymentFailedException.class
 com/fraudshield/service/OrderService.class
 com/fraudshield/service/InventoryService.class

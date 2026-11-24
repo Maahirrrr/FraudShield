@@ -17,7 +17,9 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -44,10 +46,13 @@ public class FraudShieldServer {
     public void start() throws IOException {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
-        // Endpoints
+        // Endpoints — registration order matters for prefix matching
+        server.createContext("/api/orders/recent", new RecentOrdersHandler());
         server.createContext("/api/orders", new OrdersHandler());
         server.createContext("/api/status", new StatusHandler());
         server.createContext("/api/inventory", new InventoryHandler());
+        server.createContext("/api/metrics", new MetricsHandler());
+        server.createContext("/api/override", new OverrideHandler());
 
         server.setExecutor(Executors.newFixedThreadPool(8));
         server.start();
@@ -161,6 +166,139 @@ public class FraudShieldServer {
             inv.put("product_name", p != null ? p.getName() : "Heritage Linen Shirt");
             inv.put("stock_available", p != null ? p.getStock() : 0);
             sendJsonResponse(exchange, 200, inv);
+        }
+    }
+
+    private static final String BASE = "/home/maahir/.gemini/antigravity/scratch/credit_card_fraud_detection";
+
+    private class RecentOrdersHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            setCORSHeaders(exchange);
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+            if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, Map.of("error", "Method Not Allowed"));
+                return;
+            }
+            try {
+                Path txPath = Paths.get(BASE + "/data/transactions.jsonl");
+                if (!Files.exists(txPath)) {
+                    sendJsonResponse(exchange, 200, Collections.emptyList());
+                    return;
+                }
+                List<String> lines = Files.readAllLines(txPath, StandardCharsets.UTF_8);
+                List<JsonObject> objects = new ArrayList<>();
+                for (String line : lines) {
+                    String trimmed = line.trim();
+                    if (!trimmed.isEmpty()) {
+                        objects.add(JsonParser.parseString(trimmed).getAsJsonObject());
+                    }
+                }
+                Collections.reverse(objects);
+                List<JsonObject> recent = objects.stream().limit(20).collect(Collectors.toList());
+                sendJsonResponse(exchange, 200, recent);
+            } catch (IOException e) {
+                sendJsonResponse(exchange, 200, Collections.emptyList());
+            }
+        }
+    }
+
+    private class MetricsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            setCORSHeaders(exchange);
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+            if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, Map.of("error", "Method Not Allowed"));
+                return;
+            }
+            try {
+                Path txPath = Paths.get(BASE + "/data/transactions.jsonl");
+                long total = 0, blocked = 0, approved = 0, verified = 0, fallbackCount = 0;
+                if (Files.exists(txPath)) {
+                    List<String> lines = Files.readAllLines(txPath, StandardCharsets.UTF_8);
+                    for (String line : lines) {
+                        String trimmed = line.trim();
+                        if (trimmed.isEmpty()) continue;
+                        total++;
+                        try {
+                            JsonObject obj = JsonParser.parseString(trimmed).getAsJsonObject();
+                            if (obj.has("decision")) {
+                                String decision = obj.get("decision").getAsString();
+                                if ("BLOCK".equalsIgnoreCase(decision)) blocked++;
+                                else if ("APPROVE".equalsIgnoreCase(decision)) approved++;
+                                else if ("VERIFY".equalsIgnoreCase(decision)) verified++;
+                            }
+                            if (obj.has("fallback_used") && obj.get("fallback_used").getAsBoolean()) {
+                                fallbackCount++;
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+                String fallbackRate = total > 0
+                        ? String.format("%.1f%%", (fallbackCount * 100.0 / total))
+                        : "0.0%";
+                Map<String, Object> metrics = new LinkedHashMap<>();
+                metrics.put("total_scored", total);
+                metrics.put("fraud_blocked", blocked);
+                metrics.put("approved", approved);
+                metrics.put("verified", verified);
+                metrics.put("money_saved_estimate", blocked * 2500);
+                metrics.put("fallback_rate", fallbackRate);
+                sendJsonResponse(exchange, 200, metrics);
+            } catch (IOException e) {
+                sendJsonResponse(exchange, 500, Map.of("error", "Failed to read metrics"));
+            }
+        }
+    }
+
+    private class OverrideHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            setCORSHeaders(exchange);
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, Map.of("error", "Method Not Allowed"));
+                return;
+            }
+            try (InputStream is = exchange.getRequestBody()) {
+                String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+                String transactionId = json.has("transaction_id") ? json.get("transaction_id").getAsString() : "";
+                String merchantDecision = json.has("merchant_decision") ? json.get("merchant_decision").getAsString() : "";
+                String reason = json.has("reason") ? json.get("reason").getAsString() : "";
+                long loggedAt = System.currentTimeMillis();
+
+                JsonObject record = new JsonObject();
+                record.addProperty("transaction_id", transactionId);
+                record.addProperty("merchant_decision", merchantDecision);
+                record.addProperty("reason", reason);
+                record.addProperty("logged_at", loggedAt);
+
+                Path overridePath = Paths.get(BASE + "/data/overrides.jsonl");
+                Files.createDirectories(overridePath.getParent());
+                Files.writeString(overridePath, gson.toJson(record) + "\n",
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+
+                Map<String, Object> resp = new LinkedHashMap<>();
+                resp.put("status", "LOGGED");
+                resp.put("transaction_id", transactionId);
+                resp.put("merchant_decision", merchantDecision);
+                resp.put("logged_at", loggedAt);
+                sendJsonResponse(exchange, 200, resp);
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, Map.of("error", e.getMessage() != null ? e.getMessage() : "Internal error"));
+            }
         }
     }
 
