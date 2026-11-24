@@ -94,22 +94,39 @@ def generate_synthetic_benchmark(n_samples=50000, fraud_ratio=0.0017, random_sta
     print(f"[+] Benchmark dataset saved to {RAW_CSV_PATH} ({len(df):,} rows, {df['Class'].sum()} frauds).")
     return RAW_CSV_PATH
 
-def ensure_dataset(allow_synthetic=True):
-    """Ensure creditcard.csv exists. Returns path to file."""
-    if os.path.exists(RAW_CSV_PATH):
-        print(f"[i] Dataset found at {RAW_CSV_PATH}")
+def ensure_dataset(allow_synthetic=False):
+    """Ensure authentic creditcard.csv exists. Downloads if missing."""
+    if os.path.exists(RAW_CSV_PATH) and os.path.getsize(RAW_CSV_PATH) > 100_000_000:
+        print(f"[i] Authentic 284k+ dataset found at {RAW_CSV_PATH}")
         return RAW_CSV_PATH
 
-    print("[!] creditcard.csv not found locally.")
+    print("[!] Authentic creditcard.csv not found locally. Initiating download...")
+    # Attempt 1: Kaggle API
     success = download_from_kaggle()
-    if not success:
+    if success and os.path.exists(RAW_CSV_PATH) and os.path.getsize(RAW_CSV_PATH) > 100_000_000:
+        return RAW_CSV_PATH
+
+    # Attempt 2: Direct verified public mirror (TensorFlow / Google Storage official mirror)
+    print("[*] Downloading full 284,807 transaction dataset from verified repository...")
+    url = "https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv"
+    try:
+        import urllib.request
+        def reporthook(count, block_size, total_size):
+            if count % 1000 == 0:
+                percent = int(count * block_size * 100 / total_size)
+                sys.stdout.write(f"\rDownloading: {percent}% ({count * block_size / (1024*1024):.1f} MB)")
+                sys.stdout.flush()
+        urllib.request.urlretrieve(url, RAW_CSV_PATH, reporthook=reporthook)
+        print(f"\n[+] Downloaded verified dataset successfully: {RAW_CSV_PATH}")
+        return RAW_CSV_PATH
+    except Exception as e:
+        print(f"[!] Mirror download failed: {e}")
         if allow_synthetic:
             print("[*] Falling back to generating representative benchmark dataset for experimentation.")
             return generate_synthetic_benchmark()
         else:
             print("[X] Could not acquire dataset. Please download creditcard.csv manually into data/.")
             sys.exit(1)
-    return RAW_CSV_PATH
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Acquire or generate Credit Card Fraud dataset.")

@@ -47,14 +47,14 @@ def split_and_scale(df, test_size=0.2, random_state=42, scaler_type="robust"):
     if "Time" in X_train.columns:
         X_train["Scaled_Time"] = scaler_time.fit_transform(X_train[["Time"]])
         X_test["Scaled_Time"] = scaler_time.transform(X_test[["Time"]])
-        X_train.drop(columns=["Time"], inplace=True)
-        X_test.drop(columns=["Time"], inplace=True)
+        X_train = X_train.drop(columns=["Time"])
+        X_test = X_test.drop(columns=["Time"])
         
     if "Amount" in X_train.columns:
         X_train["Scaled_Amount"] = scaler_amount.fit_transform(X_train[["Amount"]])
         X_test["Scaled_Amount"] = scaler_amount.transform(X_test[["Amount"]])
-        X_train.drop(columns=["Amount"], inplace=True)
-        X_test.drop(columns=["Amount"], inplace=True)
+        X_train = X_train.drop(columns=["Amount"])
+        X_test = X_test.drop(columns=["Amount"])
         
     scalers = {
         "scaler_time": scaler_time if "Time" in X.columns else None,
