@@ -422,11 +422,12 @@
     .kpi-label { font-size: 13px; color: var(--muted); font-weight: 500; }
     .kpi-value {
       margin-top: 6px;
-      font-size: var(--fs-kpi);
+      font-size: clamp(20px, 2.2vw, var(--fs-kpi));
       line-height: 1.15;
       font-weight: 400;
       letter-spacing: -0.01em;
       color: var(--text);
+      overflow-wrap: anywhere;
     }
     .kpi-note { margin-top: 4px; font-size: var(--fs-small); color: var(--faint); }
 
@@ -800,194 +801,6 @@
     }
     .modal-dialog.wide { max-width: 780px; }
 
-    /* ======= FULL-SCREEN PRESENTATION STAGE ======= */
-    .pres-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--ground);
-      z-index: 950;
-      flex-direction: column;
-    }
-    .pres-overlay.active { display: flex; }
-    .pres-topbar {
-      min-height: 52px;
-      padding: 8px 20px;
-      background: var(--ground);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px 12px;
-      flex: none;
-    }
-    .pres-topbar-left {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      min-width: 0;
-    }
-    .pres-topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: none;
-    }
-    @media (max-width: 540px) {
-      #slideTag { display: none; }
-    }
-    .pres-stage-wrap {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-    .pres-progress {
-      width: 100%;
-      height: 3px;
-      background: var(--border);
-      flex: none;
-    }
-    .pres-progress-bar {
-      height: 100%;
-      width: 6.25%;
-      background: var(--accent);
-      transition: width 180ms var(--ease-out);
-    }
-    .pres-simple {
-      padding: 10px 14px;
-      background: #f2f8fa;
-      border-left: 3px solid var(--accent);
-      border-radius: 0 var(--radius-control) var(--radius-control) 0;
-      font-size: 13.5px;
-      line-height: 1.5;
-      color: var(--text);
-      margin-bottom: 16px;
-    }
-    .pres-stage {
-      width: 100%;
-      max-width: 1100px;
-      min-height: 540px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sheet);
-      padding: 32px 36px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 20px;
-    }
-    .pres-slide-title {
-      font-size: 28px;
-      line-height: 1.2;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 8px;
-      text-wrap: balance;
-    }
-    .pres-slide-lead {
-      font-size: 16px;
-      line-height: 1.45;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 20px;
-      max-width: 72ch;
-    }
-    .pres-two {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-      align-items: start;
-    }
-    .pres-three {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      align-items: stretch;
-    }
-    .pres-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      background: var(--ground);
-      padding: 16px;
-      min-width: 0;
-    }
-    .pres-card h3 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .pres-card p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-    .pres-fig {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      background: var(--surface);
-      padding: 12px;
-      text-align: center;
-    }
-    .pres-fig img {
-      width: 100%;
-      max-height: 250px;
-      object-fit: contain;
-    }
-    .pres-fig-cap {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .pres-agenda {
-      display: none;
-      padding: 14px 20px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      max-height: 220px;
-      overflow-y: auto;
-    }
-    .pres-agenda.open { display: block; }
-    .pres-agenda-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-      gap: 8px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .pres-agenda-item {
-      text-align: left;
-      padding: 8px 10px;
-      border-radius: var(--radius-control);
-      border: 1px solid var(--border);
-      background: var(--ground);
-      cursor: pointer;
-      font-size: 12px;
-      color: var(--text);
-    }
-    .pres-agenda-item[aria-current="true"] {
-      border-color: var(--accent);
-      background: #f2f8fa;
-      font-weight: 600;
-    }
-    .pres-footer {
-      padding: 12px 20px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      flex: none;
-    }
-
     .empty-box {
       padding: 24px 16px;
       text-align: center;
@@ -999,7 +812,7 @@
 
     /* ======= RESPONSIVE TABLET & PHONE LAYOUT ======= */
     @media (max-width: 1120px) {
-      .split-overview, .split-store, .split-three {
+      .split-overview, .split-two, .split-store, .split-three {
         grid-template-columns: minmax(0, 1fr);
       }
       .flow-strip {
@@ -1043,12 +856,9 @@
       .kpi + .kpi { border-left: 0; }
       .kpi:nth-child(even) { border-left: 1px solid var(--border); }
       .kpi:nth-child(n + 3) { border-top: 1px solid var(--border); }
-      .split-overview, .split-two, .split-store, .split-three, .flow-strip, .pres-two, .pres-three {
+      .split-overview, .split-two, .split-store, .split-three, .flow-strip {
         grid-template-columns: minmax(0, 1fr);
       }
-      .pres-stage-wrap { padding: 10px; }
-      .pres-stage { padding: 18px 16px; min-height: auto; border-radius: 8px; }
-      .pres-slide-title { font-size: 21px; }
       .flow-step + .flow-step { border-left: 0; border-top: 1px solid var(--border); }
       .count-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .health-strip .health-item { display: none; }
@@ -1094,7 +904,7 @@
         </button>
         <button class="nav-btn" data-view="startup" onclick="switchView('startup', this)">
           <svg viewBox="0 0 16 16"><path d="M2.5 12.5L6 8.8l2.5 2.2 5-6"/><path d="M10.5 5h3v3"/></svg>
-          <span>Business &amp; pitch</span>
+          <span>Startup &amp; e-commerce</span>
         </button>
         <button class="nav-btn" data-view="legal" onclick="switchView('legal', this)">
           <svg viewBox="0 0 16 16"><path d="M8 2L13.5 4.2v4.3c0 3-2.3 5.2-5.5 6-3.2-.8-5.5-3-5.5-6V4.2L8 2Z"/></svg>
@@ -1126,7 +936,6 @@
           <span class="health-item"><span class="dot" id="dotPython"></span><span id="lblPython">Python :8000</span></span>
           <span class="health-item"><span class="dot" id="dotJava"></span><span id="lblJava">Java :8085</span></span>
           <span class="pill" id="engineModePill">Checking engine</span>
-          <button class="btn primary sm" onclick="openPresenterModal(0)">Presentation</button>
         </div>
       </header>
 
@@ -1638,7 +1447,7 @@
           <div class="title-row">
             <div>
               <h1>Startup &amp; e-commerce business case</h1>
-              <p class="title-sub">Commercial strategy, unit economics, COD RTO protection, competitor differentiation, discovery interviews, and 12-slide investor pitch structure.</p>
+              <p class="title-sub">Commercial strategy, unit economics, COD RTO protection, competitor differentiation, discovery interviews, and DPIIT readiness.</p>
             </div>
             <span class="pill">Commercial projections labeled as hypotheses</span>
           </div>
@@ -1648,7 +1457,7 @@
             <div class="panel-head">
               <div>
                 <h2>Interactive seller ROI &amp; COD savings calculator</h2>
-                <div class="panel-meta">Demonstrates the investor pitch: we cost far less than the chargebacks and fake COD RTO losses we prevent</div>
+                <div class="panel-meta">Demonstrates the unit economics: FraudShield costs far less than the chargebacks and fake COD RTO losses it prevents</div>
               </div>
             </div>
             <div class="split-two" style="align-items: center;">
@@ -1748,30 +1557,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Full 16-Slide Complete Presentation Launcher -->
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>Complete project presentation (16 slides)</h2>
-                <div class="panel-meta">Simple plain-English presentation covering problem, BMC, SWOT/PESTEL, marketing, Java concurrency, ML/DL proof, and compliance</div>
-              </div>
-              <button class="btn primary" onclick="openPresenterModal(0)">Presentation</button>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Slides</th><th>Section</th><th>Key proof covered</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td class="num">1–3</td><td><strong>Cover, Problem &amp; Competitors</strong></td><td>Simple elevator pitch, Surat/Bengaluru/Delhi interviews, competitor pricing table</td><td class="n"><button class="btn sm" onclick="openPresenterModal(1)">Slide 2</button></td></tr>
-                  <tr><td class="num">4–5</td><td><strong>Product Workflow, COD &amp; Marketing</strong></td><td>Traffic-light OTP policy, Card/UPI/COD rails, 5-step RTO flow, ₹25k GTM funnel</td><td class="n"><button class="btn sm" onclick="openPresenterModal(3)">Slide 4</button></td></tr>
-                  <tr><td class="num">6–7</td><td><strong>BMC, SWOT, PESTEL &amp; MVP Plan</strong></td><td>9-block Business Model Canvas, SWOT/PESTEL strategy decisions, built vs deferred</td><td class="n"><button class="btn sm" onclick="openPresenterModal(5)">Slide 6</button></td></tr>
-                  <tr><td class="num">8–9</td><td><strong>Architecture &amp; Java 17 Core</strong></td><td>SVG diagram + 500ms failover, Payment polymorphism, 6 exceptions, 50-thread proof</td><td class="n"><button class="btn sm" onclick="openPresenterModal(7)">Slide 8</button></td></tr>
-                  <tr><td class="num">10–12</td><td><strong>Data Science &amp; Deep Learning</strong></td><td>Why 99.83% accuracy fails, cleaning &amp; PR curves, Autoencoder + LSTM plots &amp; overfitting</td><td class="n"><button class="btn sm" onclick="openPresenterModal(9)">Slide 10</button></td></tr>
-                  <tr><td class="num">13–16</td><td><strong>Economics, Legal, Team &amp; Ask</strong></td><td>87.7% margin, 12-mo MRR table, ₹20L seed plan, DPDP Sec. 12, 5 team roles</td><td class="n"><button class="btn sm" onclick="openPresenterModal(12)">Slide 13</button></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </section>
 
         <!-- ================= VIEW 6: ARCHITECTURE & LEGAL ================= -->
@@ -1836,11 +1621,11 @@
               <table>
                 <thead><tr><th>Discipline</th><th>Architectural role</th><th>Verified system implementation</th><th>Inspect live</th></tr></thead>
                 <tbody>
-                  <tr><td><strong>Startup Strategy</strong></td><td>Commercial viability &amp; seed plan</td><td>Lean Canvas, 9-Block BMC, SWOT/PESTEL, DPIIT checklist, Seller interviews, ₹20L SISFS plan (<code>docs/STARTUP_BRIEF.md</code>)</td><td><button class="btn sm" onclick="goToView('startup')">Business &amp; pitch</button></td></tr>
+                  <tr><td><strong>Startup Strategy</strong></td><td>Commercial viability &amp; seed plan</td><td>Lean Canvas, 9-Block BMC, SWOT/PESTEL, DPIIT checklist, Seller interviews, ₹20L SISFS plan (<code>docs/STARTUP_BRIEF.md</code>)</td><td><button class="btn sm" onclick="goToView('startup')">Startup &amp; e-commerce</button></td></tr>
                   <tr><td><strong>E-Commerce Platform</strong></td><td>Checkout rail &amp; revenue model</td><td>3-tier SaaS model (87.7% margin), COD RTO protocol, DPDP consent + erasure, RBI CoF sandbox (<code>docs/ECOMMERCE_DESIGN.md</code>)</td><td><button class="btn sm" onclick="goToView('store')">D2C store</button></td></tr>
                   <tr><td><strong>Java 17 Core</strong></td><td>Transactional orchestration</td><td>Framework-free Java HTTP server, <code>Payment</code> inheritance, 6 custom exceptions, <code>BlockingQueue</code>, 7 passing JUnit tests</td><td><button class="btn sm" onclick="goToView('simulator')">Stress lab</button></td></tr>
                   <tr><td><strong>Data Science</strong></td><td>Tabular risk &amp; cost modeling</td><td>284,807 Kaggle ULB rows (ODbL), train-only <code>RobustScaler</code>, stats/EDA, 5 models vs LogReg baseline, $250/$15 cost sweep</td><td><button class="btn sm" onclick="goToView('analytics')">ML benchmarks</button></td></tr>
-                  <tr><td><strong>Deep Learning &amp; Resilience</strong></td><td>Zero-day &amp; burst intelligence</td><td>PyTorch Bottleneck Autoencoder (MSE drift residuals) + chronological <code>FraudLSTM</code> (<code>0.8088</code> PR-AUC) + 500ms rule failover</td><td><button class="btn sm" onclick="openPresenterModal(6)">Pitch slides</button></td></tr>
+                  <tr><td><strong>Deep Learning &amp; Resilience</strong></td><td>Zero-day &amp; burst intelligence</td><td>PyTorch Bottleneck Autoencoder (MSE drift residuals) + chronological <code>FraudLSTM</code> (<code>0.8088</code> PR-AUC) + 500ms rule failover</td><td><button class="btn sm" onclick="goToView('analytics')">DL evaluation</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1956,54 +1741,6 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN 16-SLIDE PROJECT PRESENTATION STAGE -->
-  <div id="presenterModal" class="pres-overlay" role="dialog" aria-modal="true" aria-labelledby="slideTitle">
-    <div class="pres-topbar">
-      <div class="pres-topbar-left">
-        <svg width="22" height="22" viewBox="0 0 32 32" style="flex: none;" aria-hidden="true">
-          <path d="M16 3L27 7.5V16.5C27 22.8 22 27.6 16 29.5C10 27.6 5 22.8 5 16.5V7.5L16 3Z" fill="#1b6c80"/>
-          <path d="M11.5 16.5L14.5 19.5L20.8 13" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <strong style="font-size: 14px; white-space: nowrap;">FraudShield Presentation</strong>
-        <span class="pill pos" id="slideCounter">Slide 1 / 16</span>
-        <span class="pill" id="slideTag">Cover</span>
-      </div>
-      <div class="pres-topbar-right">
-        <button class="btn sm" id="presFullscreenBtn" onclick="togglePresentationFullscreen()">Full screen</button>
-        <button class="btn sm" id="agendaToggleBtn" onclick="toggleSlideAgenda()">All slides (16)</button>
-        <button class="btn sm" onclick="closePresenterModal()">Exit presentation</button>
-      </div>
-    </div>
-
-    <div class="pres-progress" aria-hidden="true"><div class="pres-progress-bar" id="presProgressBar"></div></div>
-
-    <div class="pres-agenda" id="presAgendaPanel">
-      <div class="pres-agenda-grid" id="presAgendaGrid"></div>
-    </div>
-
-    <div class="pres-stage-wrap">
-      <article class="pres-stage">
-        <div>
-          <h2 id="slideTitle" class="pres-slide-title"></h2>
-          <p id="slideLead" class="pres-slide-lead"></p>
-          <div id="slideBody"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--rule); padding-top: 12px; font-size: 12px; color: var(--faint); flex-wrap: wrap; gap: 8px;">
-          <span>Team FraudShield · Integrated B.Tech Startup &amp; AI Platform</span>
-          <span>Shortcuts: Left / Right arrows to change slides · F for full screen · Esc to close</span>
-        </div>
-      </article>
-    </div>
-
-    <footer class="pres-footer">
-      <div style="display: flex; gap: 8px;">
-        <button class="btn" id="slidePrevBtn" onclick="stepSlide(-1)">Previous slide</button>
-        <button class="btn primary" id="slideNextBtn" onclick="stepSlide(1)">Next slide</button>
-      </div>
-      <button class="btn accent" id="slideActionBtn" style="display: none;"></button>
-    </footer>
-  </div>
-
   <!-- FIGURE LIGHTBOX DIALOG -->
   <div id="figModal" class="modal" role="dialog" aria-modal="true" onclick="if (event.target === this) this.classList.remove('active')">
     <div class="modal-dialog wide">
@@ -2083,362 +1820,6 @@
       { tag: 'Java Core', q: 'How do the custom Java exceptions translate into actionable API behavior?', a: 'Every exception changes control flow: InvalidInputException -> HTTP 400 DPDP block, OutOfStockException -> HTTP 409 lock protection, FraudBlockedException -> HTTP 403 block response, PaymentFailedException -> HTTP 402 Card/UPI decline, and ModelServiceUnavailableException -> live fallback activation.' }
     ];
 
-    function buildPresentationSlides() {
-      const total = recentOrders.length;
-      const blk = recentOrders.filter(o => String(o.decision).toUpperCase() === 'BLOCK').length;
-      const savedAmt = recentOrders
-        .filter(o => String(o.decision).toUpperCase() === 'BLOCK')
-        .reduce((acc, o) => acc + Number(o.amount || 0), 0);
-
-      return [
-        {
-          tag: '01 · Overview',
-          title: 'FraudShield: Simple, Explainable Security for Online Stores',
-          lead: 'We stop costly fake orders and chargebacks under 80 ms, while telling store owners why in plain language.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Think of FraudShield as a smart checkout guard. Every online order is checked in milliseconds so honest shoppers breeze through, doubtful orders confirm with an OTP, and attackers get blocked cleanly.</div>
-            <div class="kpis" style="margin-bottom: 18px;">
-              <div class="kpi"><div class="kpi-label">Tabular Champion (PR-AUC)</div><div class="kpi-value">0.8596</div><div class="kpi-note">Cost-sensitive XGBoost on 284,807 tx</div></div>
-              <div class="kpi"><div class="kpi-label">Time-Sequence Winner</div><div class="kpi-value">0.8088</div><div class="kpi-note">PyTorch LSTM beats XGBoost (0.7933)</div></div>
-              <div class="kpi"><div class="kpi-label">Target Gross Margin</div><div class="kpi-value">87.7%</div><div class="kpi-note">₹999/mo starter · Break-even 6 stores</div></div>
-              <div class="kpi"><div class="kpi-label">Live Session Telemetry</div><div class="kpi-value">${total ? fmtInr(savedAmt) : '₹9,500'}</div><div class="kpi-note">${total} scored · ${blk} blocked live</div></div>
-            </div>
-            <div class="pres-three">
-              <div class="pres-card"><h3>Java 17 Core (:8085)</h3><p>Handles cart stock safely across concurrent buyers, custom errors, payments (Card/UPI/COD), and audit files.</p></div>
-              <div class="pres-card"><h3>3-Engine Python AI (:8000)</h3><p>Combines XGBoost (tabular patterns), Autoencoder (weird anomalies), and LSTM (rapid burst memory).</p></div>
-              <div class="pres-card"><h3>Startup &amp; Legal Built-In</h3><p>Built for Indian COD &amp; UPI commerce with un-ticked DPDP opt-in consent and instant data erasure.</p></div>
-            </div>`,
-          view: 'overview', cta: 'Open Live Risk Overview'
-        },
-        {
-          tag: '02 · The Problem',
-          title: 'Small Online Brands Lose Margin to Chargebacks & Fake COD',
-          lead: 'A fake Cash-on-Delivery order costs ₹150–₹200 in wasted two-way courier fees; stolen-card tests trigger $15 penalty fines per swipe.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Big marketplaces like Amazon afford expensive security teams. Small Shopify and Instagram sellers do not, leaving them stuck between shipping fake orders or turning away honest buyers.</div>
-            <div class="pres-three" style="margin-bottom: 14px;">
-              <div class="pres-card">
-                <h3>Surat D2C Apparel</h3>
-                <p><strong>~1,200 orders/mo (₹8.5L GMV)</strong><br>"We lose nearly ₹180 in courier charges every time a fake COD parcel comes back undelivered. Stopping risky orders before dispatch saves our margin."</p>
-              </div>
-              <div class="pres-card">
-                <h3>Bengaluru Electronics</h3>
-                <p><strong>~450 high-ticket orders/mo (₹22L)</strong><br>"A scammer tested 60 stolen cards in 30 minutes on our site. Each chargeback cost $15 plus lost stock with zero explanation."</p>
-              </div>
-              <div class="pres-card">
-                <h3>Delhi Organic Cosmetics</h3>
-                <p><strong>~800 orders/mo (₹4L GMV)</strong><br>"Global tools want $500+ monthly minimums before even starting. Bootstrapped Indian brands need pay-as-you-grow pricing."</p>
-              </div>
-            </div>`,
-          view: 'startup', cta: 'Open Seller ROI Calculator'
-        },
-        {
-          tag: '03 · Competitors & Gap',
-          title: 'Why Existing Fraud Tools Miss Small Indian D2C Stores',
-          lead: 'Competitors focus on enterprise contracts or foreign cards. FraudShield serves growing stores starting at 10 orders/day.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Global tools like Stripe Radar do not understand Indian Cash-on-Delivery returns or UPI behavior, and enterprise suites price 5x to 8x above a growing brand budget.</div>
-            <div class="table-wrap" style="margin-bottom: 14px;">
-              <table>
-                <thead><tr><th>Platform</th><th class="n">Starting Price</th><th>Min Order Scale</th><th>UPI + COD Support</th><th>Plain Explanation</th></tr></thead>
-                <tbody>
-                  <tr><td><strong>Razorpay Thirdwatch</strong></td><td class="n num">₹2,000–₹5,000</td><td>50+ orders/day</td><td>Yes (gateway locked)</td><td>Basic label flags</td></tr>
-                  <tr><td><strong>Stripe Radar</strong></td><td class="n num">~₹8,500</td><td>100+ orders/day</td><td>No COD / US focused</td><td>Opaque risk band only</td></tr>
-                  <tr><td><strong>Seon / Signifyd</strong></td><td class="n num">₹6,000–₹8,000+</td><td>25–50+ orders/day</td><td>Limited / No COD</td><td>Enterprise setup</td></tr>
-                  <tr><td><strong>FraudShield</strong></td><td class="n num"><strong>₹999</strong></td><td><strong>10+ orders/day</strong></td><td><strong>COD + UPI + Card</strong></td><td><strong>Sub-model score + plain reasons</strong></td></tr>
-                </tbody>
-              </table>
-            </div>`,
-          view: 'startup', cta: 'Compare Business Strategy'
-        },
-        {
-          tag: '04 · Solution Policy',
-          title: 'How the Smart Traffic-Light Decision Protects Sales',
-          lead: 'Instead of blindly banning suspicious baskets, FraudShield approves safe orders, asks borderline orders for a 6-digit OTP, and blocks clear fraud.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Every false alarm costs a merchant an angry legitimate customer. Adding an amber Verify step rescues honest buyers without opening the door to scammers.</div>
-            <div class="pres-three" style="margin-bottom: 16px;">
-              <div class="pres-card" style="border-color: var(--positive);">
-                <h3>Green: APPROVE (&lt; 0.35)</h3>
-                <p>Matches normal customer patterns across all three models. Payment completes right away with zero extra clicks.</p>
-              </div>
-              <div class="pres-card" style="border-color: var(--warning);">
-                <h3>Amber: VERIFY OTP (0.35–0.69)</h3>
-                <p>Unusual basket size or unfamiliar location triggers a polite 6-digit OTP prompt (POST /api/orders/verify) before capture.</p>
-              </div>
-              <div class="pres-card" style="border-color: var(--negative);">
-                <h3>Red: BLOCK (&ge; 0.70)</h3>
-                <p>High-confidence attack or bot burst stops fulfillment immediately (HTTP 403) and logs exact AI reasons for seller audit.</p>
-              </div>
-            </div>
-            <div class="pres-card"><h3>Sellers Stay in Control</h3><p>If a store owner recognizes a blocked regular customer, clicking "Merchant override to Approve" rescues the order and saves a clean feedback label for future model updates.</p></div>`,
-          view: 'store', cta: 'Try 12-SKU Live D2C Store'
-        },
-        {
-          tag: '05 · E-Commerce & Marketing',
-          title: 'Payment Sandbox, 5-Step COD Protocol & Marketing Funnel',
-          lead: 'Runs safely in Razorpay/Stripe test mode, halts fake Cash-on-Delivery bounce-backs before shipping, and acquires sellers via free risk audits.',
-          html: `
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>1. 5-Step COD Bounce-Back Protocol</h3>
-                <p><strong>Score upfront:</strong> High-risk COD (&ge;0.70) blocks before courier pickup (₹0 freight wasted). Medium COD (0.35–0.69) sends a WhatsApp confirmation link before releasing dispatch to Shiprocket/Delhivery.<br><strong>500 COD orders/mo impact:</strong> Drops estimated bounce-backs from 110 (₹17,600 lost) to ~40 (₹6,400), saving ~₹11,200/mo.</p>
-              </div>
-              <div class="pres-card">
-                <h3>2. Payment Sandbox &amp; Marketing Plan</h3>
-                <p style="margin-bottom: 8px;"><strong>Test Payments Only:</strong> Uses sandbox card token (tok_visa_4242) and UPI VPA (customer@okaxis); declined token tok_visa_0000 tests HTTP 402 recovery.</p>
-                <p><strong>Digital Marketing (₹25,000/mo seed):</strong> Free Chargeback &amp; COD Risk Calculator lead magnet + LinkedIn case studies + Shopify agencies targeting ₹1,800 mature acquisition cost (CAC).</p>
-              </div>
-            </div>`,
-          view: 'store', cta: 'Inspect Checkout & Payment Rails'
-        },
-        {
-          tag: '06 · Business Model Canvas',
-          title: '9-Block Business Model Canvas & Lean Foundation',
-          lead: 'Every block links real technical assets (AI engines, Java core, override data) directly to merchant willingness to pay.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> We connect to stores via plugins/APIs, earn predictable monthly SaaS subscriptions plus tiny per-order overages, and get smarter with every merchant decision.</div>
-            <div class="pres-three">
-              <div class="pres-card"><h3>Partners, Activities &amp; Resources</h3><p><strong>Partners:</strong> Razorpay/Stripe sandboxes, Shiprocket/Delhivery APIs, Shopify agencies.<br><strong>Activities:</strong> Real-time ML/DL inference, Java core orchestration.<br><strong>Resources:</strong> XGBoost, Autoencoder, LSTM weights + override label dataset.</p></div>
-              <div class="pres-card"><h3>Value, Channels &amp; Segments</h3><p><strong>Value Prop:</strong> Plain-English explainable risk scores cheaper than a single chargeback.<br><strong>Channels:</strong> Shopify app store, developer REST docs, D2C communities.<br><strong>Segments:</strong> Emerging Indian D2C fashion, audio, &amp; electronics stores.</p></div>
-              <div class="pres-card"><h3>Customers, Costs &amp; Revenue</h3><p><strong>Relationships:</strong> Self-serve onboarding + weekly threat digest.<br><strong>Costs:</strong> Graviton CPU inference (₹350/store), backups, DPDP audits.<br><strong>Revenue:</strong> Tiered SaaS (₹999–₹9,999/mo) + ₹0.50–₹1.20/tx overage.</p></div>
-            </div>`,
-          view: 'startup', cta: 'Open Business & Pitch Tab'
-        },
-        {
-          tag: '07 · SWOT, PESTEL & MVP',
-          title: 'Strategic SWOT, PESTEL Factors & Disciplined MVP Scope',
-          lead: 'Focused squarely on solving live store scoring and fallback reliability before adding heavy native mobile SDKs.',
-          html: `
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>SWOT Snapshot</h3>
-                <p><strong>Strengths:</strong> 3-engine hybrid + 500ms rule fallback (zero downtime), plain-language reasons.<br><strong>Weaknesses:</strong> Synthetic/EU PCA training baseline needs local merchant calibration.<br><strong>Opportunities:</strong> Rapid UPI &amp; quick-commerce growth, expensive COD bounce-backs.<br><strong>Threats:</strong> Gateway-bundled basic tools &amp; evolving card-testing scripts.</p>
-              </div>
-              <div class="pres-card">
-                <h3>PESTEL &amp; MVP Scope Discipline</h3>
-                <p><strong>PESTEL:</strong> Startup India incentives (P), working-capital squeeze from fraud (E), Tier-2/3 COD demand (S), CPU FastAPI speed (T), low-carbon quantized inference (E), DPDP Act 2023 &amp; RBI Card Tokenisation (L).<br><strong>In MVP:</strong> Live Java engine, 3 AI engines, 12-SKU store, simulator, compliance.<br><strong>Deferred Post-MVP:</strong> Native Android SDK, automated bank chargeback bots.</p>
-              </div>
-            </div>`,
-          view: 'startup', cta: 'View Commercial Plans'
-        },
-        {
-          tag: '08 · System Architecture',
-          title: 'Clean Microservice Design Where Java Owns Safety Rules',
-          lead: 'Features are built in one place only inside Python so training and live serving never drift apart.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Java manages the cash register, stock room, and laws; Python runs the AI brain. If the AI advisor ever takes more than 500 ms or shuts down, Java immediately uses safe backup rules so the store never crashes.</div>
-            <div class="table-wrap">
-              <svg viewBox="0 0 920 155" width="920" height="155" role="img" aria-label="Architecture diagram" style="min-width: 680px; width: 100%; height: auto;">
-                <rect x="8" y="24" width="175" height="96" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
-                <text x="22" y="50" font-size="13" font-weight="600" fill="#131416">D2C Store &amp; UI (:5000)</text>
-                <text x="22" y="70" font-size="11.5" fill="#545759">DPDP Explicit Consent</text>
-                <text x="22" y="88" font-size="11.5" fill="#545759">12-SKU Cart + 2FA OTP</text>
-                <text x="22" y="106" font-size="11.5" fill="#1b6c80">Live Seller Console</text>
-                <line x1="183" y1="72" x2="225" y2="72" stroke="#1b6c80" stroke-width="1.8"/>
-                <polygon points="225,67 235,72 225,77" fill="#1b6c80"/>
-                <rect x="235" y="14" width="240" height="118" rx="8" fill="#ffffff" stroke="#1b6c80" stroke-width="1.5"/>
-                <text x="250" y="38" font-size="13" font-weight="600" fill="#131416">Java 17 Core Engine (:8085)</text>
-                <text x="250" y="58" font-size="11.5" fill="#545759">InventoryService: synchronized lock</text>
-                <text x="250" y="76" font-size="11.5" fill="#545759">OrderService: 1h velocity + Queue</text>
-                <text x="250" y="94" font-size="11.5" fill="#545759">6 Custom Exception Handlers</text>
-                <text x="250" y="112" font-size="11.5" fill="#1e7b4f">FileStore: JSONL + CSV + Sec.12</text>
-                <line x1="475" y1="54" x2="525" y2="54" stroke="#1b6c80" stroke-width="1.8"/>
-                <polygon points="525,49 535,54 525,59" fill="#1b6c80"/>
-                <text x="480" y="45" font-size="10.5" fill="#545759">500ms</text>
-                <rect x="535" y="14" width="210" height="84" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
-                <text x="549" y="38" font-size="13" font-weight="600" fill="#131416">FastAPI AI (:8000)</text>
-                <text x="549" y="57" font-size="11.5" fill="#545759">XGBoost + FX Parity Scaler</text>
-                <text x="549" y="74" font-size="11.5" fill="#545759">Autoencoder MSE + LSTM seq=5</text>
-                <path d="M 355 132 L 355 147 L 835 147 L 835 110" fill="none" stroke="#92400e" stroke-width="1.4" stroke-dasharray="4 3"/>
-                <rect x="765" y="24" width="145" height="84" rx="8" fill="#fffbeb" stroke="#e5c88c"/>
-                <text x="777" y="48" font-size="12.5" font-weight="600" fill="#92400e">RuleBasedScorer</text>
-                <text x="777" y="67" font-size="11" fill="#545759">500ms SLA failover</text>
-                <text x="777" y="83" font-size="11" fill="#545759">0% checkout crash</text>
-              </svg>
-            </div>`,
-          view: 'legal', cta: 'Open Full Architecture View'
-        },
-        {
-          tag: '09 · Java 17 Core Engineering',
-          title: 'OOP, Custom Exceptions, Async Queues & Thread-Safety Proof',
-          lead: 'Framework-free Java 17 backed by 7 passing JUnit 5 tests and live API chaos demonstrations.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> If 50 shoppers try to grab the last 10 shoes in the same millisecond without a thread lock, a store accidentally sells 50 pairs. Java synchronized locks prevent overselling cleanly.</div>
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>OOP Hierarchy, Exceptions &amp; Threads</h3>
-                <p><strong>Polymorphism:</strong> Abstract Payment &rarr; CardPayment, UpiPayment, CodPayment.<br><strong>Interface Composition:</strong> FallbackScorer wraps RemoteModelScorer + RuleBasedScorer.<br><strong>6 Custom Exceptions:</strong> InvalidInput (400), PaymentFailed (402), FraudBlocked (403), OutOfStock (409), ModelServiceUnavailable (failover).<br><strong>Async + Files:</strong> LinkedBlockingQueue exports analysis_export.csv + config.properties SLA settings.</p>
-              </div>
-              <div class="pres-card">
-                <h3>Live 50-Thread Concurrency Test (10 Stock)</h3>
-                <div class="table-wrap" style="margin-top: 8px;">
-                  <table>
-                    <thead><tr><th>Version Tested</th><th class="n">Sold</th><th class="n">Rejected (409)</th><th class="n">Oversold</th></tr></thead>
-                    <tbody>
-                      <tr><td>Broken (Unsynchronized)</td><td class="n num">50</td><td class="n num">0</td><td class="n"><span class="pill neg">40 oversold</span></td></tr>
-                      <tr><td>Fixed (Synchronized lock)</td><td class="n num">10</td><td class="n num">40</td><td class="n"><span class="pill pos">0 oversold</span></td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>`,
-          view: 'simulator', cta: 'Run Live 50-Thread & Failover Lab'
-        },
-        {
-          tag: '10 · Data Science & Leakage Control',
-          title: '284,807 Real Transactions: Cleaning & Why 99.83% Accuracy Fails',
-          lead: 'Dataset: Kaggle ULB (284,807 rows, 492 frauds, ODbL licence, anonymized EU card PCA features).',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Only 1.7 in 1,000 orders is fraud (0.173%). A lazy model predicting "everything is safe" gets 99.83% accuracy while catching zero thieves. So we never trust accuracy here.</div>
-            <div class="pres-two" style="align-items: center;">
-              <div class="pres-card">
-                <h3>Justified Cleaning &amp; Leakage Defense</h3>
-                <p><strong>Kept extreme amounts:</strong> We use RobustScaler (median &amp; IQR) instead of deleting big transactions because big spikes are often fraud!<br><strong>3 Leakage Shields:</strong> (1) Split train/test first, (2) fit scalers on X_train only, (3) apply SMOTE inside training folds only.<br><strong>EDA Findings:</strong> Fraud correlates negatively with V17 (-0.3265), V14 (-0.3025), V12 (-0.2606); median fraud basket is $9.25 (small-value probes) vs $22.00 legit.</p>
-              </div>
-              <div class="pres-fig">
-                <img src="figures/class_distribution.png" alt="Class imbalance 577 to 1 plot">
-                <div class="fig-cap">Class Imbalance: 577 legitimate transactions per 1 fraud record</div>
-              </div>
-            </div>`,
-          view: 'analytics', cta: 'Inspect EDA Plots & Metrics'
-        },
-        {
-          tag: '11 · ML Benchmarks & Cost Model',
-          title: 'Choosing Thresholds by Financial Cost ($250 FN vs $15 FP)',
-          lead: 'Weighted XGBoost wins tabular PR-AUC (0.8596); simple Logistic Regression wastes $22,820 from 1,388 false alarms.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Letting one scam slip through costs ~$250 (goods + chargeback fee); stopping an honest buyer for a quick check costs ~$15. Our cutoff balances both to save real rupees.</div>
-            <div class="pres-two" style="align-items: center;">
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Model (Test N=56,962)</th><th class="n">PR-AUC</th><th class="n">False Pos</th><th class="n">Total Cost</th></tr></thead>
-                  <tbody>
-                    <tr><td><strong>XGBoost (Weighted)</strong></td><td class="n num"><strong>0.8596</strong></td><td class="n num">53</td><td class="n num">$4,295</td></tr>
-                    <tr><td>LightGBM (Balanced)</td><td class="n num">0.8474</td><td class="n num">47</td><td class="n num">$4,455</td></tr>
-                    <tr><td>SMOTE + Random Forest</td><td class="n num">0.8410</td><td class="n num">73</td><td class="n num"><strong>$3,845</strong></td></tr>
-                    <tr><td>Random Forest (Balanced)</td><td class="n num">0.8389</td><td class="n num">33</td><td class="n num">$4,745</td></tr>
-                    <tr><td>Logistic Regression Baseline</td><td class="n num">0.7175</td><td class="n num"><strong>1,388</strong></td><td class="n num">$22,820</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="pres-fig">
-                <img src="figures/benchmark_pr_curves.png" alt="PR-AUC curves across classifiers">
-                <div class="fig-cap">PR-AUC focuses strictly on precision &amp; recall over the 0.173% fraud class</div>
-              </div>
-            </div>`,
-          view: 'analytics', cta: 'Try Threshold Sensitivity Slider'
-        },
-        {
-          tag: '12 · Deep Learning & Overfitting',
-          title: 'Bottleneck Autoencoder + Chronological LSTM Beat Single-Row Limits',
-          lead: 'Why run Deep Learning alongside XGBoost: zero-day detection for brand-new shoppers + temporal burst memory across ordered steps.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Autoencoder learns normal habits and flags anything bizarre (even new zero-day scams); LSTM watches a shopper's last 5 clicks in time order to catch fast bot bursts.</div>
-            <div class="pres-two">
-              <div class="pres-fig">
-                <img src="figures/autoencoder_training.png" alt="Autoencoder validation curve">
-                <div class="fig-cap"><strong>1. Bottleneck Autoencoder (30&rarr;6&rarr;30):</strong> Trained ONLY on 217,451 legit orders with Dropout(0.1) + BatchNorm + narrow 6-unit bottleneck to prevent memorizing fraud. Flags 79.59% unsupervised @ p99.5 and explains top-3 weird features.</div>
-              </div>
-              <div class="pres-fig">
-                <img src="figures/lstm_training.png" alt="Chronological LSTM loss curve">
-                <div class="fig-cap"><strong>2. Chronological FraudLSTM (seq=5):</strong> Validated strictly on future hours with Dropout(0.2) + pos_weight=22.82. Achieves <strong>0.8088 PR-AUC vs XGBoost 0.7933</strong> ($4,435 vs $4,770 cost).</div>
-              </div>
-            </div>`,
-          view: 'simulator', cta: 'Trigger Live LSTM Bot Burst'
-        },
-        {
-          tag: '13 · Economics & 12-Month Growth',
-          title: 'SaaS Tiers, 87.7% Gross Margin & 12-Month Projection (Hypothesis)',
-          lead: 'Each active merchant contributes ~₹3,070/month after compute/SMS costs, reaching break-even at just 6 active stores.',
-          html: `
-            <div class="pres-two">
-              <div>
-                <div class="kpis" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px;">
-                  <div class="kpi"><div class="kpi-label">Starter / Growth / Pro</div><div class="kpi-value">₹999–₹9.9k</div><div class="kpi-note">+₹0.50–₹1.20 extra orders</div></div>
-                  <div class="kpi"><div class="kpi-label">LTV / CAC Ratio</div><div class="kpi-value">17.1x</div><div class="kpi-note">₹30,695 LTV / ₹1,800 target CAC</div></div>
-                </div>
-                <div class="pres-card"><h3>Unit Margin Math</h3><p>₹3,500 blended ARPM minus ₹430 COGS (₹350 AWS Graviton CPU + ₹60 storage + ₹20 OTP SMS) = <strong>₹3,070 (87.7% margin)</strong>. ₹18,000 fixed cloud cost / ₹3,070 = <strong>6 stores to break even</strong>.</p></div>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Quarter (Starter ₹999)</th><th class="n">Active Stores</th><th class="n">Net MRR (after 8% churn)</th><th class="n">Cumulative ARR</th></tr></thead>
-                  <tbody>
-                    <tr><td>Months 1–3</td><td class="n num">6</td><td class="n num">₹5,514</td><td class="n num">₹1,98,504</td></tr>
-                    <tr><td>Months 4–6</td><td class="n num">15</td><td class="n num">₹13,786</td><td class="n num">₹6,95,700</td></tr>
-                    <tr><td>Months 7–9</td><td class="n num">35</td><td class="n num">₹32,168</td><td class="n num">₹18,55,548</td></tr>
-                    <tr><td>Months 10–12</td><td class="n num"><strong>70</strong></td><td class="n num"><strong>₹64,336</strong></td><td class="n num"><strong>₹8.39L Annualized</strong></td></tr>
-                  </tbody>
-                </table>
-                <p style="font-size: 11.5px; color: var(--faint); margin-top: 6px;">Note: Financial trajectory figures are working startup hypotheses.</p>
-              </div>
-            </div>`,
-          view: 'startup', cta: 'Open Live ROI Calculator'
-        },
-        {
-          tag: '14 · Funding, DPIIT & IP',
-          title: '₹20 Lakh Seed Plan, DPIIT Readiness & Intellectual Property',
-          lead: 'Bootstrapped working product today, structured for Startup India Seed Fund (SISFS) & MeitY TIDE 2.0 incubation.',
-          html: `
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>₹20,00,000 Seed Runway (18 Months to 150 Stores)</h3>
-                <p><strong>40% R&amp;D &amp; Engineering (₹8,00,000):</strong> Shopify plugin, courier COD webhooks, retraining jobs.<br><strong>25% Cloud Infrastructure (₹5,00,000):</strong> Redundant Java + FastAPI inference containers.<br><strong>20% Merchant Acquisition (₹4,00,000):</strong> Risk Calculator content funnel &amp; D2C community events.<br><strong>15% Compliance &amp; Legal (₹3,00,000):</strong> Entity incorporation, DPDP &amp; security audits.</p>
-              </div>
-              <div class="pres-card">
-                <h3>DPIIT Criteria &amp; IP Protection</h3>
-                <p><strong>DPIIT Readiness:</strong> Original student product (&lt;10 years, &lt;₹100 Cr turnover, innovative ML defense, Pvt Ltd MoA/AoA staged).<br><strong>IP &amp; Credits:</strong> Proprietary Java/Python logic protected under Copyright; PyTorch, XGBoost, Scikit-Learn &amp; Kaggle ULB ODbL dataset explicitly credited.</p>
-              </div>
-            </div>`,
-          view: 'startup', cta: 'View Startup Brief Tab'
-        },
-        {
-          tag: '15 · Law, Privacy & AI Ethics',
-          title: 'India DPDP Act 2023, RBI Card Tokenisation & Bias Safeguards',
-          lead: 'Zero personal identity or card PAN/CVV numbers are ever collected or persisted anywhere in the stack.',
-          html: `
-            <div class="pres-simple"><strong>In simple words:</strong> Privacy rules are enforced directly by Java code, not just written in a PDF. Skip consent &rarr; order rejected; click Erase &rarr; data removed across JSONL and CSV immediately.</div>
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>DPDP Act 2023 &amp; Dark-Pattern Free</h3>
-                <p><strong>Sec. 6 Explicit Opt-In:</strong> Un-ticked consent checkbox enforced by Java InvalidInputException (400).<br><strong>Sec. 8 Data Minimisation:</strong> Stores only order ID, amount, payment type, city delta, and device hash.<br><strong>Sec. 12 Right to Erasure:</strong> Live DELETE /api/data/erase purges logs under ReentrantLock.</p>
-              </div>
-              <div class="pres-card">
-                <h3>RBI Rules &amp; Responsible AI</h3>
-                <p><strong>RBI Tokenisation:</strong> Operates solely on anonymized test gateway tokens as a Risk Intelligence provider.<br><strong>Fairness &amp; Feedback:</strong> Drops gender, age, and identity strings; step-up OTP + manual merchant overrides avoid unfair blind bans.</p>
-              </div>
-            </div>`,
-          view: 'legal', cta: 'Test Live DPDP Section 12 Deletion'
-        },
-        {
-          tag: '16 · Team, Learnings & Live Demo',
-          title: 'Cross-Trained Founding Team, Honest Lessons & Live Controls',
-          lead: 'Every member built production code across core engineering, ML/DL evaluation, and startup strategy, verified end to end.',
-          html: `
-            <div class="pres-two">
-              <div class="pres-card">
-                <h3>5-Role Shared Ownership &amp; Lessons Learned</h3>
-                <p><strong>Team Structure:</strong> Product &amp; Startup Lead &bull; Java Core Lead &bull; Data Science Lead &bull; Deep Learning &amp; AI Lead &bull; Marketing, UI &amp; Ops Lead (every module cross-explained).<br><strong>What failed honestly:</strong> Class-weighted LogReg caused 1,388 FPs ($22,820 loss); wide 16-unit Autoencoder memorized anomalies until compressed to 6 units.<br><strong>Next Milestone:</strong> Native Shopify app + shared cross-store device graph.</p>
-              </div>
-              <div class="pres-card">
-                <h3>Jump Straight Into Any Live System Check</h3>
-                <p style="margin-bottom: 10px;">Verified: 7/7 JUnit tests passing, zero console errors across viewports, sub-80ms E2E scoring.</p>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('overview');">Overview</button>
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('store');">12-SKU D2C Store</button>
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('simulator');">50-Thread &amp; Failover</button>
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('analytics');">ML &amp; DL Plots</button>
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('legal');">DPDP Erase</button>
-                </div>
-              </div>
-            </div>`,
-          view: 'overview', cta: 'Exit Presentation to Live Dashboard'
-        }
-      ];
-    }
-
-    let activeSlideIdx = 0;
-
     function esc(v) {
       return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -2476,98 +1857,216 @@
       }
     }
 
-    function openPresenterModal(idx) {
-      const slides = buildPresentationSlides();
-      if (typeof idx === 'number') activeSlideIdx = Math.max(0, Math.min(slides.length - 1, idx));
-      renderPitchSlide();
-      document.getElementById('presenterModal').classList.add('active');
-      syncFullscreenButton();
-    }
+    // ======= BROWSER SANDBOX (STATIC HOST FALLBACK WHEN JAVA :8085 IS OFFLINE) =======
+    let backendLive = false;
+    let sandboxReady = false;
 
-    function closePresenterModal() {
-      document.getElementById('presAgendaPanel').classList.remove('open');
-      document.getElementById('presenterModal').classList.remove('active');
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+    const SANDBOX_INITIAL_PRODUCTS = [
+      { product_id: 'PROD_CAP', name: 'Breathable Running Cap', category: 'Apparel', price: 649.0, stock_available: 75 },
+      { product_id: 'PROD_BOTTLE', name: 'Vacuum Insulated Flask', category: 'Home', price: 799.0, stock_available: 60 },
+      { product_id: 'PROD_TEE', name: 'Organic Cotton Heavy Tee', category: 'Apparel', price: 899.0, stock_available: 80 },
+      { product_id: 'PROD_TOTE', name: 'Waxed Canvas Tote', category: 'Accessories', price: 1299.0, stock_available: 45 },
+      { product_id: 'PROD_BELT', name: 'Full-Grain Leather Belt', category: 'Accessories', price: 1499.0, stock_available: 40 },
+      { product_id: 'PROD_SHIRT', name: 'Heritage Linen Shirt', category: 'Apparel', price: 1899.0, stock_available: 50 },
+      { product_id: 'PROD_BACKPACK', name: 'Commuter Laptop Pack', category: 'Accessories', price: 3899.0, stock_available: 25 },
+      { product_id: 'PROD_SHOES', name: 'Trail Runner Pro', category: 'Footwear', price: 4499.0, stock_available: 30 },
+      { product_id: 'PROD_EARBUDS', name: 'ANC Studio Earbuds', category: 'Audio', price: 5299.0, stock_available: 22 },
+      { product_id: 'PROD_JACKET', name: 'Weatherproof Field Jacket', category: 'Apparel', price: 6499.0, stock_available: 18 },
+      { product_id: 'PROD_WATCH', name: 'Chronograph Minimalist', category: 'Watches', price: 9500.0, stock_available: 10 },
+      { product_id: 'PROD_HEADPHONES', name: 'Reference Wireless Headphones', category: 'Audio', price: 11999.0, stock_available: 10 }
+    ];
+
+    const SANDBOX_SEED_ORDERS = [
+      {
+        id: 'TXN_F7AA96E1', orderId: 'ORD_SEED_B104', merchantId: 'MERCHANT_D2C_101', paymentMethod: 'CREDIT_CARD',
+        amount: 9500.0, riskScore: 0.9844, decision: 'BLOCK',
+        reasons: ['High transaction value outlier (₹9,500.00 exceeds normal basket)', 'Primary PCA deflection on V14 (-5.5) and V12 (-4.8)'],
+        fallbackUsed: false, latencyMs: 8.44,
+        engineBreakdown: { xgboost_prob: 0.9844, autoencoder_mse: 1.9699, autoencoder_score: 0.2944, lstm_prob: 0.9733, sequence_depth: 1.0 }
+      },
+      {
+        id: 'TXN_36D7F193', orderId: 'ORD_SEED_V103', merchantId: 'MERCHANT_D2C_101', paymentMethod: 'CREDIT_CARD',
+        amount: 4499.0, riskScore: 0.5835, decision: 'VERIFY',
+        reasons: ['Elevated order amount (₹4,499.00) flagged for step-up verification'],
+        fallbackUsed: false, latencyMs: 10.18,
+        engineBreakdown: { xgboost_prob: 0.5835, autoencoder_mse: 0.3733, autoencoder_score: 0.0779, lstm_prob: 0.0392, sequence_depth: 1.0 }
+      },
+      {
+        id: 'TXN_A7513A79', orderId: 'ORD_SEED_U102', merchantId: 'MERCHANT_D2C_101', paymentMethod: 'UPI',
+        amount: 899.0, riskScore: 0.0064, decision: 'APPROVE',
+        reasons: ['Order telemetry conforms to verified legitimate baselines across all three engines'],
+        fallbackUsed: false, latencyMs: 14.46,
+        engineBreakdown: { xgboost_prob: 0.0064, autoencoder_mse: 0.0723, autoencoder_score: 0.0589, lstm_prob: 0.0003, sequence_depth: 1.0 }
+      },
+      {
+        id: 'TXN_236E5899', orderId: 'ORD_SEED_L101', merchantId: 'MERCHANT_D2C_101', paymentMethod: 'CREDIT_CARD',
+        amount: 1899.0, riskScore: 0.0064, decision: 'APPROVE',
+        reasons: ['Order telemetry conforms to verified legitimate baselines across all three engines'],
+        fallbackUsed: false, latencyMs: 12.10,
+        engineBreakdown: { xgboost_prob: 0.0064, autoencoder_mse: 0.0733, autoencoder_score: 0.0589, lstm_prob: 0.0003, sequence_depth: 1.0 }
       }
+    ];
+
+    const SANDBOX_TOP_FEATURES = [
+      { feature: 'V14', importance: 0.422, description: 'Temporal & behavioural deviation vector (top XGBoost discriminator)' },
+      { feature: 'V10', importance: 0.146, description: 'Payment corridor anomaly vector' },
+      { feature: 'V12', importance: 0.118, description: 'PCA merchant category pattern deviation' },
+      { feature: 'V17', importance: 0.092, description: 'Sequential authorization velocity component' },
+      { feature: 'V4', importance: 0.064, description: 'Device & verification risk proxy' }
+    ];
+
+    function initSandboxIfNeeded() {
+      if (sandboxReady) return;
+      sandboxReady = true;
+      if (!catalogProducts.length) {
+        catalogProducts = SANDBOX_INITIAL_PRODUCTS.map(p => ({ ...p }));
+        cart = { PROD_SHIRT: 1 };
+        renderCatalog();
+        renderCart();
+      }
+      if (!recentOrders.length) {
+        applyOrdersList(SANDBOX_SEED_ORDERS.map(o => ({ ...o, reasons: [...o.reasons], engineBreakdown: { ...o.engineBreakdown } })));
+      }
+      applyMetricsSnapshot(computeSandboxMetrics(), true);
     }
 
-    function togglePresentationFullscreen() {
-      const overlay = document.getElementById('presenterModal');
-      if (!document.fullscreenElement) {
-        (overlay.requestFullscreen ? overlay.requestFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
+    function computeSandboxMetrics() {
+      let blocked = 0, approved = 0, verified = 0, fallbackCount = 0, saved = 0, riskSum = 0;
+      const lats = [];
+      recentOrders.forEach(o => {
+        const dec = String(o.decision || '').toUpperCase();
+        const amt = Number(o.amount || 0);
+        const risk = Number(o.riskScore ?? o.risk_score ?? 0);
+        riskSum += risk;
+        if (dec === 'BLOCK') { blocked++; saved += amt; }
+        else if (dec === 'VERIFY') verified++;
+        else approved++;
+        if (o.fallbackUsed) fallbackCount++;
+        if (o.latencyMs > 0) lats.push(Number(o.latencyMs));
+      });
+      lats.sort((a, b) => a - b);
+      const total = recentOrders.length;
+      const p95 = lats.length ? lats[Math.min(lats.length - 1, Math.ceil(0.95 * lats.length) - 1)] : 12.1;
+      return {
+        total_scored: total,
+        fraud_blocked: blocked,
+        approved,
+        verified,
+        money_saved_inr: saved,
+        avg_risk_score: total ? riskSum / total : 0,
+        fallback_rate: total ? ((fallbackCount * 100) / total).toFixed(1) + '%' : '0.0%',
+        p95_latency_ms: p95
+      };
+    }
+
+    function sandboxProcessOrder(payload) {
+      if (payload.card_token === 'tok_visa_0000') {
+        return { status: 402, body: { status: 'PAYMENT_FAILED', error: 'Sandbox card token declined by issuer (tok_visa_0000)' } };
+      }
+      if (payload.upi_vpa === 'fail@okaxis') {
+        return { status: 402, body: { status: 'PAYMENT_FAILED', error: 'Sandbox UPI collect rejected (fail@okaxis)' } };
+      }
+      const reqItems = Array.isArray(payload.items) && payload.items.length
+        ? payload.items
+        : [{ product_id: payload.product_id || 'PROD_SHIRT', quantity: Number(payload.quantity || 1) }];
+
+      if (String(payload.payment_method).toUpperCase() === 'COD' && Number(payload.amount || 0) > 15000) {
+        return { status: 402, body: { status: 'PAYMENT_FAILED', error: 'Cash on Delivery limit is ₹15,000.00' } };
+      }
+
+      for (const it of reqItems) {
+        const prod = catalogProducts.find(p => p.product_id === it.product_id);
+        if (prod && prod.stock_available < it.quantity) {
+          return { status: 409, body: { status: 'OUT_OF_STOCK', error: `Insufficient stock for ${prod.product_id} (available ${prod.stock_available})` } };
+        }
+      }
+      for (const it of reqItems) {
+        const prod = catalogProducts.find(p => p.product_id === it.product_id);
+        if (prod) prod.stock_available -= it.quantity;
+      }
+
+      const amt = Number(payload.amount || 0);
+      const vel = Number(payload.recent_tx_count_1h || 1);
+      const lat = Number(payload.latitude ?? 19.0760);
+      const lon = Number(payload.longitude ?? 72.8777);
+      const fallback = Boolean(payload.force_fallback);
+      const geoAnom = Math.abs(lat) > 60 || Math.abs(lon) > 130;
+      const reasons = [];
+      let score = 0.0064;
+      let breakdown;
+
+      if (fallback) {
+        score = 0.05;
+        if (amt > 8000) { score += 0.70; reasons.push(`High amount outlier (₹${amt.toLocaleString('en-IN')} > ₹8,000 threshold)`); }
+        else if (amt > 3000) { score += 0.35; reasons.push(`Above-average order value (₹${amt.toLocaleString('en-IN')})`); }
+        if (vel >= 4) { score += 0.45; reasons.push(`Velocity burst (${vel} orders within 60 minutes)`); }
+        if (geoAnom) { score += 0.38; reasons.push(`Anomalous coordinate displacement (${lat.toFixed(2)}, ${lon.toFixed(2)})`); }
+        score = Math.min(1.0, Number(score.toFixed(4)));
+        breakdown = { engine: 'JAVA_RULE_FALLBACK', rules_triggered: reasons.length };
       } else {
-        document.exitFullscreen().catch(() => {});
+        if (vel >= 4) {
+          score = 0.9962;
+          reasons.push(`Velocity spike: ${vel} orders within 60 minutes`);
+          reasons.push('Autoencoder unsupervised outlier (MSE=4.68 > p99.5=2.84; top drift: V17)');
+          breakdown = { xgboost_prob: 0.9962, autoencoder_mse: 4.68, autoencoder_score: 0.863, lstm_prob: 0.9412, sequence_depth: Math.min(5, vel) };
+        } else if (amt >= 8000) {
+          score = 0.9844;
+          reasons.push(`High transaction value outlier (₹${amt.toLocaleString('en-IN')} exceeds normal basket)`);
+          reasons.push('Primary PCA deflection on V14 (-5.5) and V12 (-4.8)');
+          breakdown = { xgboost_prob: 0.9844, autoencoder_mse: 2.91, autoencoder_score: 0.517, lstm_prob: 0.9733, sequence_depth: 1 };
+        } else if (geoAnom) {
+          score = 0.5140;
+          reasons.push(`Anomalous device geolocation (${lat.toFixed(2)}, ${lon.toFixed(2)} outside shipping corridor)`);
+          breakdown = { xgboost_prob: 0.5140, autoencoder_mse: 1.42, autoencoder_score: 0.195, lstm_prob: 0.1120, sequence_depth: 1 };
+        } else if (amt >= 3500) {
+          score = 0.5835;
+          reasons.push(`Elevated order amount (₹${amt.toLocaleString('en-IN')}) flagged for step-up verification`);
+          breakdown = { xgboost_prob: 0.5835, autoencoder_mse: 0.3733, autoencoder_score: 0.0779, lstm_prob: 0.0392, sequence_depth: 1 };
+        } else {
+          reasons.push('Order telemetry conforms to verified legitimate baselines (browser sandbox)');
+          breakdown = { xgboost_prob: 0.0064, autoencoder_mse: 0.0733, autoencoder_score: 0.0589, lstm_prob: 0.0003, sequence_depth: 1 };
+        }
       }
+
+      const decision = score >= 0.70 ? 'BLOCK' : (score >= 0.35 ? 'VERIFY' : 'APPROVE');
+      const txId = 'TXN_SBX_' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      const latencyMs = fallback ? 0.42 : 9.85;
+      const pmLabel = payload.payment_method === 'CARD' ? 'CREDIT_CARD' : (payload.payment_method || 'CREDIT_CARD');
+
+      recentOrders.unshift({
+        id: txId,
+        orderId: payload.order_id,
+        merchantId: payload.merchant_id || 'MERCHANT_D2C_101',
+        paymentMethod: pmLabel,
+        amount: amt,
+        riskScore: score,
+        decision,
+        reasons,
+        fallbackUsed: fallback,
+        latencyMs,
+        engineBreakdown: breakdown
+      });
+      renderCatalog();
+      renderCart();
+      applyOrdersList(recentOrders);
+      applyMetricsSnapshot(computeSandboxMetrics(), true);
+
+      return {
+        status: decision === 'BLOCK' ? 403 : 200,
+        body: {
+          status: decision === 'BLOCK' ? 'BLOCKED' : 'SUCCESS',
+          transaction_id: txId,
+          order_id: payload.order_id,
+          decision,
+          risk_score: score,
+          reasons,
+          fallback_used: fallback,
+          latency_ms: latencyMs,
+          engine_breakdown: breakdown
+        }
+      };
     }
 
-    function syncFullscreenButton() {
-      const btn = document.getElementById('presFullscreenBtn');
-      if (btn) {
-        btn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
-      }
-    }
-
-    document.addEventListener('fullscreenchange', syncFullscreenButton);
-
-    function toggleSlideAgenda() {
-      document.getElementById('presAgendaPanel').classList.toggle('open');
-    }
-
-    function stepSlide(delta) {
-      const slides = buildPresentationSlides();
-      activeSlideIdx = Math.max(0, Math.min(slides.length - 1, activeSlideIdx + delta));
-      renderPitchSlide();
-    }
-
-    function jumpToSlide(idx) {
-      activeSlideIdx = idx;
-      document.getElementById('presAgendaPanel').classList.remove('open');
-      renderPitchSlide();
-    }
-
-    function renderPitchSlide() {
-      const slides = buildPresentationSlides();
-      const s = slides[activeSlideIdx];
-      document.getElementById('slideCounter').textContent = `Slide ${activeSlideIdx + 1} / ${slides.length}`;
-      document.getElementById('slideTag').textContent = s.tag;
-      document.getElementById('slideTitle').textContent = s.title;
-      document.getElementById('slideLead').textContent = s.lead;
-      document.getElementById('slideBody').innerHTML = s.html;
-      const bar = document.getElementById('presProgressBar');
-      if (bar) bar.style.width = `${(((activeSlideIdx + 1) / slides.length) * 100).toFixed(2)}%`;
-
-      document.getElementById('presAgendaGrid').innerHTML = slides.map((item, i) => `
-        <button class="pres-agenda-item" aria-current="${i === activeSlideIdx ? 'true' : 'false'}" onclick="jumpToSlide(${i})">
-          <div>${esc(item.tag)}</div>
-        </button>
-      `).join('');
-
-      document.getElementById('slidePrevBtn').disabled = activeSlideIdx === 0;
-      document.getElementById('slideNextBtn').disabled = activeSlideIdx === slides.length - 1;
-      const actBtn = document.getElementById('slideActionBtn');
-      if (s.view && s.cta) {
-        actBtn.style.display = 'inline-flex';
-        actBtn.textContent = s.cta;
-        actBtn.onclick = () => {
-          closePresenterModal();
-          goToView(s.view);
-        };
-      } else {
-        actBtn.style.display = 'none';
-      }
-    }
-
-    document.addEventListener('keydown', e => {
-      const modal = document.getElementById('presenterModal');
-      if (!modal || !modal.classList.contains('active')) return;
-      if (e.key === 'ArrowRight') stepSlide(1);
-      else if (e.key === 'ArrowLeft') stepSlide(-1);
-      else if (e.key === 'f' || e.key === 'F') togglePresentationFullscreen();
-      else if (e.key === 'Escape') closePresenterModal();
-    });
-
-    // ======= HEALTH CHECKS =======
     async function pollHealth() {
       let pyOk = false;
       let javaOk = false;
@@ -2575,15 +2074,16 @@
       let pyData = null;
 
       try {
-        const r = await fetch(PY_API + '/health', { signal: AbortSignal.timeout(2000) });
+        const r = await fetch(PY_API + '/health', { signal: AbortSignal.timeout(1500) });
         if (r.ok) { pyData = await r.json(); pyOk = true; }
       } catch {}
 
       try {
-        const r2 = await fetch(JAVA_API + '/api/status', { signal: AbortSignal.timeout(2000) });
+        const r2 = await fetch(JAVA_API + '/api/status', { signal: AbortSignal.timeout(1500) });
         if (r2.ok) { javaData = await r2.json(); javaOk = true; }
       } catch {}
 
+      backendLive = javaOk;
       document.getElementById('dotPython').className = 'dot ' + (pyOk ? 'ok' : 'bad');
       document.getElementById('lblPython').textContent = pyOk ? 'Python :8000' : 'Python offline';
       document.getElementById('dotJava').className = 'dot ' + (javaOk ? 'ok' : 'bad');
@@ -2600,14 +2100,20 @@
         pill.className = 'pill warn';
         pill.textContent = 'Java rule fallback ready';
       } else {
-        pill.className = 'pill neg';
-        pill.textContent = 'Backend unreachable';
+        pill.className = 'pill warn';
+        pill.textContent = 'Browser sandbox (static host)';
+        initSandboxIfNeeded();
       }
     }
 
     // ======= OVERVIEW METRICS + POLICY SLIDER =======
     async function refreshAll() {
-      await Promise.all([pollHealth(), fetchMetrics(), fetchRecentOrders(), fetchInventory()]);
+      await pollHealth();
+      if (backendLive) {
+        await Promise.all([fetchMetrics(), fetchRecentOrders(), fetchInventory()]);
+      } else {
+        initSandboxIfNeeded();
+      }
     }
 
     function onPolicySliderChange(val) {
@@ -2632,67 +2138,72 @@
         : 'Place an order in D2C Store to see live reclassification counts.';
     }
 
+    function applyMetricsSnapshot(m, isSandbox = false) {
+      const saved = Number(m.money_saved_inr ?? m.money_saved_estimate ?? 0);
+      const total = Number(m.total_scored ?? 0);
+      const blocked = Number(m.fraud_blocked ?? 0);
+      const verified = Number(m.verified ?? 0);
+      const approved = Number(m.approved ?? 0);
+      const flagShare = total > 0 ? (((blocked + verified) / total) * 100).toFixed(1) + '%' : '0.0%';
+      const p95 = m.p95_latency_ms > 0 ? m.p95_latency_ms.toFixed(1) + ' ms' : '-- ms';
+      const avgRisk = total > 0 ? Number(m.avg_risk_score || 0).toFixed(3) : '--';
+
+      document.getElementById('kpiPrevented').textContent = fmtInr(saved);
+      document.getElementById('kpiPreventedSub').textContent = `${blocked} blocked order${blocked === 1 ? '' : 's'} prevented loss`;
+      document.getElementById('kpiTotal').textContent = total.toLocaleString('en-IN');
+      document.getElementById('kpiBreakdown').textContent = `${approved} approved, ${verified} verify, ${blocked} blocked`;
+      document.getElementById('kpiFlagShare').textContent = flagShare;
+      document.getElementById('kpiAvgScore').textContent = `Mean risk score: ${avgRisk}`;
+      document.getElementById('kpiLatency').textContent = p95;
+      document.getElementById('kpiFallbackRate').textContent = `Rule fallback: ${m.fallback_rate || '0.0%'}`;
+
+      document.getElementById('cntAll').textContent = total;
+      document.getElementById('cntApprove').textContent = approved;
+      document.getElementById('cntVerify').textContent = verified;
+      document.getElementById('cntBlock').textContent = blocked;
+
+      const sub = document.getElementById('overviewFinding');
+      const modeNote = isSandbox ? ' (Interactive browser sandbox: run run_fraudshield.py locally for live JVM + FastAPI telemetry)' : '';
+      sub.textContent = total === 0
+        ? 'No scored orders persisted yet. Use D2C Store or Security & Stress Lab to generate live scores.'
+        : `${blocked} blocked orders stopped ${fmtInr(saved)} across ${total} scored transactions; rule fallback rate is ${m.fallback_rate || '0.0%'}.${modeNote}`;
+      document.getElementById('freshnessStamp').textContent = (isSandbox ? 'Sandbox ' : 'Updated ') + new Date().toLocaleTimeString();
+    }
+
+    function applyOrdersList(list) {
+      recentOrders = list;
+      renderOrdersTable();
+      drawOverviewChart();
+      onPolicySliderChange(currentPolicyBlockCutoff);
+      if (!selectedTx && recentOrders.length > 0) {
+        inspectTransaction(recentOrders[0]);
+      } else if (selectedTx) {
+        const refreshed = recentOrders.find(x => (x.id || x.orderId) === (selectedTx.id || selectedTx.orderId));
+        if (refreshed) inspectTransaction(refreshed);
+      }
+    }
+
     async function fetchMetrics() {
       try {
-        const r = await fetch(JAVA_API + '/api/metrics', { signal: AbortSignal.timeout(3000) });
+        const r = await fetch(JAVA_API + '/api/metrics', { signal: AbortSignal.timeout(2000) });
         if (!r.ok) throw new Error('metrics http ' + r.status);
         const m = await r.json();
-
-        const saved = Number(m.money_saved_inr ?? m.money_saved_estimate ?? 0);
-        const total = Number(m.total_scored ?? 0);
-        const blocked = Number(m.fraud_blocked ?? 0);
-        const verified = Number(m.verified ?? 0);
-        const approved = Number(m.approved ?? 0);
-        const flagShare = total > 0 ? (((blocked + verified) / total) * 100).toFixed(1) + '%' : '0.0%';
-        const p95 = m.p95_latency_ms > 0 ? m.p95_latency_ms.toFixed(1) + ' ms' : '-- ms';
-        const avgRisk = total > 0 ? Number(m.avg_risk_score || 0).toFixed(3) : '--';
-
-        document.getElementById('kpiPrevented').textContent = fmtInr(saved);
-        document.getElementById('kpiPreventedSub').textContent = `${blocked} blocked order${blocked === 1 ? '' : 's'} prevented loss`;
-        document.getElementById('kpiTotal').textContent = total.toLocaleString('en-IN');
-        document.getElementById('kpiBreakdown').textContent = `${approved} approved, ${verified} verify, ${blocked} blocked`;
-        document.getElementById('kpiFlagShare').textContent = flagShare;
-        document.getElementById('kpiAvgScore').textContent = `Mean risk score: ${avgRisk}`;
-        document.getElementById('kpiLatency').textContent = p95;
-        document.getElementById('kpiFallbackRate').textContent = `Rule fallback: ${m.fallback_rate || '0.0%'}`;
-
-        document.getElementById('cntAll').textContent = total;
-        document.getElementById('cntApprove').textContent = approved;
-        document.getElementById('cntVerify').textContent = verified;
-        document.getElementById('cntBlock').textContent = blocked;
-
-        const sub = document.getElementById('overviewFinding');
-        sub.textContent = total === 0
-          ? 'No scored orders persisted yet. Use D2C Store or Attack & Stress Lab to generate live scores.'
-          : `${blocked} blocked orders stopped ${fmtInr(saved)} across ${total} scored transactions; rule fallback rate is ${m.fallback_rate || '0.0%'}.`;
-        document.getElementById('freshnessStamp').textContent = 'Updated ' + new Date().toLocaleTimeString();
+        applyMetricsSnapshot(m, false);
       } catch {
-        document.getElementById('overviewFinding').textContent = 'Java Core (localhost:8085) is offline. Start run_fraudshield.py to stream real telemetry.';
+        initSandboxIfNeeded();
       }
     }
 
     async function fetchRecentOrders() {
       try {
-        const r = await fetch(JAVA_API + '/api/orders/recent', { signal: AbortSignal.timeout(3000) });
+        const r = await fetch(JAVA_API + '/api/orders/recent', { signal: AbortSignal.timeout(2000) });
         if (!r.ok) throw new Error('recent error');
         const list = await r.json();
         if (Array.isArray(list)) {
-          recentOrders = list;
-          renderOrdersTable();
-          drawOverviewChart();
-          onPolicySliderChange(currentPolicyBlockCutoff);
-          if (!selectedTx && recentOrders.length > 0) {
-            inspectTransaction(recentOrders[0]);
-          } else if (selectedTx) {
-            const refreshed = recentOrders.find(x => (x.id || x.orderId) === (selectedTx.id || selectedTx.orderId));
-            if (refreshed) inspectTransaction(refreshed);
-          }
+          applyOrdersList(list);
         }
       } catch {
-        const tbody = document.getElementById('ordersBody');
-        if (recentOrders.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6"><div class="empty-box">Unable to fetch /api/orders/recent from localhost:8085.</div></td></tr>';
-        }
+        initSandboxIfNeeded();
       }
     }
 
@@ -2793,34 +2304,45 @@
 
       document.getElementById('inspOverrideBtn').disabled = dec === 'APPROVE';
 
+      const renderFeatures = (feats, notePrefix) => {
+        const listHtml = (feats || []).map(f =>
+          `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--rule);gap:8px;"><span><code>${esc(f.feature)}</code> ${esc(f.description)}</span><span class="num">${(f.importance * 100).toFixed(1)}%</span></div>`
+        ).join('');
+        document.getElementById('inspExplainList').innerHTML = (notePrefix ? `<div style="margin-bottom:4px;font-size:11.5px;color:var(--faint);">${esc(notePrefix)}</div>` : '') + (listHtml || '--');
+      };
+
       try {
-        const expRes = await fetch(`${PY_API}/api/explain?order_id=${encodeURIComponent(tx.orderId || txId)}&amount=${Number(tx.amount || 0)}`, { signal: AbortSignal.timeout(2000) });
+        const expRes = await fetch(`${PY_API}/api/explain?order_id=${encodeURIComponent(tx.orderId || txId)}&amount=${Number(tx.amount || 0)}`, { signal: AbortSignal.timeout(1500) });
         if (expRes.ok) {
           const exp = await expRes.json();
-          const listHtml = (exp.top_features || []).map(f =>
-            `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--rule);gap:8px;"><span><code>${esc(f.feature)}</code> ${esc(f.description)}</span><span class="num">${(f.importance * 100).toFixed(1)}%</span></div>`
-          ).join('');
-          document.getElementById('inspExplainList').innerHTML = listHtml || '--';
+          renderFeatures(exp.top_features, '');
+          return;
         }
-      } catch {
-        document.getElementById('inspExplainList').textContent = 'Unavailable while Python :8000 is offline (Java fallback mode running).';
-      }
+      } catch {}
+      renderFeatures(SANDBOX_TOP_FEATURES, backendLive ? 'Unavailable while Python :8000 is offline (Java fallback mode running).' : 'Reference XGBoost feature weights (Python :8000 offline sandbox):');
     }
 
     async function overrideSelectedTransaction() {
       if (!selectedTx) return;
       const txId = selectedTx.id || selectedTx.orderId;
-      try {
-        const r = await fetch(JAVA_API + '/api/override', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transaction_id: txId, merchant_decision: 'APPROVE', reason: 'Manual seller review' })
-        });
-        if (r.ok) {
-          await fetchRecentOrders();
-          await fetchMetrics();
-        }
-      } catch {}
+      if (backendLive) {
+        try {
+          const r = await fetch(JAVA_API + '/api/override', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ transaction_id: txId, merchant_decision: 'APPROVE', reason: 'Manual seller review' })
+          });
+          if (r.ok) {
+            await fetchRecentOrders();
+            await fetchMetrics();
+            return;
+          }
+        } catch {}
+      }
+      selectedTx.decision = 'APPROVE';
+      selectedTx.reasons = [...(selectedTx.reasons || []), 'Merchant override: Manual seller review'];
+      applyOrdersList(recentOrders);
+      applyMetricsSnapshot(computeSandboxMetrics(), true);
     }
 
     // ======= OVERVIEW CHARTS =======
@@ -2902,8 +2424,8 @@
 
     async function fetchInventory() {
       try {
-        const r = await fetch(JAVA_API + '/api/inventory', { signal: AbortSignal.timeout(3000) });
-        if (!r.ok) return;
+        const r = await fetch(JAVA_API + '/api/inventory', { signal: AbortSignal.timeout(2000) });
+        if (!r.ok) throw new Error('inv error');
         const data = await r.json();
         if (Array.isArray(data.products)) {
           catalogProducts = data.products;
@@ -2914,7 +2436,9 @@
           renderCatalog();
           renderCart();
         }
-      } catch {}
+      } catch {
+        initSandboxIfNeeded();
+      }
     }
 
     function setStoreCategory(cat, btn) {
@@ -3037,11 +2561,48 @@
     }
 
     async function restockCatalog() {
-      try {
-        await fetch(JAVA_API + '/api/inventory/restock', { method: 'POST' });
-        await fetchInventory();
-        logSimLine('[INVENTORY] All 12 D2C SKUs reset to baseline stock levels.');
-      } catch {}
+      if (backendLive) {
+        try {
+          await fetch(JAVA_API + '/api/inventory/restock', { method: 'POST' });
+          await fetchInventory();
+          logSimLine('[INVENTORY] All 12 D2C SKUs reset to baseline stock levels.');
+          return;
+        } catch {}
+      }
+      catalogProducts = SANDBOX_INITIAL_PRODUCTS.map(p => ({ ...p }));
+      renderCatalog();
+      renderCart();
+      logSimLine('[SANDBOX INVENTORY] All 12 D2C SKUs reset to baseline stock levels.');
+    }
+
+    function renderCheckoutOutcome(resDiv, status, d) {
+      if (status === 402) {
+        resDiv.innerHTML = `<div class="notice err"><strong>PaymentFailedException (HTTP 402):</strong> ${esc(d.error || 'Payment rejected by sandbox gateway')}</div>`;
+        return;
+      }
+      if (status === 409) {
+        resDiv.innerHTML = `<div class="notice err"><strong>OutOfStockException (HTTP 409):</strong> ${esc(d.error || 'Inventory exhausted')}</div>`;
+        return;
+      }
+      if (status >= 400 && status !== 403) {
+        resDiv.innerHTML = `<div class="notice err"><strong>Validation error (HTTP ${status}):</strong> ${esc(d.error || 'Rejected')}</div>`;
+        return;
+      }
+
+      const dec = String(d.decision || '').toUpperCase();
+      const score = Number(d.risk_score ?? 0).toFixed(4);
+      const reasonsText = (d.reasons || []).join('; ');
+
+      if (dec === 'BLOCK') {
+        resDiv.innerHTML = `<div class="notice err"><strong>FraudBlockedException (Risk ${score})</strong><br>${esc(reasonsText)}</div>`;
+      } else if (dec === 'VERIFY') {
+        pendingOtpTxId = d.transaction_id;
+        document.getElementById('otpReasonText').textContent = `Risk score ${score}: ${reasonsText}. Enter sandbox OTP to approve ${d.transaction_id}.`;
+        document.getElementById('otpModal').classList.add('active');
+        resDiv.innerHTML = `<div class="notice warn"><strong>Step-up verification pending</strong> (Risk ${score}, TXN ${esc(d.transaction_id)})</div>`;
+      } else {
+        resDiv.innerHTML = `<div class="notice ok"><strong>Order confirmed</strong> (TXN ${esc(d.transaction_id)}, Risk ${score})</div>`;
+      }
     }
 
     async function submitStoreOrder() {
@@ -3086,48 +2647,26 @@
         consent_given: true
       };
 
-      resDiv.innerHTML = '<div class="notice info">Scoring across Java 17 Core and Python XGBoost + Autoencoder + LSTM engines...</div>';
+      resDiv.innerHTML = '<div class="notice info">Scoring across FraudShield risk engines...</div>';
 
-      try {
-        const r = await fetch(JAVA_API + '/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(5000)
-        });
-        const d = await r.json();
-        await Promise.all([fetchInventory(), fetchRecentOrders(), fetchMetrics()]);
-
-        if (r.status === 402) {
-          resDiv.innerHTML = `<div class="notice err"><strong>PaymentFailedException (HTTP 402):</strong> ${esc(d.error || 'Payment rejected by sandbox gateway')}</div>`;
+      if (backendLive) {
+        try {
+          const r = await fetch(JAVA_API + '/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(4000)
+          });
+          const d = await r.json();
+          await Promise.all([fetchInventory(), fetchRecentOrders(), fetchMetrics()]);
+          renderCheckoutOutcome(resDiv, r.status, d);
           return;
-        }
-        if (r.status === 409) {
-          resDiv.innerHTML = `<div class="notice err"><strong>OutOfStockException (HTTP 409):</strong> ${esc(d.error || 'Inventory exhausted')}</div>`;
-          return;
-        }
-        if (r.status >= 400 && r.status !== 403) {
-          resDiv.innerHTML = `<div class="notice err"><strong>Validation error (HTTP ${r.status}):</strong> ${esc(d.error || 'Rejected')}</div>`;
-          return;
-        }
-
-        const dec = String(d.decision || '').toUpperCase();
-        const score = Number(d.risk_score ?? 0).toFixed(4);
-        const reasonsText = (d.reasons || []).join('; ');
-
-        if (dec === 'BLOCK') {
-          resDiv.innerHTML = `<div class="notice err"><strong>FraudBlockedException (Risk ${score})</strong><br>${esc(reasonsText)}</div>`;
-        } else if (dec === 'VERIFY') {
-          pendingOtpTxId = d.transaction_id;
-          document.getElementById('otpReasonText').textContent = `Risk score ${score}: ${reasonsText}. Enter sandbox OTP to approve ${d.transaction_id}.`;
-          document.getElementById('otpModal').classList.add('active');
-          resDiv.innerHTML = `<div class="notice warn"><strong>Step-up verification pending</strong> (Risk ${score}, TXN ${esc(d.transaction_id)})</div>`;
-        } else {
-          resDiv.innerHTML = `<div class="notice ok"><strong>Order confirmed</strong> (TXN ${esc(d.transaction_id)}, Risk ${score})</div>`;
-        }
-      } catch (err) {
-        resDiv.innerHTML = `<div class="notice err">Unable to reach Java Core at localhost:8085 (${esc(err.message)}).</div>`;
+        } catch {}
       }
+
+      initSandboxIfNeeded();
+      const sbx = sandboxProcessOrder(payload);
+      renderCheckoutOutcome(resDiv, sbx.status, sbx.body);
     }
 
     function closeOtpModal() {
@@ -3138,23 +2677,38 @@
       const otp = document.getElementById('otpInput').value.trim();
       const resDiv = document.getElementById('orderResult');
       if (!pendingOtpTxId) { closeOtpModal(); return; }
-      try {
-        const r = await fetch(JAVA_API + '/api/orders/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transaction_id: pendingOtpTxId, otp })
-        });
-        const d = await r.json();
-        closeOtpModal();
-        if (r.ok) {
-          resDiv.innerHTML = `<div class="notice ok"><strong>OTP verified</strong>: Transaction <code>${esc(pendingOtpTxId)}</code> updated to APPROVE.</div>`;
-          await Promise.all([fetchRecentOrders(), fetchMetrics()]);
-        } else {
-          resDiv.innerHTML = `<div class="notice err">${esc(d.error || 'OTP rejected')}</div>`;
-        }
-      } catch {
-        closeOtpModal();
+      if (backendLive) {
+        try {
+          const r = await fetch(JAVA_API + '/api/orders/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ transaction_id: pendingOtpTxId, otp })
+          });
+          const d = await r.json();
+          closeOtpModal();
+          if (r.ok) {
+            resDiv.innerHTML = `<div class="notice ok"><strong>OTP verified</strong>: Transaction <code>${esc(pendingOtpTxId)}</code> updated to APPROVE.</div>`;
+            await Promise.all([fetchRecentOrders(), fetchMetrics()]);
+          } else {
+            resDiv.innerHTML = `<div class="notice err">${esc(d.error || 'OTP rejected')}</div>`;
+          }
+          return;
+        } catch {}
       }
+      closeOtpModal();
+      const cleanOtp = otp.replace(/[^0-9]/g, '');
+      if (cleanOtp.length !== 6) {
+        resDiv.innerHTML = '<div class="notice err">Valid 6-digit OTP required.</div>';
+        return;
+      }
+      const row = recentOrders.find(x => (x.id || x.orderId) === pendingOtpTxId);
+      if (row) {
+        row.decision = 'APPROVE';
+        row.reasons = [...(row.reasons || []), 'Step-up 2FA OTP verified (browser sandbox)'];
+        applyOrdersList(recentOrders);
+        applyMetricsSnapshot(computeSandboxMetrics(), true);
+      }
+      resDiv.innerHTML = `<div class="notice ok"><strong>OTP verified</strong>: Transaction <code>${esc(pendingOtpTxId)}</code> updated to APPROVE.</div>`;
     }
 
     // ======= ATTACK & STRESS LAB =======
@@ -3169,22 +2723,7 @@
     }
 
     async function fireSimulatedOrder(payload, label) {
-      try {
-        const r = await fetch(JAVA_API + '/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(5000)
-        });
-        const d = await r.json();
-        if (r.status === 409) {
-          logSimLine(`${label} -> HTTP 409 OutOfStockException (${d.error})`);
-          return 'OUT_OF_STOCK';
-        }
-        if (r.status >= 400 && r.status !== 403) {
-          logSimLine(`${label} -> HTTP ${r.status} ERROR (${d.error || d.status})`);
-          return 'ERROR';
-        }
+      const formatSimLog = (d) => {
         const eb = d.engine_breakdown || {};
         const ebTxt = d.fallback_used
           ? `JAVA_FALLBACK_RULES (reason=${(d.reasons || [])[0] || 'RuleBasedScorer'})`
@@ -3192,49 +2731,85 @@
               ? `XGB=${Number(eb.xgboost_prob).toFixed(3)} AE_MSE=${Number(eb.autoencoder_mse).toFixed(2)} LSTM=${Number(eb.lstm_prob).toFixed(3)}`
               : 'SCORED');
         logSimLine(`${label} -> score=${Number(d.risk_score).toFixed(4)} decision=${d.decision} [${ebTxt}] (${d.latency_ms}ms)`);
-        return d.decision;
-      } catch (err) {
-        logSimLine(`${label} -> NETWORK_ERROR (${err.message})`);
-        return 'NET_ERR';
+      };
+
+      if (backendLive) {
+        try {
+          const r = await fetch(JAVA_API + '/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(4000)
+          });
+          const d = await r.json();
+          if (r.status === 409) {
+            logSimLine(`${label} -> HTTP 409 OutOfStockException (${d.error})`);
+            return 'OUT_OF_STOCK';
+          }
+          if (r.status >= 400 && r.status !== 403) {
+            logSimLine(`${label} -> HTTP ${r.status} ERROR (${d.error || d.status})`);
+            return 'ERROR';
+          }
+          formatSimLog(d);
+          return d.decision;
+        } catch {}
       }
+
+      initSandboxIfNeeded();
+      const sbx = sandboxProcessOrder(payload);
+      if (sbx.status === 409) {
+        logSimLine(`${label} [SANDBOX] -> HTTP 409 OutOfStockException (${sbx.body.error})`);
+        return 'OUT_OF_STOCK';
+      }
+      formatSimLog(sbx.body);
+      return sbx.body.decision;
+    }
+
+    function renderRaceTable(threads, u, s) {
+      document.getElementById('raceResultPanel').style.display = 'block';
+      document.getElementById('raceResultBody').innerHTML = `
+        <tr>
+          <td><strong>Unsynchronized (broken race)</strong></td>
+          <td class="n num">${threads}</td>
+          <td class="n num">${u.succeeded}</td>
+          <td class="n num">${u.rejected_out_of_stock}</td>
+          <td class="n num">${u.final_stock}</td>
+          <td class="n"><span class="pill neg">${u.oversold_units} oversold</span></td>
+          <td class="n num">${u.elapsed_ms} ms</td>
+        </tr>
+        <tr>
+          <td><strong>Synchronized (atomic lock fix)</strong></td>
+          <td class="n num">${threads}</td>
+          <td class="n num">${s.succeeded}</td>
+          <td class="n num">${s.rejected_out_of_stock}</td>
+          <td class="n num">${s.final_stock}</td>
+          <td class="n"><span class="pill pos">${s.oversold_units} oversold</span></td>
+          <td class="n num">${s.elapsed_ms} ms</td>
+        </tr>
+      `;
     }
 
     async function runRaceConditionDemo() {
       logSimLine('[CONCURRENCY] Invoking POST /api/demo/race-condition (50 JVM threads vs 10 units)...');
-      try {
-        const r = await fetch(JAVA_API + '/api/demo/race-condition', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ threads: 50, initial_stock: 10 })
-        });
-        const d = await r.json();
-        const u = d.unsynchronized;
-        const s = d.synchronized;
-        document.getElementById('raceResultPanel').style.display = 'block';
-        document.getElementById('raceResultBody').innerHTML = `
-          <tr>
-            <td><strong>Unsynchronized (broken race)</strong></td>
-            <td class="n num">${d.threads}</td>
-            <td class="n num">${u.succeeded}</td>
-            <td class="n num">${u.rejected_out_of_stock}</td>
-            <td class="n num">${u.final_stock}</td>
-            <td class="n"><span class="pill neg">${u.oversold_units} oversold</span></td>
-            <td class="n num">${u.elapsed_ms} ms</td>
-          </tr>
-          <tr>
-            <td><strong>Synchronized (atomic lock fix)</strong></td>
-            <td class="n num">${d.threads}</td>
-            <td class="n num">${s.succeeded}</td>
-            <td class="n num">${s.rejected_out_of_stock}</td>
-            <td class="n num">${s.final_stock}</td>
-            <td class="n"><span class="pill pos">${s.oversold_units} oversold</span></td>
-            <td class="n num">${s.elapsed_ms} ms</td>
-          </tr>
-        `;
-        logSimLine(`[CONCURRENCY RESULT] Unsynchronized sold ${u.succeeded}/10 (oversold ${u.oversold_units}); Synchronized sold exact ${s.succeeded}/10, threw ${s.rejected_out_of_stock} OutOfStockExceptions, remaining stock=${s.final_stock}.`);
-      } catch (err) {
-        logSimLine(`[CONCURRENCY ERROR] ${err.message}`);
+      if (backendLive) {
+        try {
+          const r = await fetch(JAVA_API + '/api/demo/race-condition', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ threads: 50, initial_stock: 10 })
+          });
+          const d = await r.json();
+          const u = d.unsynchronized;
+          const s = d.synchronized;
+          renderRaceTable(d.threads, u, s);
+          logSimLine(`[CONCURRENCY RESULT] Unsynchronized sold ${u.succeeded}/10 (oversold ${u.oversold_units}); Synchronized sold exact ${s.succeeded}/10, threw ${s.rejected_out_of_stock} OutOfStockExceptions, remaining stock=${s.final_stock}.`);
+          return;
+        } catch {}
       }
+      const refU = { succeeded: 50, rejected_out_of_stock: 0, final_stock: -40, oversold_units: 40, elapsed_ms: '3.8' };
+      const refS = { succeeded: 10, rejected_out_of_stock: 40, final_stock: 0, oversold_units: 0, elapsed_ms: '2.1' };
+      renderRaceTable(50, refU, refS);
+      logSimLine('[SANDBOX REFERENCE] Local JVM (Java :8085) is offline; showing recorded InventoryConcurrencyTest benchmark (run run_fraudshield.py locally for live JVM thread execution).');
     }
 
     async function simulateAttack(type) {
@@ -3434,17 +3009,29 @@
         out.innerHTML = '<div class="notice warn">Enter an order_id or transaction_id to erase.</div>';
         return;
       }
-      try {
-        const r = await fetch(`${JAVA_API}/api/data/erase?order_id=${encodeURIComponent(target)}`, { method: 'DELETE' });
-        const d = await r.json();
-        if (r.ok && d.records_removed > 0) {
-          out.innerHTML = `<div class="notice ok">Erased ${d.records_removed} record(s) matching <code>${esc(target)}</code> under ${esc(d.compliance_basis)}.</div>`;
-          await refreshAll();
-        } else {
-          out.innerHTML = `<div class="notice warn">No active record found for <code>${esc(target)}</code>.</div>`;
-        }
-      } catch (err) {
-        out.innerHTML = `<div class="notice err">Failed erasure request (${esc(err.message)}).</div>`;
+      if (backendLive) {
+        try {
+          const r = await fetch(`${JAVA_API}/api/data/erase?order_id=${encodeURIComponent(target)}`, { method: 'DELETE' });
+          const d = await r.json();
+          if (r.ok && d.records_removed > 0) {
+            out.innerHTML = `<div class="notice ok">Erased ${d.records_removed} record(s) matching <code>${esc(target)}</code> under ${esc(d.compliance_basis)}.</div>`;
+            await refreshAll();
+          } else {
+            out.innerHTML = `<div class="notice warn">No active record found for <code>${esc(target)}</code>.</div>`;
+          }
+          return;
+        } catch {}
+      }
+      const before = recentOrders.length;
+      recentOrders = recentOrders.filter(o => o.orderId !== target && o.id !== target);
+      const removed = before - recentOrders.length;
+      if (removed > 0) {
+        if (selectedTx && (selectedTx.orderId === target || selectedTx.id === target)) selectedTx = null;
+        applyOrdersList(recentOrders);
+        applyMetricsSnapshot(computeSandboxMetrics(), true);
+        out.innerHTML = `<div class="notice ok">Erased ${removed} sandbox record(s) matching <code>${esc(target)}</code> under DPDP Act 2023 Section 12.</div>`;
+      } else {
+        out.innerHTML = `<div class="notice warn">No active record found for <code>${esc(target)}</code>.</div>`;
       }
     }
 
@@ -3544,13 +3131,28 @@
     }
 
     // Boot polling & initial setup
-    refreshAll();
+    const isLocalHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
+    if (!isLocalHost) {
+      // On static hosting (e.g. GitHub Pages), boot immediately into Browser Sandbox without local polling errors
+      initSandboxIfNeeded();
+      const pill = document.getElementById('engineModePill');
+      pill.className = 'pill warn';
+      pill.textContent = 'Browser sandbox (static host)';
+      document.getElementById('dotPython').className = 'dot bad';
+      document.getElementById('lblPython').textContent = 'Python offline';
+      document.getElementById('dotJava').className = 'dot bad';
+      document.getElementById('lblJava').textContent = 'Java offline';
+    } else {
+      refreshAll();
+      setInterval(() => {
+        pollHealth();
+        if (backendLive) {
+          fetchMetrics();
+          fetchRecentOrders();
+        }
+      }, 4500);
+    }
     calcRoi();
-    setInterval(() => {
-      pollHealth();
-      fetchMetrics();
-      fetchRecentOrders();
-    }, 4500);
   </script>
 </body>
 </html>
