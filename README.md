@@ -3,6 +3,7 @@
 **Real-time fraud intelligence, atomic inventory protection, and COD Return-to-Origin (RTO) defense built for Indian D2C commerce.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Web%20Console-GitHub%20Pages-1b6c80)](https://maahirrrr.github.io/FraudShield/)
+[![Download PPTX](https://img.shields.io/badge/Download%20PPTX-16%20Slides%20(.pptx)-15803d)](https://maahirrrr.github.io/FraudShield/FraudShield_Presentation.pptx)
 [![Repository](https://img.shields.io/badge/GitHub-Maahirrrr%2FFraudShield-131416)](https://github.com/Maahirrrr/FraudShield)
 [![Java 17](https://img.shields.io/badge/Java%20Core-JDK%2017%20(7%20JUnit%205%20Tests)-1e7b4f)](java-core/)
 [![ML & DL](https://img.shields.io/badge/AI%20Engine-XGBoost%20%2B%20Autoencoder%20%2B%20LSTM-0f4c5c)](model-service/)
@@ -10,6 +11,7 @@
 
 > [!TIP]
 > **Live Hosted Console**: **[https://maahirrrr.github.io/FraudShield/](https://maahirrrr.github.io/FraudShield/)**  
+> **Download PowerPoint Deck (`.pptx`)**: **[FraudShield_Presentation.pptx](https://maahirrrr.github.io/FraudShield/FraudShield_Presentation.pptx)** *(also at [`FraudShield_Presentation.pptx`](FraudShield_Presentation.pptx))*  
 > Visitors on GitHub Pages can test the 12-SKU D2C store checkout, DPDP consent block, step-up OTP verification (`482910`), card-burst detection, threshold cost simulator, seller ROI calculator, and Section 12 right-to-erasure directly in the browser sandbox — or run [`run_fraudshield.py`](run_fraudshield.py) locally for full live **Java 17 (`:8085`) + Python FastAPI (`:8000`)** execution.
 
 ---
