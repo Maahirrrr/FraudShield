@@ -27,7 +27,7 @@ When a customer places an order on a connected store, transaction telemetry is e
 | **Channels** | 1. Pre-built Shopify / WooCommerce app store plugins.<br>2. Direct founder outreach in Indian D2C founder communities (D2C Insider, SaaSBOOMi).<br>3. Open-source developer SDKs (Java, Python, Node) and free chargeback risk audit tool. |
 | **Revenue Streams** | 1. **Starter**: ₹999/month (up to 1,000 transactions; ₹1.20 per extra order).<br>2. **Growth**: ₹3,499/month (up to 5,000 transactions; ₹0.85 per extra order).<br>3. **Pro / D2C Scale**: ₹9,999/month (up to 20,000 transactions; ₹0.50 per extra order + custom rules). |
 | **Cost Structure** | 1. Cloud infrastructure: Microservices, inference workers, and file persistence (₹15,000/mo initial).<br>2. Model retraining pipeline and compute (AWS/GCP spots).<br>3. Compliance, legal incorporation, and security audits. |
-| **Key Metrics** | 1. Chargeback rate reduction (% drop after 30 days).<br>2. False positive rate (< 0.2% legitimate orders flagged).<br>3. Merchant API latency (< 60ms p95).<br>4. Monthly Recurring Revenue (MRR) & Merchant churn. |
+| **Key Metrics** | 1. Chargeback rate reduction (% drop after 30 days).<br>2. False positive rate (`0.05%` at BLOCK 0.70; `0.09%` at 0.50).<br>3. End-to-end API latency (`< 80ms` p95).<br>4. Monthly Recurring Revenue (MRR) & Merchant churn. |
 | **Unfair Advantage** | Merchant feedback override flywheel: each seller override creates proprietary, verified local ground-truth labels that generic global models lack. |
 
 ---
@@ -96,7 +96,7 @@ flowchart TD
 
 * **Strengths**:
   * Hybrid decision architecture: Fast gradient boosting + deep sequence anomaly detection.
-  * Fault-tolerant Java core: If Python ML microservice drops or times out (>300ms), built-in `RuleBasedScorer` seamlessly guarantees zero checkout downtime.
+  * Fault-tolerant Java core: If Python ML microservice drops or times out (>500ms SLA configured in `config.properties`), built-in `RuleBasedScorer` seamlessly guarantees zero checkout downtime.
   * Native explainability: Explains every score with human-readable diagnostic factors.
 * **Weaknesses**:
   * Cold-start challenge on zero-history new merchants.

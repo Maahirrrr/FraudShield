@@ -28,6 +28,9 @@ public class FallbackScorer implements FraudScorer {
     @Override
     public ScoreResult score(Order order) throws ScoringException {
         try {
+            if (order != null && order.isForceFallback()) {
+                throw new ModelServiceUnavailableException("Simulated model service outage for resilience demonstration");
+            }
             ScoreResult result = remoteScorer.score(order);
             lastCallUsedFallback = false;
             return result;

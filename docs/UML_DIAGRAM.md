@@ -34,8 +34,10 @@ classDiagram
     class Product {
         -String id
         -String name
+        -String category
         -double price
         -int stock
+        +getCategory() String
         +getStock() int
         +setStock(int) void
     }
@@ -179,6 +181,7 @@ classDiagram
         -ConcurrentHashMap~String, Product~ products
         +decrementStockSynchronized(String, int) boolean
         +decrementStockUnsynchronized(String, int) boolean
+        +runRaceConditionComparison(int, int) Map
     }
 
     class PaymentService {

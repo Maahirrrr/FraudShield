@@ -146,7 +146,8 @@ public class OrderService {
                 : new Order(order.getId(), order.getMerchantId(), order.getCustomerId(),
                         order.getItems(), order.getTotalAmount(), order.getIpAddress(),
                         order.getDeviceFingerprint(), order.getShippingLatitude(),
-                        order.getShippingLongitude(), effectiveVelocity, order.isConsentGiven());
+                        order.getShippingLongitude(), effectiveVelocity, order.isConsentGiven(),
+                        order.isForceFallback());
 
         ScoreResult scoreResult = fraudScorer.score(enrichedOrder);
 

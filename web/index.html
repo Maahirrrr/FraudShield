@@ -18,8 +18,8 @@
       --rule: #f0f1f2;
       --control: #cdced1;
       --text: #131416;
-      --muted: #5d5f60;
-      --faint: #686b6e;
+      --muted: #545759;
+      --faint: #5f6367;
       --accent: #1b6c80;
       --primary: #131416;
       --primary-ink: #ffffff;
@@ -27,7 +27,7 @@
       --negative: #c4242a;
       --warning: #92400e;
       --pill-positive-bg: #dcfae5;
-      --pill-positive-ink: #04250e;
+      --pill-positive-ink: #1e7b4f;
       --pill-negative-bg: #ffedea;
       --pill-negative-ink: #831c1e;
       --pill-warning-bg: #fffbeb;
@@ -40,7 +40,7 @@
       --chart-muted: #cfd3d6;
       --chart-span: 0.06;
       --grid: #f0f1f2;
-      --axis-ink: #5d5f60;
+      --axis-ink: #545759;
       --ink: #131416;
 
       --font: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
@@ -50,10 +50,10 @@
       --fs-body: 14px;
       --fs-small: 12px;
 
-      --sidebar-width: 228px;
+      --sidebar-width: 232px;
       --topbar-height: 48px;
       --pad: 24px;
-      --gap: 24px;
+      --gap: 20px;
       --card-pad: 20px;
       --radius-card: 8px;
       --radius-control: 6px;
@@ -74,11 +74,20 @@
       -webkit-font-smoothing: antialiased;
     }
     h1, h2, h3, h4, p { margin: 0; }
+    h1, h2 { text-wrap: balance; }
     button, input, select { font: inherit; color: inherit; }
-    a { color: inherit; text-decoration: none; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
     svg { display: block; max-width: 100%; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
     .num, table, .kpi-value { font-variant-numeric: tabular-nums; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
 
     code, pre {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -92,7 +101,6 @@
     }
 
     /* ======= L-FRAME + WHITE SHEET ======= */
-    /* Grid: 228px sidebar + flexible frame right area; top bar 48px sits seamlessly on #f9fbfc ground */
     .shell {
       display: grid;
       grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
@@ -107,13 +115,14 @@
       flex-direction: column;
       padding: 14px 12px 16px;
       background: var(--ground);
+      overflow-y: auto;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 4px 8px 16px;
+      padding: 4px 8px 14px;
     }
 
     .brand-name {
@@ -130,11 +139,17 @@
       line-height: 16px;
     }
 
+    .nav-group-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--faint);
+      padding: 12px 10px 4px;
+    }
+
     .nav-list {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      margin-top: 6px;
     }
 
     .nav-btn {
@@ -194,6 +209,7 @@
       font-size: var(--fs-small);
       color: var(--faint);
       line-height: 18px;
+      border-top: 1px solid var(--border);
     }
 
     .frame-right {
@@ -204,21 +220,21 @@
       padding-bottom: var(--sheet-inset);
     }
 
-    /* 48px seamless top bar on #f9fbfc ground, zero border dividing from sidebar */
+    /* 48px seamless top bar on #f9fbfc ground */
     .topbar {
       height: var(--topbar-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 0 16px 0 8px;
+      gap: 12px;
+      padding: 0 12px 0 8px;
       background: var(--ground);
     }
 
     .topbar-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
       min-width: 0;
     }
@@ -229,6 +245,7 @@
       justify-content: center;
       width: 32px;
       height: 32px;
+      flex: none;
       border-radius: var(--radius-control);
       border: 1px solid var(--control);
       background: var(--surface);
@@ -251,10 +268,11 @@
     .health-strip {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       font-size: var(--fs-small);
       color: var(--muted);
       white-space: nowrap;
+      flex: none;
     }
 
     .health-item {
@@ -294,7 +312,7 @@
       align-items: flex-end;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
     }
 
@@ -309,7 +327,7 @@
       margin-top: 4px;
       font-size: var(--fs-body);
       color: var(--muted);
-      max-width: 76ch;
+      max-width: 74ch;
     }
 
     .title-actions {
@@ -364,6 +382,32 @@
     .btn.danger:hover { background: var(--pill-negative-bg); }
     .btn.sm { height: 26px; padding: 0 9px; font-size: 12px; }
 
+    /* ======= FLOW STRIP (plain-English 10s walkthrough) ======= */
+    .flow-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--ground);
+      margin-bottom: var(--gap);
+    }
+    .flow-step {
+      padding: 12px 14px;
+      min-width: 0;
+    }
+    .flow-step + .flow-step { border-left: 1px solid var(--border); }
+    .flow-step-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .flow-step-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
     /* ======= DIVIDED KPI STRIP ======= */
     .kpis {
       display: grid;
@@ -373,21 +417,9 @@
       border-radius: var(--radius-card);
       margin-bottom: var(--gap);
     }
-
-    .kpi {
-      padding: 16px 20px;
-      min-width: 0;
-    }
-    .kpi + .kpi {
-      border-left: 1px solid var(--border);
-    }
-
-    .kpi-label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
+    .kpi { padding: 16px 20px; min-width: 0; }
+    .kpi + .kpi { border-left: 1px solid var(--border); }
+    .kpi-label { font-size: 13px; color: var(--muted); font-weight: 500; }
     .kpi-value {
       margin-top: 6px;
       font-size: var(--fs-kpi);
@@ -396,14 +428,7 @@
       letter-spacing: -0.01em;
       color: var(--text);
     }
-
-    .kpi-note {
-      margin-top: 4px;
-      font-size: var(--fs-small);
-      color: var(--faint);
-    }
-    .kpi-note .pos { color: var(--positive); font-weight: 500; }
-    .kpi-note .neg { color: var(--negative); font-weight: 500; }
+    .kpi-note { margin-top: 4px; font-size: var(--fs-small); color: var(--faint); }
 
     /* ======= PANELS & GRID ======= */
     .panel {
@@ -424,17 +449,8 @@
       margin-bottom: 14px;
       flex-wrap: wrap;
     }
-
-    .panel h2 {
-      font-size: var(--fs-section);
-      line-height: 1.3;
-      font-weight: 600;
-    }
-
-    .panel-meta {
-      font-size: var(--fs-small);
-      color: var(--faint);
-    }
+    .panel h2 { font-size: var(--fs-section); line-height: 1.3; font-weight: 600; }
+    .panel-meta { font-size: var(--fs-small); color: var(--faint); }
 
     .split-overview {
       display: grid;
@@ -442,17 +458,21 @@
       gap: var(--gap);
       align-items: start;
     }
-
     .split-two {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--gap);
       align-items: start;
     }
-
+    .split-three {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--gap);
+      align-items: stretch;
+    }
     .split-store {
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) 360px;
+      grid-template-columns: minmax(0, 1.6fr) 360px;
       gap: var(--gap);
       align-items: start;
     }
@@ -487,10 +507,7 @@
 
     /* ======= TABLES ======= */
     .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
     th {
       height: 36px;
       padding: 0 10px;
@@ -502,7 +519,7 @@
       white-space: nowrap;
     }
     td {
-      padding: 11px 10px;
+      padding: 10px;
       border-bottom: 1px solid var(--rule);
       vertical-align: middle;
       font-size: 13px;
@@ -536,7 +553,7 @@
     .pill.neg { background: var(--pill-negative-bg); color: var(--pill-negative-ink); }
     .pill.warn { background: var(--pill-warning-bg); color: var(--pill-warning-ink); }
 
-    /* ======= COUNT FILTER CARDS (list pattern) ======= */
+    /* ======= COUNT FILTER CARDS ======= */
     .count-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
@@ -564,46 +581,57 @@
     /* ======= STORE & CHECKOUT ======= */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 14px;
     }
     .sku-card {
       min-width: 0;
       border: 1px solid var(--border);
       border-radius: var(--radius-card);
-      padding: 16px;
+      padding: 14px;
       background: var(--surface);
-      cursor: pointer;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       gap: 10px;
       transition: border-color 150ms ease, background-color 150ms ease;
     }
     .sku-card:hover { background: var(--raised); }
-    .sku-card[aria-selected="true"] {
-      border-color: var(--accent);
-      background: #f5f9fa;
-    }
     .sku-art {
-      height: 88px;
+      height: 76px;
       border-radius: 6px;
       background: var(--raised);
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .sku-name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .sku-price { font-size: 16px; font-weight: 600; color: var(--accent); }
-    .sku-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    .sku-cat { font-size: 11px; color: var(--faint); font-weight: 500; }
+    .sku-name { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .sku-price { font-size: 15px; font-weight: 600; color: var(--accent); margin-top: 2px; }
+    .sku-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); gap: 6px; }
+
+    .cart-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 13px;
+    }
+    .cart-row:first-child { border-top: 0; }
+    .qty-ctrl { display: inline-flex; align-items: center; gap: 6px; }
 
     .field { display: grid; gap: 6px; margin-bottom: 14px; }
     .field-label { font-size: 13px; font-weight: 500; color: var(--text); }
-    .radio-stack { display: grid; gap: 8px; }
+    .range-input { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .radio-stack { display: grid; gap: 6px; }
     .radio-opt {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 12px;
+      gap: 8px;
+      padding: 8px 10px;
       border: 1px solid var(--border);
       border-radius: var(--radius-control);
       cursor: pointer;
@@ -623,12 +651,7 @@
       line-height: 1.45;
       margin-bottom: 14px;
     }
-    .consent-box label {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      cursor: pointer;
-    }
+    .consent-box label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
 
     .notice {
       padding: 10px 12px;
@@ -642,7 +665,18 @@
     .notice.warn { background: var(--pill-warning-bg); color: var(--pill-warning-ink); }
     .notice.info { background: var(--raised); color: var(--text); }
 
-    /* ======= SIMULATOR LOG (<pre> monospace) ======= */
+    .callout-band {
+      padding: 12px 14px;
+      border-left: 3px solid var(--accent);
+      background: var(--ground);
+      border-radius: 0 var(--radius-control) var(--radius-control) 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: var(--gap);
+    }
+
+    /* ======= SIMULATOR LOG & CARDS ======= */
     .sim-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -668,19 +702,20 @@
       background: #131416;
       color: #d7dcdf;
       border-radius: var(--radius-card);
-      min-height: 180px;
-      max-height: 320px;
+      min-height: 160px;
+      max-height: 300px;
       overflow-y: auto;
       white-space: pre-wrap;
       line-height: 1.6;
     }
 
-    /* ======= INSPECTOR & METRICS BREAKDOWN ======= */
+    /* ======= INSPECTOR & ACCORDION ======= */
     .kv-list { display: grid; }
     .kv-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      gap: 12px;
       padding: 8px 0;
       border-top: 1px solid var(--rule);
       font-size: 13px;
@@ -691,7 +726,7 @@
 
     .figure-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 16px;
     }
     .fig-card {
@@ -704,19 +739,43 @@
     .fig-card:hover { background: var(--raised); }
     .fig-card img {
       width: 100%;
-      height: 150px;
+      height: 145px;
       object-fit: contain;
       background: var(--surface);
       border-radius: 4px;
     }
-    .fig-caption {
-      margin-top: 8px;
-      font-size: 12px;
-      font-weight: 500;
+    .fig-caption { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--text); }
+    .fig-takeaway { margin-top: 3px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    details.viva-item {
+      border-top: 1px solid var(--rule);
+      padding: 12px 0;
+    }
+    details.viva-item:first-child { border-top: 0; }
+    details.viva-item summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
       color: var(--text);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    details.viva-item summary::-webkit-details-marker { display: none; }
+    .viva-ans {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 78ch;
+      padding: 10px 12px;
+      background: var(--ground);
+      border-radius: 6px;
     }
 
-    /* ======= DIALOG OVERLAYS (real floating dialogs may carry shadow) ======= */
+    /* ======= DIALOG OVERLAYS ======= */
     .modal {
       display: none;
       position: fixed;
@@ -734,13 +793,15 @@
       border-radius: 12px;
       padding: 24px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
+      max-height: 88svh;
+      overflow-y: auto;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16); /* taste-skill-ignore: dialog overlay */
     }
     .modal-dialog.wide { max-width: 780px; }
 
     .empty-box {
-      padding: 28px 16px;
+      padding: 24px 16px;
       text-align: center;
       color: var(--muted);
       font-size: 13px;
@@ -750,9 +811,14 @@
 
     /* ======= RESPONSIVE TABLET & PHONE LAYOUT ======= */
     @media (max-width: 1120px) {
-      .split-overview, .split-store {
+      .split-overview, .split-store, .split-three {
         grid-template-columns: minmax(0, 1fr);
       }
+      .flow-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .flow-step:nth-child(odd) { border-left: 0; }
+      .flow-step:nth-child(n + 3) { border-top: 1px solid var(--border); }
     }
 
     @media (max-width: 860px) {
@@ -769,21 +835,32 @@
       }
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: inline-flex; }
+      .topbar {
+        height: auto;
+        padding: 8px 14px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .topbar-left { flex: 1 1 100%; }
+      .topbar .search-input { max-width: 100%; }
+      .health-strip {
+        flex: 1 1 100%;
+        justify-content: space-between;
+      }
       .frame-right { padding: 0; overflow-x: clip; }
       .sheet { border-radius: 0; border-left: 0; border-right: 0; padding: 14px; }
       .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .kpi { padding: 14px; }
-      .kpi-value { font-size: clamp(19px, 5vw, 24px); overflow-wrap: anywhere; }
+      .kpi-value { font-size: clamp(18px, 4.8vw, 24px); overflow-wrap: anywhere; }
       .kpi + .kpi { border-left: 0; }
       .kpi:nth-child(even) { border-left: 1px solid var(--border); }
       .kpi:nth-child(n + 3) { border-top: 1px solid var(--border); }
-      .split-overview, .split-two, .split-store {
+      .split-overview, .split-two, .split-store, .split-three, .flow-strip {
         grid-template-columns: minmax(0, 1fr);
       }
-      .count-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .health-strip { display: none; }
+      .flow-step + .flow-step { border-left: 0; border-top: 1px solid var(--border); }
+      .count-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .health-strip .health-item { display: none; }
     }
   </style>
 </head>
@@ -802,36 +879,45 @@
         </div>
       </div>
 
-      <nav class="nav-list" aria-label="Primary navigation">
-        <button class="nav-btn" aria-current="page" onclick="switchView('overview', this)">
+      <div class="nav-group-label">Live platform</div>
+      <nav class="nav-list" aria-label="Live platform navigation">
+        <button class="nav-btn" aria-current="page" data-view="overview" onclick="switchView('overview', this)">
           <svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
           <span>Overview</span>
         </button>
-        <button class="nav-btn" onclick="switchView('store', this)">
+        <button class="nav-btn" data-view="store" onclick="switchView('store', this)">
           <svg viewBox="0 0 16 16"><path d="M2.5 5.5h11l-.9 7.5H3.4L2.5 5.5Z"/><path d="M5.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5"/></svg>
-          <span>Checkout store</span>
+          <span>D2C store</span>
         </button>
-        <button class="nav-btn" onclick="switchView('simulator', this)">
+        <button class="nav-btn" data-view="simulator" onclick="switchView('simulator', this)">
           <svg viewBox="0 0 16 16"><path d="M8.5 1.8L3.5 9h4.2l-.7 5.2 5.5-7.4H8.3l.2-5Z"/></svg>
-          <span>Attack simulator</span>
+          <span>Attack &amp; stress lab</span>
         </button>
-        <button class="nav-btn" onclick="switchView('analytics', this)">
+      </nav>
+
+      <div class="nav-group-label">Academic defense</div>
+      <nav class="nav-list" aria-label="Academic defense navigation">
+        <button class="nav-btn" data-view="analytics" onclick="switchView('analytics', this)">
           <svg viewBox="0 0 16 16"><path d="M2.5 13.5V9.5M6.2 13.5V5.5M9.8 13.5V7.5M13.5 13.5V2.5"/></svg>
-          <span>Model benchmarks</span>
+          <span>ML &amp; DL benchmarks</span>
         </button>
-        <button class="nav-btn" onclick="switchView('legal', this)">
+        <button class="nav-btn" data-view="startup" onclick="switchView('startup', this)">
+          <svg viewBox="0 0 16 16"><path d="M2.5 12.5L6 8.8l2.5 2.2 5-6"/><path d="M10.5 5h3v3"/></svg>
+          <span>Startup &amp; e-commerce</span>
+        </button>
+        <button class="nav-btn" data-view="legal" onclick="switchView('legal', this)">
           <svg viewBox="0 0 16 16"><path d="M8 2L13.5 4.2v4.3c0 3-2.3 5.2-5.5 6-3.2-.8-5.5-3-5.5-6V4.2L8 2Z"/></svg>
-          <span>Compliance</span>
+          <span>Java, rubric &amp; legal</span>
         </button>
-        <button class="nav-btn" onclick="switchView('skilla', this)">
+        <button class="nav-btn" data-view="viva" onclick="switchView('viva', this)">
           <svg viewBox="0 0 16 16"><path d="M3 3.5h10M3 8h10M3 12.5h6"/></svg>
-          <span>Playbooks archive</span>
+          <span>Viva Q&amp;A &amp; skills</span>
         </button>
       </nav>
 
       <div class="sidebar-foot">
-        <div>Hybrid scoring core</div>
-        <div>XGBoost + Autoencoder + LSTM</div>
+        <div>5-Subject B.Tech Capstone</div>
+        <div>Java 17 + FastAPI + PyTorch</div>
       </div>
     </aside>
 
@@ -842,13 +928,14 @@
           <button class="menu-toggle" aria-label="Open navigation" onclick="document.getElementById('sidebar').classList.toggle('open')">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg>
           </button>
-          <input type="search" id="globalTxFilter" class="search-input" placeholder="Filter transactions by ID, method, or reason..." oninput="renderOrdersTable()">
+          <input type="search" id="globalTxFilter" class="search-input" placeholder="Filter live orders by ID, payment method, or reason..." oninput="renderOrdersTable()">
         </div>
 
         <div class="health-strip">
           <span class="health-item"><span class="dot" id="dotPython"></span><span id="lblPython">Python :8000</span></span>
           <span class="health-item"><span class="dot" id="dotJava"></span><span id="lblJava">Java :8085</span></span>
           <span class="pill" id="engineModePill">Checking engine</span>
+          <button class="btn sm" onclick="openPresenterModal()">60s demo guide</button>
         </div>
       </header>
 
@@ -863,15 +950,36 @@
             <div class="title-actions">
               <span class="stamp" id="freshnessStamp">Waiting for sync</span>
               <button class="btn" onclick="refreshAll()">Refresh</button>
-              <button class="btn primary" onclick="switchView('store', document.querySelectorAll('.nav-btn')[1])">Open checkout</button>
+              <button class="btn primary" onclick="goToView('store')">Open D2C store</button>
             </div>
           </div>
 
-          <div class="kpis" aria-label="Key fraud metrics">
+          <!-- Plain-English 10-second flow explainer for faculty -->
+          <div class="flow-strip" aria-label="How FraudShield processes an order">
+            <div class="flow-step">
+              <div class="flow-step-title">1. Buyer checkout &amp; consent</div>
+              <div class="flow-step-desc">Un-ticked DPDP Act 2023 checkbox; zero raw card numbers or PII stored.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-title">2. Java atomic lock &amp; velocity</div>
+              <div class="flow-step-desc">Java 17 locks stock safely across threads and counts 1h order velocity.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-title">3. 3-engine AI scoring</div>
+              <div class="flow-step-desc">XGBoost + Autoencoder + LSTM score risk together with rule fallback safety.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-title">4. Plain-English action</div>
+              <div class="flow-step-desc">Below 0.35 approves, 0.35–0.69 triggers OTP, and 0.70+ blocks with reasons.</div>
+            </div>
+          </div>
+
+          <!-- 4-KPI divided strip -->
+          <div class="kpis">
             <div class="kpi">
               <div class="kpi-label">Fraud prevented</div>
               <div class="kpi-value" id="kpiPrevented">₹0.00</div>
-              <div class="kpi-note" id="kpiPreventedSub">Actual sum of blocked orders</div>
+              <div class="kpi-note" id="kpiPreventedSub">0 blocked orders prevented loss</div>
             </div>
             <div class="kpi">
               <div class="kpi-label">Orders scored</div>
@@ -879,7 +987,7 @@
               <div class="kpi-note" id="kpiBreakdown">0 approved, 0 verify, 0 blocked</div>
             </div>
             <div class="kpi">
-              <div class="kpi-label">Block and verify share</div>
+              <div class="kpi-label">Flagged share (verify + block)</div>
               <div class="kpi-value" id="kpiFlagShare">0.0%</div>
               <div class="kpi-note" id="kpiAvgScore">Mean risk score: --</div>
             </div>
@@ -890,7 +998,35 @@
             </div>
           </div>
 
-          <!-- Chart panel with segmented view swap -->
+          <!-- Interactive Cost Policy Threshold Slider (Blueprint Sec. 3 & 5) -->
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Interactive policy threshold control</h2>
+                <div class="panel-meta">Slide the BLOCK cutoff to see real-time stream impact alongside our calibrated $250 FN / $15 FP benchmark</div>
+              </div>
+              <span class="pill" id="livePolicyBadge">Block &ge; 0.70 · Verify 0.35–0.69</span>
+            </div>
+            <div class="split-two" style="align-items: center;">
+              <div>
+                <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; margin-bottom: 6px;">
+                  <span>Strict (&ge; 0.30)</span>
+                  <strong class="num" id="policySliderVal">0.70</strong>
+                  <span>Lenient (&ge; 0.80)</span>
+                </div>
+                <input type="range" id="policySlider" class="range-input" min="0.30" max="0.80" step="0.10" value="0.70" oninput="onPolicySliderChange(this.value)">
+                <div style="font-size: 12px; color: var(--muted); margin-top: 6px;" id="policyLiveImpact">
+                  Adjust slider to simulate policy decisions across active stream and full Kaggle holdout set.
+                </div>
+              </div>
+              <div class="kv-list" style="background: var(--ground); padding: 10px 14px; border-radius: 6px;">
+                <div class="kv-row"><span class="kv-k">Holdout precision / recall</span><span class="kv-v num" id="policyBenchPr">74.55% / 83.67%</span></div>
+                <div class="kv-row"><span class="kv-k">Estimated holdout loss</span><span class="kv-v num" id="policyBenchLoss">$4,420.00 (vs $22,820 baseline)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart panel -->
           <div class="panel">
             <div class="panel-head">
               <div>
@@ -906,13 +1042,13 @@
             <div id="overviewChartBox" style="min-height: 210px;"></div>
           </div>
 
-          <!-- Transactions list + Engine inspector -->
+          <!-- Stream + Inspector -->
           <div class="split-overview">
             <div class="panel">
               <div class="panel-head">
                 <div>
                   <h2>Transaction decision stream</h2>
-                  <div class="panel-meta" id="ledgerCountMeta">Click any row to inspect XGBoost, Autoencoder, and LSTM signals</div>
+                  <div class="panel-meta">Click any row to see plain-English seller and customer reasons</div>
                 </div>
               </div>
 
@@ -958,89 +1094,129 @@
             <div class="panel" id="txInspectorPanel">
               <div class="panel-head">
                 <div>
-                  <h2>Engine attribution</h2>
+                  <h2>Order explanation &amp; AI telemetry</h2>
                   <div class="panel-meta" id="inspTxId">Select a transaction row</div>
                 </div>
                 <span class="pill" id="inspDecisionPill">--</span>
               </div>
 
+              <div id="inspPlainSummary" class="callout-band" style="margin-bottom: 14px;">
+                Select any row on the left to inspect both the plain-English seller explanation and sub-model telemetry.
+              </div>
+
               <div class="kv-list" id="inspMetrics">
                 <div class="kv-row"><span class="kv-k">XGBoost probability</span><span class="kv-v num" id="inspXgb">--</span></div>
                 <div class="kv-row"><span class="kv-k">Autoencoder MSE</span><span class="kv-v num" id="inspAe">--</span></div>
-                <div class="kv-row"><span class="kv-k">LSTM sequence p</span><span class="kv-v num" id="inspLstm">--</span></div>
+                <div class="kv-row"><span class="kv-k">LSTM sequence probability</span><span class="kv-v num" id="inspLstm">--</span></div>
                 <div class="kv-row"><span class="kv-k">Execution latency</span><span class="kv-v num" id="inspLat">--</span></div>
                 <div class="kv-row"><span class="kv-k">Engine path</span><span class="kv-v" id="inspPath">--</span></div>
               </div>
 
-              <div style="margin-top: 16px;">
+              <div style="margin-top: 14px;">
                 <div style="font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 6px;">Triggered reason codes</div>
                 <div id="inspReasons" style="font-size: 13px; color: var(--text); line-height: 1.5; background: var(--raised); padding: 10px 12px; border-radius: 6px;">
-                  Select any scored order on the left to inspect its ML/DL attribution.
+                  No row selected.
                 </div>
               </div>
 
-              <div style="margin-top: 16px;">
+              <div style="margin-top: 14px;">
                 <div style="font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 6px;">Top XGBoost model discriminators (/api/explain)</div>
                 <div id="inspExplainList" style="font-size: 12px; color: var(--muted);">--</div>
               </div>
 
-              <div style="margin-top: 16px; display: flex; gap: 8px;" id="inspActionRow">
-                <button class="btn sm" id="inspOverrideBtn" onclick="overrideSelectedTransaction()" disabled>Override to Approve</button>
+              <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn sm" id="inspOverrideBtn" onclick="overrideSelectedTransaction()" disabled>Merchant override to Approve</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- ================= VIEW 2: CHECKOUT STORE ================= -->
+        <!-- ================= VIEW 2: D2C STORE ================= -->
         <section id="store" class="view">
           <div class="title-row">
             <div>
-              <h1>Live merchant checkout</h1>
-              <p class="title-sub">Every order flows through atomic Java inventory locking, DPDP consent checks, and real-time hybrid AI risk scoring.</p>
+              <h1>Live D2C merchant checkout sandbox</h1>
+              <p class="title-sub">12-product store wired to Java atomic stock locks, DPDP consent checks, polymorphic payments (Card, UPI, COD), and live 3-engine fraud scoring.</p>
             </div>
             <div class="title-actions">
-              <button class="btn" onclick="restockCatalog()">Restock catalog</button>
+              <button class="btn" onclick="restockCatalog()">Restock all SKUs</button>
             </div>
           </div>
 
           <div class="split-store">
             <div class="panel">
               <div class="panel-head">
-                <h2>Product catalog (synced via /api/inventory)</h2>
-                <span class="panel-meta">Prices in INR (sandbox mode)</span>
+                <div>
+                  <h2>Product catalog (/api/inventory)</h2>
+                  <div class="panel-meta">Items ₹649–₹1,899 normally approve; ₹3,899–₹6,499 trigger OTP verify; ₹9,500+ trigger high-ticket block</div>
+                </div>
+                <input type="search" id="storeSearchInput" class="search-input" style="max-width: 210px;" placeholder="Search products..." oninput="renderCatalog()">
               </div>
+
+              <div class="segmented" id="storeCatTabs" role="group" aria-label="Product category filter" style="margin-bottom: 14px;">
+                <button aria-pressed="true" onclick="setStoreCategory('ALL', this)">All (12)</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Apparel', this)">Apparel</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Footwear', this)">Footwear</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Audio', this)">Audio</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Accessories', this)">Accessories</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Watches', this)">Watches</button>
+                <button aria-pressed="false" onclick="setStoreCategory('Home', this)">Home</button>
+              </div>
+
               <div class="product-grid" id="storeCatalogGrid">
                 <div class="empty-box" style="grid-column: 1 / -1;">Fetching live inventory from Java Core...</div>
               </div>
             </div>
 
+            <!-- Multi-item Cart + Checkout Panel -->
             <div class="panel">
               <div class="panel-head">
-                <h2>Order summary</h2>
-                <span class="pill">Test sandbox</span>
+                <h2>Shopping cart &amp; checkout</h2>
+                <span class="pill">Test sandbox only</span>
               </div>
 
-              <div class="kv-list" style="margin-bottom: 14px;">
+              <div id="cartItemsList" style="margin-bottom: 12px;">
+                <div class="empty-box" style="padding: 14px;">Cart empty. Add items from the catalog.</div>
+              </div>
+
+              <div class="kv-list" style="margin-bottom: 14px; border-top: 1px solid var(--border); padding-top: 8px;">
                 <div class="kv-row">
-                  <span class="kv-k">Selected item</span>
-                  <span class="kv-v" id="checkoutItemName">--</span>
+                  <span class="kv-k">Items in cart</span>
+                  <span class="kv-v num" id="checkoutCartCount">0 units</span>
                 </div>
                 <div class="kv-row">
                   <span class="kv-k">Total payable</span>
-                  <span class="kv-v num" style="font-size: 18px; font-weight: 600;" id="checkoutItemPrice">--</span>
+                  <span class="kv-v num" style="font-size: 18px; font-weight: 600;" id="checkoutItemPrice">₹0.00</span>
                 </div>
               </div>
 
               <div class="field">
-                <span class="field-label">Payment rail</span>
+                <span class="field-label">Payment rail (Java Payment polymorphism)</span>
                 <div class="radio-stack">
-                  <label class="radio-opt"><span>Credit or Debit Card (Stripe token)</span><input type="radio" name="payMethod" value="CARD" checked></label>
-                  <label class="radio-opt"><span>UPI (Test VPA customer@okaxis)</span><input type="radio" name="payMethod" value="UPI"></label>
-                  <label class="radio-opt"><span>Cash on Delivery (COD)</span><input type="radio" name="payMethod" value="COD"></label>
+                  <label class="radio-opt"><span>Credit / Debit Card (Stripe token)</span><input type="radio" name="payMethod" value="CARD" checked></label>
+                  <label class="radio-opt"><span>UPI (Razorpay sandbox VPA)</span><input type="radio" name="payMethod" value="UPI"></label>
+                  <label class="radio-opt"><span>Cash on Delivery (COD &le; ₹15,000)</span><input type="radio" name="payMethod" value="COD"></label>
                 </div>
               </div>
 
-              <!-- Un-ticked by default per DPDP Act 2023 & dark-pattern compliance -->
+              <div class="field">
+                <label class="field-label" for="gatewayOutcome">Sandbox gateway behavior (test PaymentFailedException)</label>
+                <select id="gatewayOutcome" class="search-input" style="max-width: 100%;">
+                  <option value="AUTHORIZED">Authorized sandbox payment (normal flow)</option>
+                  <option value="DECLINED_CARD">Simulate Card Decline (tok_visa_0000 &rarr; HTTP 402)</option>
+                  <option value="FAILED_UPI">Simulate UPI Rejection (fail@okaxis &rarr; HTTP 402)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field-label" for="shippingCorridor">Shipping location (geo telemetry)</label>
+                <select id="shippingCorridor" class="search-input" style="max-width: 100%;">
+                  <option value="DOMESTIC">Mumbai Domestic Corridor (19.08, 72.88)</option>
+                  <option value="FOREIGN">Out-of-Corridor Alert (78.21, 162.40 &rarr; VERIFY)</option>
+                </select>
+              </div>
+
+              <!-- Un-ticked by default per DPDP Act 2023 -->
               <div class="consent-box">
                 <label>
                   <input type="checkbox" id="dpdpConsent" style="margin-top: 2px;">
@@ -1054,68 +1230,119 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 3: ATTACK SIMULATOR ================= -->
+        <!-- ================= VIEW 3: ATTACK & STRESS LAB ================= -->
         <section id="simulator" class="view">
           <div class="title-row">
             <div>
-              <h1>Adversarial attack simulator</h1>
-              <p class="title-sub">Dispatch live attack vectors against Java port 8085 and inspect how XGBoost, LSTM burst memory, Autoencoder MSE, and Java locks respond.</p>
+              <h1>Adversarial, concurrency &amp; fallback lab</h1>
+              <p class="title-sub">Demonstrate every high-value viva test live: card-testing velocity bursts, Java 50-thread race condition proof, and graceful AI-outage fallback.</p>
             </div>
             <div class="title-actions">
-              <button class="btn" onclick="restockCatalog()">Restock catalog (50 units)</button>
-              <button class="btn" onclick="clearSimLog()">Clear log</button>
+              <button class="btn" onclick="restockCatalog()">Restock all SKUs</button>
+              <button class="btn" onclick="clearSimLog()">Clear trace</button>
             </div>
           </div>
 
           <div class="sim-grid">
             <div class="sim-card">
               <div>
-                <h3>Card-testing burst (5 sequential calls)</h3>
-                <p>Fires 5 rapid orders from shared device <code>FP_49A8</code> (₹1,899). Triggers Java 1h velocity tracking and PyTorch LSTM 5-step sequence window.</p>
+                <h3>1. Card-testing bot burst (5 calls)</h3>
+                <p>Sends 5 rapid ₹1,899 orders from one customer/device. First 3 approve (~0.006); calls 4–5 spike LSTM sequence + Autoencoder MSE &gt; p99.5 and block (~0.996).</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('CARD_BURST')">Run 5x burst</button>
+              <button class="btn primary" onclick="simulateAttack('CARD_BURST')">Run 5x burst attack</button>
             </div>
 
             <div class="sim-card">
               <div>
-                <h3>High-ticket outlier (₹14,500)</h3>
-                <p>Sends a ₹14,500 card order exceeding baseline risk thresholds. Triggers XGBoost PCA deflection plus Autoencoder reconstruction residual.</p>
+                <h3>2. Java 50-thread race condition</h3>
+                <p>Hits <code>POST /api/demo/race-condition</code> (50 threads racing for 10 units) showing broken unsynchronized oversell vs fixed atomic lock (10 OK / 40 rejected / 0 left).</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('NIGHT_ANOMALY')">Send ₹14,500 order</button>
+              <button class="btn primary" onclick="runRaceConditionDemo()">Run 50-thread benchmark</button>
             </div>
 
             <div class="sim-card">
               <div>
-                <h3>Impossible geolocation spoof</h3>
-                <p>Submits coordinates <code>lat 78.21, lon 162.40</code> far outside operating merchant corridor, triggering step-up OTP verification.</p>
+                <h3>3. Graceful AI outage fallback</h3>
+                <p>Simulates Python ML microservice timeout inside Java <code>FallbackScorer</code>, catching <code>ModelServiceUnavailableException</code> and scoring via deterministic rules.</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('GEO_SPOOF')">Send spoofed coordinates</button>
+              <button class="btn primary" onclick="simulateAttack('FALLBACK_TEST')">Simulate AI outage fallback</button>
             </div>
 
             <div class="sim-card">
               <div>
-                <h3>20-thread concurrency storm</h3>
-                <p>Dispatches 20 simultaneous <code>Promise.all</code> POST requests on <code>PROD_SHIRT</code> to verify atomic synchronized locking (200 vs 409 OutOfStock).</p>
+                <h3>4. High-value &amp; geo-spoof vectors</h3>
+                <p>Tests out-of-corridor coordinates (<code>78.21, 162.40</code> &rarr; VERIFY) and high-ticket card outlier (<code>₹14,500</code> &rarr; BLOCK) live end-to-end.</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('CONCURRENCY_STRESS')">Fire 20 threads</button>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn" onclick="simulateAttack('GEO_SPOOF')">Geo spoof</button>
+                <button class="btn primary" onclick="simulateAttack('NIGHT_ANOMALY')">₹14,500 outlier</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side-by-Side Java Concurrency Result Box -->
+          <div class="panel" id="raceResultPanel" style="display: none;">
+            <div class="panel-head">
+              <div>
+                <h2>Java 50-thread race condition measurement (10 units initial stock)</h2>
+                <div class="panel-meta">Executed live on JVM ExecutorService + CountDownLatch</div>
+              </div>
+              <span class="pill pos">Zero overselling proved</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Implementation</th>
+                    <th class="n">Threads</th>
+                    <th class="n">Succeeded</th>
+                    <th class="n">OutOfStockException</th>
+                    <th class="n">Final stock</th>
+                    <th class="n">Oversold</th>
+                    <th class="n">Runtime</th>
+                  </tr>
+                </thead>
+                <tbody id="raceResultBody"></tbody>
+              </table>
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-head">
               <h2>Live execution trace</h2>
-              <span class="panel-meta">Direct telemetry returned by POST http://localhost:8085/api/orders</span>
+              <span class="panel-meta">Real HTTP responses from Java port 8085 &amp; Python port 8000</span>
             </div>
-            <pre id="simLog">[READY] Select an adversarial test vector above to hit live Java + Python scoring services.</pre>
+            <pre id="simLog">[READY] Choose any viva experiment above to stream live telemetry.</pre>
           </div>
         </section>
 
-        <!-- ================= VIEW 4: MODEL BENCHMARKS ================= -->
+        <!-- ================= VIEW 4: ML & DL BENCHMARKS ================= -->
         <section id="analytics" class="view">
           <div class="title-row">
             <div>
-              <h1>Empirical model evaluation</h1>
-              <p class="title-sub">Reproduced directly from 284,807 Kaggle ULB transactions across both stratified (N=56,962) and strict chronological splits.</p>
+              <h1>Data science &amp; deep learning evaluation</h1>
+              <p class="title-sub">Honest empirical metrics across 284,807 Kaggle ULB transactions (0.173% fraud). Zero leakage, time-ordered validation, and dollar cost trade-offs.</p>
+            </div>
+          </div>
+
+          <div class="split-three" style="margin-bottom: var(--gap);">
+            <div class="panel" style="margin-bottom: 0;">
+              <h2 style="margin-bottom: 6px;">Why accuracy fails here</h2>
+              <p style="font-size: 13px; color: var(--muted); line-height: 1.5;">
+                Predicting zero fraud everywhere scores <strong>99.83% accuracy</strong> while missing 100% of attacks. We rank models strictly by <strong>PR-AUC</strong> and business cost.
+              </p>
+            </div>
+            <div class="panel" style="margin-bottom: 0;">
+              <h2 style="margin-bottom: 6px;">How we blocked data leakage</h2>
+              <p style="font-size: 13px; color: var(--muted); line-height: 1.5;">
+                <code>RobustScaler</code> fits strictly on <code>X_train</code>; SMOTE runs strictly inside training folds; LSTM validates strictly on unseen future <code>Time</code> hours.
+              </p>
+            </div>
+            <div class="panel" style="margin-bottom: 0;">
+              <h2 style="margin-bottom: 6px;">Honest XGBoost vs DL finding</h2>
+              <p style="font-size: 13px; color: var(--muted); line-height: 1.5;">
+                XGBoost leads tabular PR-AUC (<code>0.8596</code>), while PyTorch <strong>FraudLSTM</strong> beats XGBoost on future-hour sequences (<code>0.8088</code> vs <code>0.7933</code> PR-AUC).
+              </p>
             </div>
           </div>
 
@@ -1123,7 +1350,7 @@
             <div class="panel-head">
               <div>
                 <h2 id="benchChartTitle">Stratified holdout PR-AUC comparison</h2>
-                <div class="panel-meta">Primary metric for 0.173% fraud base rate (577:1 imbalance ratio)</div>
+                <div class="panel-meta">Primary metric for 577:1 class imbalance</div>
               </div>
               <div class="segmented" role="group" aria-label="Benchmark chart metric">
                 <button aria-pressed="true" onclick="renderBenchChart('pr', this)">PR-AUC score</button>
@@ -1131,14 +1358,14 @@
                 <button aria-pressed="false" onclick="renderBenchChart('chrono', this)">Chronological split (LSTM vs XGB)</button>
               </div>
             </div>
-            <div id="benchChartBox" style="min-height: 220px;"></div>
+            <div id="benchChartBox" style="min-height: 210px;"></div>
           </div>
 
-          <div class="split-two" style="margin-bottom: 24px;">
+          <div class="split-two" style="margin-bottom: var(--gap);">
             <div class="panel">
               <div class="panel-head">
                 <h2>Stratified 80/20 benchmark (N=56,962)</h2>
-                <span class="panel-meta">Cost = FN * $250 + FP * $15</span>
+                <span class="panel-meta">Cost = FN &times; $250 + FP &times; $15</span>
               </div>
               <div class="table-wrap">
                 <table>
@@ -1159,8 +1386,8 @@
 
             <div class="panel">
               <div class="panel-head">
-                <h2>Chronological holdout and DL evaluation</h2>
-                <span class="panel-meta">Strict Time-ordered future hours</span>
+                <h2>Chronological holdout &amp; DL comparison</h2>
+                <span class="panel-meta">Strict Time-ordered future split</span>
               </div>
               <div class="table-wrap">
                 <table>
@@ -1178,7 +1405,7 @@
                 </table>
               </div>
               <p style="margin-top: 12px; font-size: 13px; color: var(--muted); line-height: 1.5;">
-                On unseen future chronological windows, PyTorch FraudLSTM (0.8088 PR-AUC, $4,435 loss) outperforms isolated tabular XGBoost (0.7933 PR-AUC, $4,770 loss), proving why sequence modeling matters in production.
+                Logistic Regression (weighted) triggers <strong>1,388 false alarms ($22,820 loss)</strong>. Our Bottleneck Autoencoder (<code>30&rarr;6&rarr;30</code>) flags 79.59% of frauds unsupervised with per-feature residual attribution.
               </p>
             </div>
           </div>
@@ -1188,16 +1415,16 @@
             <div class="panel-head">
               <div>
                 <h2>XGBoost threshold sensitivity simulator</h2>
-                <div class="panel-meta">Inspect exact test-set precision, recall, and dollar loss measured by notebooks/threshold_analysis.py</div>
+                <div class="panel-meta">Exact test-set counts reproduced from notebooks/threshold_analysis.py</div>
               </div>
               <div style="display: flex; align-items: center; gap: 10px;">
-                <label for="thrSelect" style="font-size: 13px; color: var(--muted);">Decision threshold:</label>
+                <label for="thrSelect" style="font-size: 13px; color: var(--muted);">Threshold:</label>
                 <select id="thrSelect" class="btn" onchange="updateThresholdView()">
                   <option value="0.30">0.30</option>
                   <option value="0.40">0.40</option>
                   <option value="0.50">0.50</option>
                   <option value="0.60">0.60</option>
-                  <option value="0.70" selected>0.70 (Production block policy)</option>
+                  <option value="0.70" selected>0.70 (Production BLOCK)</option>
                   <option value="0.80">0.80</option>
                 </select>
               </div>
@@ -1208,40 +1435,241 @@
           <!-- Generated Figures Gallery -->
           <div class="panel">
             <div class="panel-head">
-              <h2>Generated Matplotlib diagnostics</h2>
-              <span class="panel-meta">Click any figure to inspect full resolution</span>
+              <h2>Diagnostic plots &amp; product findings</h2>
+              <span class="panel-meta">Every chart links directly to a rule or product threshold</span>
             </div>
             <div class="figure-grid" id="figuresGallery"></div>
           </div>
         </section>
 
-        <!-- ================= VIEW 5: COMPLIANCE & DPDP ================= -->
-        <section id="legal" class="view">
+        <!-- ================= VIEW 5: STARTUP & E-COMMERCE ================= -->
+        <section id="startup" class="view">
           <div class="title-row">
             <div>
-              <h1>Regulatory compliance and governance</h1>
-              <p class="title-sub">Privacy engineering aligned with India DPDP Act 2023, RBI Card Tokenisation guidelines, and dark-pattern freedom.</p>
+              <h1>Startup &amp; e-commerce business case</h1>
+              <p class="title-sub">Commercial strategy, unit economics, COD RTO protection, competitor differentiation, discovery interviews, and 12-slide investor pitch structure.</p>
+            </div>
+            <span class="pill">Commercial projections labeled as hypotheses</span>
+          </div>
+
+          <!-- Interactive Merchant ROI Calculator -->
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Interactive seller ROI &amp; COD savings calculator</h2>
+                <div class="panel-meta">Demonstrates the investor pitch: we cost far less than the chargebacks and fake COD RTO losses we prevent</div>
+              </div>
+            </div>
+            <div class="split-two" style="align-items: center;">
+              <div>
+                <div class="field">
+                  <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                    <label for="roiOrders" class="field-label">Monthly orders</label>
+                    <strong class="num" id="roiOrdersVal">1,200 orders/mo</strong>
+                  </div>
+                  <input type="range" id="roiOrders" class="range-input" min="200" max="15000" step="100" value="1200" oninput="calcRoi()">
+                </div>
+                <div class="field">
+                  <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                    <label for="roiAov" class="field-label">Average order value (INR)</label>
+                    <strong class="num" id="roiAovVal">₹1,800</strong>
+                  </div>
+                  <input type="range" id="roiAov" class="range-input" min="500" max="8000" step="100" value="1800" oninput="calcRoi()">
+                </div>
+                <div class="field" style="margin-bottom: 0;">
+                  <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                    <label for="roiRiskRate" class="field-label">Baseline fraud + fake COD rate</label>
+                    <strong class="num" id="roiRiskRateVal">2.0%</strong>
+                  </div>
+                  <input type="range" id="roiRiskRate" class="range-input" min="0.5" max="6.0" step="0.5" value="2.0" oninput="calcRoi()">
+                </div>
+              </div>
+
+              <div class="kpis" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 0;">
+                <div class="kpi">
+                  <div class="kpi-label">Est. monthly fraud + RTO saved</div>
+                  <div class="kpi-value" id="roiSavedVal">₹34,560</div>
+                  <div class="kpi-note" id="roiSavedSub">Assumes 80% net prevention recovery</div>
+                </div>
+                <div class="kpi">
+                  <div class="kpi-label">Recommended FraudShield plan</div>
+                  <div class="kpi-value" id="roiPlanCost">₹3,499/mo</div>
+                  <div class="kpi-note" id="roiMultiple">Net ROI multiple: 9.9x (Growth tier)</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="split-two" style="margin-bottom: 24px;">
+          <!-- SaaS Unit Economics & Revenue Tiers -->
+          <div class="split-two" style="margin-bottom: var(--gap);">
             <div class="panel">
-              <div class="panel-head"><h2>DPDP Act 2023</h2><span class="pill pos">Enforced in code</span></div>
-              <div class="kv-list">
-                <div class="kv-row"><span class="kv-k">Explicit checkout consent</span><span class="kv-v">Unticked checkbox + Java validation</span></div>
-                <div class="kv-row"><span class="kv-k">Data minimisation</span><span class="kv-v">Zero PAN, CVV, phone, or name persisted</span></div>
-                <div class="kv-row"><span class="kv-k">Right to erasure (Sec. 12)</span><span class="kv-v"><code>DELETE /api/data/erase</code></span></div>
-                <div class="kv-row"><span class="kv-k">Audit export format</span><span class="kv-v">Anonymized CSV + JSONL</span></div>
+              <div class="panel-head"><h2>SaaS pricing &amp; revenue streams</h2><span class="pill">India-first pricing</span></div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Tier</th><th class="n">Monthly</th><th class="n">Included</th><th class="n">Overage</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>Starter</strong><span class="cell-sub">Instagram &amp; early D2C</span></td><td class="n num">₹999</td><td class="n num">1,000</td><td class="n num">₹1.20/tx</td></tr>
+                    <tr><td><strong>Growth</strong><span class="cell-sub">Scaling Shopify brands</span></td><td class="n num">₹3,499</td><td class="n num">5,000</td><td class="n num">₹0.85/tx</td></tr>
+                    <tr><td><strong>Pro / Scale</strong><span class="cell-sub">Custom rules &amp; SLA</span></td><td class="n num">₹9,999</td><td class="n num">20,000</td><td class="n num">₹0.50/tx</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
             <div class="panel">
-              <div class="panel-head"><h2>RBI CoF Tokenisation and Consumer Protection</h2><span class="pill pos">Verified</span></div>
+              <div class="panel-head"><h2>Projected SaaS unit economics</h2><span class="pill pos">87.7% gross margin</span></div>
               <div class="kv-list">
-                <div class="kv-row"><span class="kv-k">Card credential retention</span><span class="kv-v">Sandbox gateway token only (<code>tok_visa_4242</code>)</span></div>
-                <div class="kv-row"><span class="kv-k">Explainability mandate</span><span class="kv-v">PCA residual + <code>/api/explain</code> attributes</span></div>
-                <div class="kv-row"><span class="kv-k">Dark-pattern audit</span><span class="kv-v">No fake timers, no pre-ticked checkboxes</span></div>
-                <div class="kv-row"><span class="kv-k">Human review loop</span><span class="kv-v">Merchant override persisted to <code>overrides.jsonl</code></span></div>
+                <div class="kv-row"><span class="kv-k">Blended ARPM (hypothesis)</span><span class="kv-v num">₹3,500 / month</span></div>
+                <div class="kv-row"><span class="kv-k">COGS (CPU compute + audit + OTP SMS)</span><span class="kv-v num">₹430 / merchant</span></div>
+                <div class="kv-row"><span class="kv-k">LTV (₹3,500 &times; 87.7% &times; 10 mos)</span><span class="kv-v num">₹30,695</span></div>
+                <div class="kv-row"><span class="kv-k">CAC (referral-stage target ₹1,800)</span><span class="kv-v num">17.1x LTV/CAC · Break-even 6 merchants</span></div>
+                <div class="kv-row"><span class="kv-k">Seed grant target (SISFS / MeitY)</span><span class="kv-v num">₹20,00,000 (18-mo runway)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Competitive Matrix + Lean Canvas / Seller Interviews -->
+          <div class="split-two" style="margin-bottom: var(--gap);">
+            <div class="panel">
+              <div class="panel-head"><h2>Honest competitor differentiation</h2></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Provider</th><th class="n">Min cost</th><th>COD + UPI</th><th>Plain reasons</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Razorpay Thirdwatch</strong></td><td class="n num">₹2,000+</td><td>Yes (tied)</td><td>Limited logs</td></tr>
+                    <tr><td><strong>Stripe Radar</strong></td><td class="n num">~₹8,500</td><td>No INR/COD</td><td>Opaque risk band</td></tr>
+                    <tr><td><strong>Signifyd / Seon</strong></td><td class="n num">₹6,000+</td><td>No COD</td><td>Enterprise min</td></tr>
+                    <tr><td><strong>FraudShield</strong></td><td class="n num">₹999</td><td>COD + UPI + Card</td><td>Sub-model + PCA</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Real merchant discovery interviews</h2><span class="pill">Demand proof</span></div>
+              <div class="kv-list">
+                <div class="kv-row"><span class="kv-k">Surat D2C Apparel (1,200/mo)</span><span class="kv-v">Loses ₹180/order on fake COD bounce-backs</span></div>
+                <div class="kv-row"><span class="kv-k">Bengaluru Electronics (₹22L/mo)</span><span class="kv-v">Hit by 60 card-testing tries in 30 mins</span></div>
+                <div class="kv-row"><span class="kv-k">Delhi Cosmetics (800/mo)</span><span class="kv-v">Priced out of $500/mo enterprise fraud suites</span></div>
+                <div class="kv-row"><span class="kv-k">DPIIT &amp; SISFS readiness</span><span class="kv-v">Original IP, &lt;₹100 Cr turnover, incorporation planned</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 12-Slide Pitch Outline -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>12-slide investor &amp; faculty pitch flow</h2>
+              <span class="panel-meta">Teammates present the modules they engineered and cross-explain integration</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Slides</th><th>Section</th><th>Key proof presented live</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">1–3</td><td><strong>Problem &amp; Target Seller</strong></td><td>Surat/Bengaluru seller interviews, 1.5–3.5% chargeback + ₹180 COD RTO margin loss</td></tr>
+                  <tr><td class="num">4–5</td><td><strong>Solution &amp; Architecture</strong></td><td>Live D2C Store &rarr; Java 17 Core (:8085) &rarr; FastAPI XGB+AE+LSTM (:8000) + Fallback</td></tr>
+                  <tr><td class="num">6–7</td><td><strong>AI Engine &amp; Honest Benchmarks</strong></td><td>Why 99.83% accuracy fails, XGBoost 0.8596 PR-AUC, Chronological LSTM 0.8088, $250/$15 cost curve</td></tr>
+                  <tr><td class="num">8–10</td><td><strong>Differentiation, Unit Economics &amp; GTM</strong></td><td>₹999–₹9,999 plans, 87.7% gross margin, 6-merchant break-even, Shopify/D2C content funnel</td></tr>
+                  <tr><td class="num">11–12</td><td><strong>Compliance, Ethics &amp; ₹20L Ask</strong></td><td>DPDP Act 2023 live erasure, RBI CoF non-storage, 18-mo SISFS runway for 150 merchants</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 6: JAVA, RUBRIC & LEGAL ================= -->
+        <section id="legal" class="view">
+          <div class="title-row">
+            <div>
+              <h1>Java architecture, rubric coverage &amp; compliance</h1>
+              <p class="title-sub">Complete technical traceability across all 5 B.Tech subjects, plus DPDP Act 2023 right-to-erasure and dataset ethics.</p>
+            </div>
+          </div>
+
+          <!-- Inline Clean SVG System Architecture Diagram -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>End-to-end system flow</h2>
+              <span class="panel-meta">Java owns checkout business rules and never fails even if AI is offline</span>
+            </div>
+            <div class="table-wrap">
+              <svg viewBox="0 0 920 155" width="920" height="155" role="img" aria-label="FraudShield system architecture flow diagram" style="min-width: 720px; width: 100%; height: auto;">
+                <rect x="8" y="24" width="175" height="96" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
+                <text x="22" y="50" font-size="13" font-weight="600" fill="#131416">D2C Store &amp; UI (:5000)</text>
+                <text x="22" y="70" font-size="11.5" fill="#545759">Unticked DPDP Consent</text>
+                <text x="22" y="88" font-size="11.5" fill="#545759">Card / UPI / COD Cart</text>
+                <text x="22" y="106" font-size="11.5" fill="#1b6c80">Live Seller Dashboard</text>
+
+                <line x1="183" y1="72" x2="225" y2="72" stroke="#1b6c80" stroke-width="1.8"/>
+                <polygon points="225,67 235,72 225,77" fill="#1b6c80"/>
+
+                <rect x="235" y="14" width="240" height="118" rx="8" fill="#ffffff" stroke="#1b6c80" stroke-width="1.5"/>
+                <text x="250" y="38" font-size="13" font-weight="600" fill="#131416">Java 17 Core Engine (:8085)</text>
+                <text x="250" y="58" font-size="11.5" fill="#545759">InventoryService: synchronized stock lock</text>
+                <text x="250" y="76" font-size="11.5" fill="#545759">OrderService: 1h velocity + BlockingQueue</text>
+                <text x="250" y="94" font-size="11.5" fill="#545759">Payment: Card / UPI / COD polymorphism</text>
+                <text x="250" y="112" font-size="11.5" fill="#1e7b4f">FileStore: JSONL + CSV + Sec.12 Erase</text>
+
+                <line x1="475" y1="54" x2="525" y2="54" stroke="#1b6c80" stroke-width="1.8"/>
+                <polygon points="525,49 535,54 525,59" fill="#1b6c80"/>
+                <text x="480" y="45" font-size="10.5" fill="#545759">500ms</text>
+
+                <rect x="535" y="14" width="210" height="84" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
+                <text x="549" y="38" font-size="13" font-weight="600" fill="#131416">FastAPI AI (:8000)</text>
+                <text x="549" y="57" font-size="11.5" fill="#545759">XGBoost (Tabular PR-AUC 0.8596)</text>
+                <text x="549" y="74" font-size="11.5" fill="#545759">Autoencoder MSE + LSTM seq=5</text>
+
+                <path d="M 355 132 L 355 147 L 835 147 L 835 110" fill="none" stroke="#92400e" stroke-width="1.4" stroke-dasharray="4 3"/>
+                <rect x="765" y="24" width="145" height="84" rx="8" fill="#fffbeb" stroke="#e5c88c"/>
+                <text x="777" y="48" font-size="12.5" font-weight="600" fill="#92400e">RuleBasedScorer</text>
+                <text x="777" y="67" font-size="11" fill="#545759">Activates on timeout</text>
+                <text x="777" y="83" font-size="11" fill="#545759">0% checkout crash</text>
+                <text x="492" y="142" font-size="10.5" fill="#92400e">FallbackScorer catches ModelServiceUnavailableException</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 100-Mark + 5-Bonus Rubric Checklist -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>100-mark + 5-bonus integrated rubric scorecard</h2>
+              <span class="panel-meta">Direct code and test proof across all 5 subjects</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Subject component</th><th class="n">Marks</th><th>Verified code &amp; deliverable evidence</th><th>Live proof</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Startup Policies</strong></td><td class="n num">10</td><td>Lean Canvas, 9-Block BMC, SWOT/PESTEL, DPIIT checklist, Seller interviews, ₹20L SISFS plan (<code>docs/STARTUP_BRIEF.md</code>)</td><td><button class="btn sm" onclick="goToView('startup')">Open business case</button></td></tr>
+                  <tr><td><strong>E-Commerce &amp; Legal</strong></td><td class="n num">10</td><td>3-tier SaaS model (87.7% margin), COD RTO 5-step protocol, DPDP consent + erasure, RBI CoF sandbox (<code>docs/ECOMMERCE_DESIGN.md</code>)</td><td><button class="btn sm" onclick="goToView('store')">Open D2C checkout</button></td></tr>
+                  <tr><td><strong>Java Core Engine</strong></td><td class="n num">20</td><td>Framework-free Java 17, <code>Payment</code> inheritance, 6 custom exceptions, <code>BlockingQueue</code> + <code>ExecutorService</code>, 7 JUnit tests passing</td><td><button class="btn sm" onclick="goToView('simulator')">Open stress lab</button></td></tr>
+                  <tr><td><strong>Data Science</strong></td><td class="n num">15</td><td>284,807 Kaggle ULB transactions (ODbL), train-only <code>RobustScaler</code>, stats/EDA, 5 models vs LogReg baseline, cost matrix</td><td><button class="btn sm" onclick="goToView('analytics')">Open benchmarks</button></td></tr>
+                  <tr><td><strong>Deep Learning</strong></td><td class="n num">20</td><td>PyTorch Bottleneck Autoencoder (`@p99.5` MSE + drift attribution) + chronological `FraudLSTM` (`0.8088` PR-AUC &gt; XGBoost)</td><td><button class="btn sm" onclick="goToView('analytics')">Open DL curves</button></td></tr>
+                  <tr><td><strong>Integration, Pitch &amp; Bonus</strong></td><td class="n num">25+5</td><td>Java↔FastAPI live 500ms timeout + automatic rule fallback, 12-slide outline, Razorpay/Stripe payment sandbox</td><td><button class="btn sm" onclick="openPresenterModal()">Open demo script</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="split-two" style="margin-bottom: var(--gap);">
+            <div class="panel">
+              <div class="panel-head"><h2>DPDP Act 2023 &amp; dark-pattern checklist</h2><span class="pill pos">Enforced in code</span></div>
+              <div class="kv-list">
+                <div class="kv-row"><span class="kv-k">Explicit opt-in consent</span><span class="kv-v">Unticked checkbox + Java HTTP 400 validation</span></div>
+                <div class="kv-row"><span class="kv-k">Data minimisation</span><span class="kv-v">Zero raw PAN, CVV, phone, or name persisted</span></div>
+                <div class="kv-row"><span class="kv-k">Right to erasure (Sec. 12)</span><span class="kv-v"><code>DELETE /api/data/erase</code> across JSONL + CSV</span></div>
+                <div class="kv-row"><span class="kv-k">Consumer protection audit</span><span class="kv-v">No fake countdown timers; contestable overrides</span></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h2>Dataset licence &amp; AI fairness note</h2><span class="pill">Audited</span></div>
+              <div class="kv-list">
+                <div class="kv-row"><span class="kv-k">Public dataset licence</span><span class="kv-v">Kaggle ULB 284,807 tx (ODbL / anonymized EU cards)</span></div>
+                <div class="kv-row"><span class="kv-k">Demographic fairness</span><span class="kv-v">Zero gender, caste, age, or name features ingested</span></div>
+                <div class="kv-row"><span class="kv-k">Feedback-loop mitigation</span><span class="kv-v">Step-up OTP + Merchant overrides prevent blind bans</span></div>
+                <div class="kv-row"><span class="kv-k">Synthetic limitation caveat</span><span class="kv-v">INR FX parity (₹85/unit) bridges PCA scale to D2C test</span></div>
               </div>
             </div>
           </div>
@@ -1251,11 +1679,11 @@
             <div class="panel-head">
               <div>
                 <h2>DPDP Section 12 right-to-erasure execution tool</h2>
-                <div class="panel-meta">Purge a customer transaction across both transactions.jsonl and analysis_export.csv via Java lock</div>
+                <div class="panel-meta">Deletes matching customer telemetry across both transactions.jsonl and analysis_export.csv under ReentrantLock</div>
               </div>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-              <input type="text" id="eraseTargetInput" class="search-input" style="max-width: 340px;" placeholder="Enter order_id or transaction_id (e.g. ORD_TEST1)">
+              <input type="text" id="eraseTargetInput" class="search-input" style="max-width: 340px;" placeholder="Enter order_id or transaction_id (e.g. ORD_SEED_V103)">
               <button class="btn" onclick="fillLatestOrderForErase()">Use latest order ID</button>
               <button class="btn danger" onclick="executeDpdpErasure()">Erase telemetry record</button>
             </div>
@@ -1263,46 +1691,46 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 6: PLAYBOOKS ARCHIVE ================= -->
-        <section id="skilla" class="view">
+        <!-- ================= VIEW 7: VIVA Q&A & SKILLS ================= -->
+        <section id="viva" class="view">
           <div class="title-row">
             <div>
-              <h1>Engineering playbooks and Skilla index</h1>
-              <p class="title-sub">Integrated architecture standards (Tasteskill, ECC engineering suite, SQL Pro, Security Hardening) and searchable catalog.</p>
+              <h1>Viva defense Q&amp;A &amp; engineering playbooks</h1>
+              <p class="title-sub">All 14 core viva questions from the Assignment Brief prepared for rapid teammate recall, plus the indexed engineering skills library.</p>
             </div>
           </div>
 
-          <div class="panel" style="margin-bottom: 24px;">
+          <div class="panel" style="margin-bottom: var(--gap);">
             <div class="panel-head">
-              <h2>Filter skill catalog</h2>
-              <span class="panel-meta" id="skillaTotalCount">Indexed catalog</span>
+              <h2>14-question examiner viva defense guide</h2>
+              <input type="search" id="vivaSearchInput" class="search-input" style="max-width: 260px;" placeholder="Filter viva questions..." oninput="renderVivaList()">
             </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-              <input type="search" id="skillaSearchInput" class="search-input" placeholder="Filter by keyword (security, pytorch, java, docker, sql)..." oninput="filterSkills()">
-              <div class="segmented" id="categoryFilterButtons" role="group">
-                <button aria-pressed="true" onclick="setSkillCategory('all', this)">All</button>
-                <button aria-pressed="false" onclick="setSkillCategory('bundle', this)">Core 21 bundle</button>
-                <button aria-pressed="false" onclick="setSkillCategory('security', this)">Security</button>
-                <button aria-pressed="false" onclick="setSkillCategory('ai-ml', this)">AI and ML</button>
-                <button aria-pressed="false" onclick="setSkillCategory('development', this)">Engineering</button>
-              </div>
-            </div>
+            <div id="vivaAccordionList"></div>
           </div>
 
           <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Indexed engineering playbooks (Skilla library)</h2>
+                <div class="panel-meta" id="skillaTotalCount">Engineering playbooks index</div>
+              </div>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <input type="search" id="skillaSearchInput" class="search-input" style="max-width: 220px;" placeholder="Search skills..." oninput="filterSkills()">
+                <div class="segmented" id="categoryFilterButtons" role="group">
+                  <button aria-pressed="true" onclick="setSkillCategory('all', this)">All</button>
+                  <button aria-pressed="false" onclick="setSkillCategory('bundle', this)">Core 21</button>
+                  <button aria-pressed="false" onclick="setSkillCategory('security', this)">Security</button>
+                  <button aria-pressed="false" onclick="setSkillCategory('ai-ml', this)">AI &amp; ML</button>
+                </div>
+              </div>
+            </div>
             <div class="table-wrap">
               <table>
                 <thead>
-                  <tr>
-                    <th>Skill playbook</th>
-                    <th>Domain</th>
-                    <th>Summary</th>
-                    <th class="n">Stars</th>
-                    <th></th>
-                  </tr>
+                  <tr><th>Skill playbook</th><th>Domain</th><th>Summary</th><th class="n">Stars</th><th></th></tr>
                 </thead>
                 <tbody id="skillsTableBody">
-                  <tr><td colspan="5"><div class="empty-box">Switch to this view to load skills_data.json</div></td></tr>
+                  <tr><td colspan="5"><div class="empty-box">Loading skills_data.json...</div></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1321,7 +1749,7 @@
     <div class="modal-dialog">
       <h2 id="otpTitle" style="font-size: 17px; margin-bottom: 6px;">Step-up verification required</h2>
       <p style="font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 16px;" id="otpReasonText">
-        Transaction scored in moderate risk band (0.35 to 0.69). Enter the sandbox 6-digit OTP to verify customer intent.
+        Transaction scored in moderate risk band (0.35 to 0.69). Enter the sandbox 6-digit OTP to verify customer intent without false blocking.
       </p>
       <div class="field">
         <label class="field-label" for="otpInput">6-digit sandbox OTP code (demo: 482910)</label>
@@ -1334,6 +1762,34 @@
     </div>
   </div>
 
+  <!-- 60-SECOND PRESENTER GUIDE MODAL -->
+  <div id="presenterModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="presenterTitle" onclick="if (event.target === this) this.classList.remove('active')">
+    <div class="modal-dialog wide">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h2 id="presenterTitle" style="font-size: 17px;">60-second faculty presentation flow</h2>
+        <button class="btn sm" onclick="document.getElementById('presenterModal').classList.remove('active')">Close</button>
+      </div>
+      <div class="kv-list">
+        <div class="kv-row">
+          <span class="kv-k"><strong>Step 1 &mdash; Overview (10s)</strong><span class="cell-sub">Click the blocked ₹9,500 order on the left table.</span></span>
+          <span class="kv-v">Show plain-English summary + live XGBoost, Autoencoder MSE, and LSTM scores. Slide the Threshold Policy control.</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-k"><strong>Step 2 &mdash; D2C Store (15s)</strong><span class="cell-sub">Show DPDP consent error first, then check &amp; buy Trail Runner Pro.</span></span>
+          <span class="kv-v">Proves unticked consent protection (<code>400</code>) + Step-up 2FA OTP (<code>482910</code>) + optional card decline (<code>402</code>).</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-k"><strong>Step 3 &mdash; Attack &amp; Stress Lab (20s)</strong><span class="cell-sub">Run Card-testing burst, 50-thread race, and AI Outage Fallback.</span></span>
+          <span class="kv-v">Proves LSTM catches rapid bursts, Java locks prevent overselling, and checkout stays 100% online if AI drops.</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-k"><strong>Step 4 &mdash; Benchmarks, Startup &amp; Erase (15s)</strong><span class="cell-sub">Open ML &amp; DL + Startup ROI + Java/Legal tabs.</span></span>
+          <span class="kv-v">Explain PR-AUC vs accuracy, show interactive merchant ROI, and run live DPDP Section 12 deletion.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- FIGURE LIGHTBOX DIALOG -->
   <div id="figModal" class="modal" role="dialog" aria-modal="true" onclick="if (event.target === this) this.classList.remove('active')">
     <div class="modal-dialog wide">
@@ -1341,7 +1797,8 @@
         <h3 id="figModalTitle" style="font-size: 15px; font-weight: 600;">Diagnostic plot</h3>
         <button class="btn sm" onclick="document.getElementById('figModal').classList.remove('active')">Close</button>
       </div>
-      <img id="figModalImg" src="" alt="Benchmark chart" style="width: 100%; max-height: 75svh; object-fit: contain;">
+      <img id="figModalImg" src="" alt="Benchmark chart" style="width: 100%; max-height: 70svh; object-fit: contain;">
+      <p id="figModalNote" style="margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;"></p>
     </div>
   </div>
 
@@ -1352,14 +1809,15 @@
 
     let recentOrders = [];
     let catalogProducts = [];
-    let selectedProduct = null;
+    let cart = {}; // product_id -> qty
+    let currentStoreCategory = 'ALL';
     let selectedTx = null;
     let pendingOtpTxId = null;
     let currentDecisionFilter = 'ALL';
     let currentOverviewChartMode = 'risk';
-    let currentMetrics = null;
+    let currentPolicyBlockCutoff = 0.70;
 
-    // Empirically measured CSV benchmarks (reproduced from src/main.py, autoencoder.py, lstm_sequence.py)
+    // Empirically measured CSV benchmarks
     const STRATIFIED_BENCHMARKS = [
       { model: 'XGBoost (Cost-Sensitive)', prAuc: 0.8596, rocAuc: 0.9729, recall: 0.8571, precision: 0.6131, f1: 0.7149, cost: 4295 },
       { model: 'LightGBM (Balanced)', prAuc: 0.8474, rocAuc: 0.9770, recall: 0.8469, precision: 0.6385, f1: 0.7281, cost: 4455 },
@@ -1384,14 +1842,31 @@
     };
 
     const FIGURES = [
-      { file: 'benchmark_pr_curves.png', title: 'Precision-Recall Curves (All Classifiers)' },
-      { file: 'threshold_sensitivity.png', title: 'XGBoost Threshold Sensitivity vs Loss' },
-      { file: 'correlation_bar.png', title: 'Top Feature Correlations with Class' },
-      { file: 'class_distribution.png', title: 'Class Distribution (577:1 Imbalance)' },
-      { file: 'autoencoder_training.png', title: 'Autoencoder Train and Val MSE' },
-      { file: 'lstm_training.png', title: 'Chronological LSTM Weighted BCE Loss' },
-      { file: 'cm_xgboost_(cost-sensitive).png', title: 'XGBoost Confusion Matrix (Test N=56,962)' },
-      { file: 'cm_smote_+_random_forest.png', title: 'SMOTE + RF Confusion Matrix' }
+      { file: 'benchmark_pr_curves.png', title: 'Precision-Recall Curves', note: 'Finding: PR-AUC cleanly separates XGBoost (0.8596) from linear LogReg (0.7175), driving our choice of XGBoost as primary tabular scorer.' },
+      { file: 'threshold_sensitivity.png', title: 'Threshold Cost Trade-Off', note: 'Finding: Raising hard BLOCK cutoff to 0.70 prevents FP drop-offs (28 FPs vs 104 at 0.30), while 0.35–0.69 routes borderline shoppers safely to OTP.' },
+      { file: 'correlation_bar.png', title: 'Feature Correlations with Fraud', note: 'Finding: V17 (-0.3265), V14 (-0.3025), and V12 (-0.2606) carry the strongest signal and power live Autoencoder drift reasons.' },
+      { file: 'class_distribution.png', title: 'Class Imbalance (577:1 Ratio)', note: 'Finding: 492 frauds in 284,807 rows prove accuracy (99.83%) is invalid, dictating cost-weighted training and PR-AUC.' },
+      { file: 'autoencoder_training.png', title: 'Autoencoder Train & Val MSE', note: 'Finding: Narrow 6-unit bottleneck stops the network from reconstructing outliers while generalizing smoothly across held-out normal rows.' },
+      { file: 'lstm_training.png', title: 'Chronological LSTM Loss', note: 'Finding: Calibrated pos_weight (22.82) stabilizes gradient convergence across sequential 5-tx windows on future unseen hours.' },
+      { file: 'cm_xgboost_(cost-sensitive).png', title: 'XGBoost Confusion Matrix', note: 'Finding: Captures 84/98 holdout frauds with only 53 false alarms out of 56,864 genuine buyers (0.09% FPR at 0.50).' },
+      { file: 'cm_smote_+_random_forest.png', title: 'SMOTE + RF Confusion Matrix', note: 'Finding: Achieves peak recall (88.78%, lowest test cost $3,845) when SMOTE runs strictly inside the training pipeline.' }
+    ];
+
+    const VIVA_QA = [
+      { q: 'Q1. Why is accuracy useless here and what metric did you use instead?', a: 'Only 492 of 284,807 rows (0.173%) are fraud. Predicting all legitimate gives 99.83% accuracy with 0% fraud caught. We evaluate using PR-AUC (blind to overwhelming true negatives), Precision/Recall at fixed thresholds, and the business Financial Loss formula (FN * $250 + FP * $15).' },
+      { q: 'Q2. How do you guarantee zero data leakage?', a: 'Three controls in src/preprocess.py: (1) train/test split happens before scaling, (2) RobustScaler fits strictly on X_train only, and (3) SMOTE runs inside imblearn Pipeline training folds only while FraudLSTM validates strictly on chronologically later Time hours.' },
+      { q: 'Q3. Your public dataset is anonymized/European. Why should results hold for D2C India?', a: 'Kaggle ULB preserves real transaction covariance structure; in production we align INR checkout totals via FX parity scaling (Amount / 85) and continuously collect verified local ground-truth labels through merchant dashboard overrides and COD RTO outcomes.' },
+      { q: 'Q4. Why run Deep Learning if XGBoost wins tabular PR-AUC (0.8596)?', a: 'XGBoost treats every order in isolation. PyTorch Autoencoder detects zero-day outliers for brand-new shoppers without history (79.59% unsupervised recall @ p99.5), and PyTorch LSTM catches temporal burst sequences — actually beating XGBoost on future chronological hours (0.8088 vs 0.7933 PR-AUC).' },
+      { q: 'Q5. Show an attack the sequence model catches that single-row models miss.', a: 'A card-testing bot fires 5 rapid low-value orders (₹1,899 each) in under 60 seconds. Single-row inspection sees small routine baskets on burst 1–3 (0.0064), while burst 4–5 trigger 1h velocity + 5-step LSTM hidden state + Autoencoder V17 drift, spiking risk to 0.9962 BLOCK (testable live in Attack & stress lab).' },
+      { q: 'Q6. How do you explain a blocked order differently to the seller vs buyer?', a: 'Sellers see full sub-model telemetry (XGBoost p, Autoencoder MSE drift vector, LSTM burst window) to audit decisions. Shoppers only receive a polite verification/dispute message without leaking thresholds adversaries could reverse-engineer.' },
+      { q: 'Q7. What happens if the Python AI service crashes or times out?', a: 'Java RemoteModelScorer enforces a 500ms timeout (config.properties) and throws ModelServiceUnavailableException. FallbackScorer catches it immediately and delegates to local deterministic RuleBasedScorer (amount, night window, 1h velocity >=4, geo bounds) so checkout never drops.' },
+      { q: 'Q8. Show the Java multithreading race condition and your synchronized fix.', a: 'Two threads calling check-then-act on stock=10 can both pass p.getStock() >= 1 simultaneously and oversell. Making decrementStockSynchronized() atomic inside synchronized prevents oversell: verified by 50 concurrent threads in JUnit & live API (10 succeed, 40 throw OutOfStockException, stock=0).' },
+      { q: 'Q9. Who pays, how much, and why not Stripe Radar or Razorpay Thirdwatch?', a: 'Indian D2C merchants doing 300–25,000 orders/month pay ₹999–₹9,999/mo (87.7% estimated margin, break-even at 6 merchants). Unlike Stripe Radar (gateway lock-in, no INR/COD) or Thirdwatch (higher entry commit), FraudShield works across COD + UPI + Card with sub-model explainability.' },
+      { q: 'Q10. What personal data do you store and under what DPDP Act 2023 consent?', a: 'Zero raw card PAN, CVV, full name, phone, or postal address. Checkout requires an un-ticked DPDP consent checkbox enforced in Java (HTTP 400 if unchecked), and Section 12 DELETE /api/data/erase purges JSONL + CSV records immediately.' },
+      { q: 'Q11. How did you choose 0.35 Verify and 0.70 Block thresholds?', a: 'Using our threshold sweep (notebooks/threshold_analysis.py), setting Block at 0.70 cuts false alarms down to 28 out of 56,864 genuine buyers while routing the 0.35–0.69 gray zone to cheap 2FA OTP instead of lost sales.' },
+      { q: 'Q12. What failed during development and what would you build next?', a: 'Class-weighted Logistic Regression triggered 1,388 false alarms ($22,820 loss), and an Autoencoder latent size of 16 reconstructed fraud too easily until narrowed to 6. Next step: merchant Graph Neural Network across shared device hashes and a one-click Shopify app.' },
+      { q: 'Q13. How does Java BlockingQueue and ScheduledExecutorService work in production?', a: 'OrderService persists JSONL immediately for dashboard reads while pushing transactions into a 1,000-slot LinkedBlockingQueue drained asynchronously to analysis_export.csv by a 2-thread worker pool, plus a ScheduledExecutorService pruning 1h velocity windows every 60s.' },
+      { q: 'Q14. How do you ensure all 6 custom Java exceptions perform real recovery?', a: 'Every exception changes control flow and maps cleanly in HTTP: InvalidInputException -> 400 DPDP block, OutOfStockException -> 409 lock protection, FraudBlockedException -> 403 block response, PaymentFailedException -> 402 Card/UPI decline, and ModelServiceUnavailableException -> live fallback activation.' }
     ];
 
     function esc(v) {
@@ -1405,6 +1880,11 @@
     }
 
     // ======= NAVIGATION =======
+    function goToView(viewId) {
+      const btn = document.querySelector(`.nav-btn[data-view="${viewId}"]`);
+      switchView(viewId, btn);
+    }
+
     function switchView(viewId, btn) {
       document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.removeAttribute('aria-current'));
@@ -1418,9 +1898,16 @@
         fetchInventory();
       } else if (viewId === 'analytics') {
         renderBenchmarksView();
-      } else if (viewId === 'skilla') {
+      } else if (viewId === 'startup') {
+        calcRoi();
+      } else if (viewId === 'viva') {
+        renderVivaList();
         ensureSkillsLoaded();
       }
+    }
+
+    function openPresenterModal() {
+      document.getElementById('presenterModal').classList.add('active');
     }
 
     // ======= HEALTH CHECKS =======
@@ -1461,9 +1948,31 @@
       }
     }
 
-    // ======= OVERVIEW METRICS + LIVE STREAM =======
+    // ======= OVERVIEW METRICS + POLICY SLIDER =======
     async function refreshAll() {
       await Promise.all([pollHealth(), fetchMetrics(), fetchRecentOrders(), fetchInventory()]);
+    }
+
+    function onPolicySliderChange(val) {
+      currentPolicyBlockCutoff = Number(val);
+      const key = currentPolicyBlockCutoff.toFixed(2);
+      document.getElementById('policySliderVal').textContent = key;
+      document.getElementById('livePolicyBadge').textContent = `Block >= ${key} · Verify 0.35–${(currentPolicyBlockCutoff - 0.01).toFixed(2)}`;
+
+      const row = THRESHOLD_TABLE[key] || THRESHOLD_TABLE['0.70'];
+      document.getElementById('policyBenchPr').textContent = `${(row.precision * 100).toFixed(2)}% / ${(row.recall * 100).toFixed(2)}%`;
+      document.getElementById('policyBenchLoss').textContent = `$${row.loss.toLocaleString('en-US')}.00 (vs $22,820 LogReg)`;
+
+      let simApp = 0, simVer = 0, simBlk = 0;
+      recentOrders.forEach(o => {
+        const s = Number(o.riskScore ?? o.risk_score ?? 0);
+        if (s >= currentPolicyBlockCutoff) simBlk++;
+        else if (s >= 0.35) simVer++;
+        else simApp++;
+      });
+      document.getElementById('policyLiveImpact').textContent = recentOrders.length > 0
+        ? `At cutoff ${key}, the ${recentOrders.length} active orders classify as: ${simApp} Approve, ${simVer} Verify, ${simBlk} Block.`
+        : 'Place an order in D2C Store to see live reclassification counts.';
     }
 
     async function fetchMetrics() {
@@ -1471,7 +1980,6 @@
         const r = await fetch(JAVA_API + '/api/metrics', { signal: AbortSignal.timeout(3000) });
         if (!r.ok) throw new Error('metrics http ' + r.status);
         const m = await r.json();
-        currentMetrics = m;
 
         const saved = Number(m.money_saved_inr ?? m.money_saved_estimate ?? 0);
         const total = Number(m.total_scored ?? 0);
@@ -1497,11 +2005,9 @@
         document.getElementById('cntBlock').textContent = blocked;
 
         const sub = document.getElementById('overviewFinding');
-        if (total === 0) {
-          sub.textContent = 'Zero orders persisted yet. Run Checkout Store or Attack Simulator to generate live scores.';
-        } else {
-          sub.textContent = `${blocked} blocked orders stopped ${fmtInr(saved)} across ${total} scored transactions; rule fallback rate is ${m.fallback_rate || '0.0%'}.`;
-        }
+        sub.textContent = total === 0
+          ? 'No scored orders persisted yet. Use D2C Store or Attack & Stress Lab to generate live scores.'
+          : `${blocked} blocked orders stopped ${fmtInr(saved)} across ${total} scored transactions; rule fallback rate is ${m.fallback_rate || '0.0%'}.`;
         document.getElementById('freshnessStamp').textContent = 'Updated ' + new Date().toLocaleTimeString();
       } catch {
         document.getElementById('overviewFinding').textContent = 'Java Core (localhost:8085) is offline. Start run_fraudshield.py to stream real telemetry.';
@@ -1517,6 +2023,7 @@
           recentOrders = list;
           renderOrdersTable();
           drawOverviewChart();
+          onPolicySliderChange(currentPolicyBlockCutoff);
           if (!selectedTx && recentOrders.length > 0) {
             inspectTransaction(recentOrders[0]);
           } else if (selectedTx) {
@@ -1594,18 +2101,29 @@
 
       const txId = tx.id || tx.orderId || 'TXN';
       const dec = String(tx.decision || 'APPROVE').toUpperCase();
+      const score = Number(tx.riskScore ?? tx.risk_score ?? 0);
       const pillCls = dec === 'BLOCK' ? 'neg' : dec === 'VERIFY' ? 'warn' : 'pos';
       document.getElementById('inspTxId').textContent = `${txId} (${tx.orderId || ''})`;
       const pill = document.getElementById('inspDecisionPill');
       pill.className = 'pill ' + pillCls;
       pill.textContent = dec;
 
+      // Plain-English seller + customer explanation
+      const summaryBox = document.getElementById('inspPlainSummary');
+      if (dec === 'BLOCK') {
+        summaryBox.innerHTML = `<strong>Plain-English summary:</strong> Blocked at risk <strong>${score.toFixed(2)}</strong> (&ge; 0.70 cutoff), protecting <strong>${fmtInr(tx.amount)}</strong> before fulfillment. Customer sees a polite decline message; merchant can override below if legitimate.`;
+      } else if (dec === 'VERIFY') {
+        summaryBox.innerHTML = `<strong>Plain-English summary:</strong> Borderline risk <strong>${score.toFixed(2)}</strong> (0.35–0.69 band). Routed to quick 6-digit OTP confirmation instead of losing a genuine customer.`;
+      } else {
+        summaryBox.innerHTML = `<strong>Plain-English summary:</strong> Low risk <strong>${score.toFixed(2)}</strong> (&lt; 0.35 cutoff). Matches normal basket and velocity baselines; payment captured cleanly.`;
+      }
+
       const eb = tx.engineBreakdown || tx.engine_breakdown || {};
       const xgb = eb.xgboost_prob !== undefined ? Number(eb.xgboost_prob).toFixed(4) : '--';
       const ae = eb.autoencoder_mse !== undefined ? Number(eb.autoencoder_mse).toFixed(4) : '--';
-      const lstm = eb.lstm_prob !== undefined ? `${Number(eb.lstm_prob).toFixed(4)} (window ${eb.sequence_depth || 1}/5)` : '--';
+      const lstm = eb.lstm_prob !== undefined ? `${Number(eb.lstm_prob).toFixed(4)} (win ${eb.sequence_depth || 1}/5)` : '--';
       const lat = tx.latencyMs > 0 ? `${Number(tx.latencyMs).toFixed(2)} ms` : '--';
-      const path = tx.fallbackUsed ? 'Java RuleBasedScorer (Fallback)' : 'Python FastAPI Hybrid (XGB+AE+LSTM)';
+      const path = tx.fallbackUsed ? 'Java RuleBasedScorer (Fallback active)' : 'Python FastAPI Hybrid (XGB+AE+LSTM)';
 
       document.getElementById('inspXgb').textContent = xgb;
       document.getElementById('inspAe').textContent = ae;
@@ -1616,20 +2134,19 @@
       const reasons = tx.reasons && tx.reasons.length ? tx.reasons : ['No anomaly reasons logged.'];
       document.getElementById('inspReasons').innerHTML = reasons.map(r => `<div>${esc(r)}</div>`).join('');
 
-      const ovBtn = document.getElementById('inspOverrideBtn');
-      ovBtn.disabled = dec === 'APPROVE';
+      document.getElementById('inspOverrideBtn').disabled = dec === 'APPROVE';
 
       try {
         const expRes = await fetch(`${PY_API}/api/explain?order_id=${encodeURIComponent(tx.orderId || txId)}&amount=${Number(tx.amount || 0)}`, { signal: AbortSignal.timeout(2000) });
         if (expRes.ok) {
           const exp = await expRes.json();
           const listHtml = (exp.top_features || []).map(f =>
-            `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--rule);"><span><code>${esc(f.feature)}</code> ${esc(f.description)}</span><span class="num">${(f.importance * 100).toFixed(1)}%</span></div>`
+            `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--rule);gap:8px;"><span><code>${esc(f.feature)}</code> ${esc(f.description)}</span><span class="num">${(f.importance * 100).toFixed(1)}%</span></div>`
           ).join('');
           document.getElementById('inspExplainList').innerHTML = listHtml || '--';
         }
       } catch {
-        document.getElementById('inspExplainList').textContent = 'Unavailable while Python :8000 is offline.';
+        document.getElementById('inspExplainList').textContent = 'Unavailable while Python :8000 is offline (Java fallback mode running).';
       }
     }
 
@@ -1640,7 +2157,7 @@
         const r = await fetch(JAVA_API + '/api/override', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transaction_id: txId, merchant_decision: 'APPROVE', reason: 'Manual dashboard review' })
+          body: JSON.stringify({ transaction_id: txId, merchant_decision: 'APPROVE', reason: 'Manual seller review' })
         });
         if (r.ok) {
           await fetchRecentOrders();
@@ -1649,7 +2166,7 @@
       } catch {}
     }
 
-    // ======= OVERVIEW CHARTS (charts.js) =======
+    // ======= OVERVIEW CHARTS =======
     function setOverviewChart(mode, btn) {
       currentOverviewChartMode = mode;
       btn.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
@@ -1675,7 +2192,7 @@
       }
 
       if (!recentOrders.length) {
-        el.innerHTML = '<div class="empty-box">No live scored orders yet. Run Checkout Store or Attack Simulator to populate chart series.</div>';
+        el.innerHTML = '<div class="empty-box">No live scored orders yet. Run D2C Store or Attack &amp; Stress Lab to populate series.</div>';
         return;
       }
 
@@ -1696,7 +2213,7 @@
         });
       } else {
         document.getElementById('overviewChartTitle').textContent = 'Recent transaction risk trajectory';
-        document.getElementById('overviewChartMeta').textContent = 'Dashed threshold marks BLOCK policy at 0.70 risk score';
+        document.getElementById('overviewChartMeta').textContent = 'Dashed threshold marks BLOCK policy at 0.70 and VERIFY at 0.35';
         Charts.line(el, {
           labels,
           series: [{ name: 'Risk score', values: ordered.map(o => Number(o.riskScore ?? o.risk_score ?? 0)) }],
@@ -1709,15 +2226,21 @@
       }
     }
 
-    // ======= DEMO STORE + LIVE INVENTORY =======
-    function getProductSvg(id) {
-      if (id === 'PROD_SHIRT') {
-        return `<svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2" stroke-linejoin="round"><path d="M24 10L13 18L5 15L10 30V54H54V30L59 15L51 18L40 10C37 14 27 14 24 10Z"/><path d="M24 10L32 18L40 10"/></svg>`;
+    // ======= D2C STORE + CART =======
+    function getCategorySvg(cat, id) {
+      if (cat === 'Footwear' || id === 'PROD_SHOES') {
+        return `<svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2" stroke-linejoin="round"><path d="M8 44H56V36C56 32 49 28 43 26L34 18L22 24L8 34V44Z"/><path d="M8 44H56"/></svg>`;
       }
-      if (id === 'PROD_SHOES') {
-        return `<svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2" stroke-linejoin="round"><path d="M8 44H56V36C56 32 49 28 43 26L34 18L22 24L8 34V44Z"/><path d="M8 44H56"/></svg>`;
+      if (cat === 'Watches' || id === 'PROD_WATCH') {
+        return `<svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2"><rect x="26" y="6" width="12" height="8" rx="1"/><rect x="26" y="50" width="12" height="8" rx="1"/><circle cx="32" cy="32" r="18"/><path d="M32 22V32L39 36" stroke-linecap="round"/></svg>`;
       }
-      return `<svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2"><rect x="26" y="6" width="12" height="8" rx="1"/><rect x="26" y="50" width="12" height="8" rx="1"/><circle cx="32" cy="32" r="18"/><path d="M32 22V32L39 36" stroke-linecap="round"/></svg>`;
+      if (cat === 'Audio') {
+        return `<svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2"><path d="M14 36V28C14 18 22 10 32 10C42 10 50 18 50 28V36"/><rect x="10" y="34" width="10" height="16" rx="4"/><rect x="44" y="34" width="10" height="16" rx="4"/></svg>`;
+      }
+      if (cat === 'Accessories' || cat === 'Home') {
+        return `<svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2"><rect x="16" y="20" width="32" height="32" rx="4"/><path d="M24 20V16C24 12 28 8 32 8C36 8 40 12 40 16V20"/></svg>`;
+      }
+      return `<svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1b6c80" stroke-width="2" stroke-linejoin="round"><path d="M24 10L13 18L5 15L10 30V54H54V30L59 15L51 18L40 10C37 14 27 14 24 10Z"/></svg>`;
     }
 
     async function fetchInventory() {
@@ -1727,59 +2250,148 @@
         const data = await r.json();
         if (Array.isArray(data.products)) {
           catalogProducts = data.products;
-          if (!selectedProduct && catalogProducts.length) {
-            selectedProduct = catalogProducts[0];
-          } else if (selectedProduct) {
-            const match = catalogProducts.find(p => p.product_id === selectedProduct.product_id);
-            if (match) selectedProduct = match;
+          if (Object.keys(cart).length === 0 && catalogProducts.length > 0) {
+            const def = catalogProducts.find(p => p.product_id === 'PROD_SHIRT') || catalogProducts[0];
+            cart[def.product_id] = 1;
           }
           renderCatalog();
+          renderCart();
         }
       } catch {}
+    }
+
+    function setStoreCategory(cat, btn) {
+      currentStoreCategory = cat;
+      document.querySelectorAll('#storeCatTabs button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      if (btn) btn.setAttribute('aria-pressed', 'true');
+      renderCatalog();
+    }
+
+    function addToCart(pid) {
+      const p = catalogProducts.find(x => x.product_id === pid);
+      if (!p) return;
+      const cur = cart[pid] || 0;
+      if (cur >= p.stock_available) return;
+      cart[pid] = cur + 1;
+      renderCart();
+      renderCatalog();
+    }
+
+    function setCartQty(pid, delta) {
+      const p = catalogProducts.find(x => x.product_id === pid);
+      const next = (cart[pid] || 0) + delta;
+      if (next <= 0) {
+        delete cart[pid];
+      } else if (!p || next <= p.stock_available) {
+        cart[pid] = next;
+      }
+      renderCart();
+      renderCatalog();
+    }
+
+    function selectSingleSku(pid) {
+      cart = {};
+      cart[pid] = 1;
+      renderCart();
+      renderCatalog();
     }
 
     function renderCatalog() {
       const grid = document.getElementById('storeCatalogGrid');
       if (!catalogProducts.length) return;
+      const q = (document.getElementById('storeSearchInput')?.value || '').toLowerCase().trim();
+
+      const shown = catalogProducts.filter(p => {
+        const okCat = currentStoreCategory === 'ALL' || (p.category || 'General') === currentStoreCategory;
+        const okQ = !q || p.name.toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q);
+        return okCat && okQ;
+      });
+
+      if (!shown.length) {
+        grid.innerHTML = '<div class="empty-box" style="grid-column: 1 / -1;">No products match that filter.</div>';
+        return;
+      }
+
       grid.innerHTML = '';
-      catalogProducts.forEach(p => {
-        const sel = selectedProduct && selectedProduct.product_id === p.product_id;
+      shown.forEach(p => {
+        const bandPill = p.price >= 8000
+          ? '<span class="pill neg">High ticket</span>'
+          : (p.price >= 3500 ? '<span class="pill warn">Step-up band</span>' : '<span class="pill pos">Standard</span>');
+        const inCart = cart[p.product_id] || 0;
         const card = document.createElement('div');
         card.className = 'sku-card';
-        if (sel) card.setAttribute('aria-selected', 'true');
-        card.onclick = () => { selectedProduct = p; renderCatalog(); };
         card.innerHTML = `
-          <div class="sku-art">${getProductSvg(p.product_id)}</div>
           <div>
-            <div class="sku-name">${esc(p.name)}</div>
-            <div class="sku-price num">${fmtInr(p.price)}</div>
+            <div class="sku-art">${getCategorySvg(p.category, p.product_id)}</div>
+            <div style="margin-top: 10px;">
+              <div class="sku-cat">${esc(p.category || 'Catalog')}</div>
+              <div class="sku-name">${esc(p.name)}</div>
+              <div class="sku-price num">${fmtInr(p.price)}</div>
+            </div>
           </div>
-          <div class="sku-meta">
-            <span>Stock: ${Number(p.stock_available)} units</span>
-            <span>${p.stock_available <= 5 ? '<span class="pill warn">Low stock</span>' : ''}</span>
+          <div>
+            <div class="sku-meta" style="margin-bottom: 8px;">
+              <span>Stock: ${Number(p.stock_available)}</span>
+              ${bandPill}
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn sm" style="flex: 1;" onclick="selectSingleSku('${esc(p.product_id)}')">Buy solo</button>
+              <button class="btn sm accent" onclick="addToCart('${esc(p.product_id)}')">+ Cart${inCart ? ' (' + inCart + ')' : ''}</button>
+            </div>
           </div>
         `;
         grid.appendChild(card);
       });
+    }
 
-      if (selectedProduct) {
-        document.getElementById('checkoutItemName').textContent = selectedProduct.name;
-        document.getElementById('checkoutItemPrice').textContent = fmtInr(selectedProduct.price);
+    function renderCart() {
+      const box = document.getElementById('cartItemsList');
+      const entries = Object.entries(cart).filter(([, q]) => q > 0);
+      if (!entries.length) {
+        box.innerHTML = '<div class="empty-box" style="padding: 14px;">Cart empty. Add any product or click Buy solo.</div>';
+        document.getElementById('checkoutCartCount').textContent = '0 units';
+        document.getElementById('checkoutItemPrice').textContent = fmtInr(0);
+        return;
       }
+
+      let totalAmt = 0;
+      let totalQty = 0;
+      box.innerHTML = entries.map(([pid, qty]) => {
+        const p = catalogProducts.find(x => x.product_id === pid) || { name: pid, price: 0 };
+        totalAmt += p.price * qty;
+        totalQty += qty;
+        return `
+          <div class="cart-row">
+            <div style="min-width: 0;">
+              <div style="font-weight: 500;">${esc(p.name)}</div>
+              <div class="num" style="font-size: 12px; color: var(--muted);">${fmtInr(p.price)} each</div>
+            </div>
+            <div class="qty-ctrl">
+              <button class="btn sm" aria-label="Decrease quantity" onclick="setCartQty('${esc(pid)}', -1)">-</button>
+              <span class="num" style="min-width: 18px; text-align: center;">${qty}</span>
+              <button class="btn sm" aria-label="Increase quantity" onclick="setCartQty('${esc(pid)}', 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('checkoutCartCount').textContent = `${totalQty} unit${totalQty === 1 ? '' : 's'}`;
+      document.getElementById('checkoutItemPrice').textContent = fmtInr(totalAmt);
     }
 
     async function restockCatalog() {
       try {
         await fetch(JAVA_API + '/api/inventory/restock', { method: 'POST' });
         await fetchInventory();
-        logSimLine('[INVENTORY] Catalog stock reset to initial counts (50, 30, 10).');
+        logSimLine('[INVENTORY] All 12 D2C SKUs reset to baseline stock levels.');
       } catch {}
     }
 
     async function submitStoreOrder() {
       const resDiv = document.getElementById('orderResult');
-      if (!selectedProduct) {
-        resDiv.innerHTML = '<div class="notice err">Catalog not synced yet. Ensure Java Core :8085 is running.</div>';
+      const entries = Object.entries(cart).filter(([, q]) => q > 0);
+      if (!entries.length) {
+        resDiv.innerHTML = '<div class="notice warn">Your cart is empty. Click Buy solo or + Cart on any product.</div>';
         return;
       }
 
@@ -1789,19 +2401,35 @@
         return;
       }
 
+      const items = [];
+      let totalAmount = 0;
+      entries.forEach(([pid, qty]) => {
+        const p = catalogProducts.find(x => x.product_id === pid);
+        if (p) {
+          items.push({ product_id: pid, quantity: qty });
+          totalAmount += p.price * qty;
+        }
+      });
+
       const method = document.querySelector('input[name="payMethod"]:checked')?.value || 'CARD';
-      resDiv.innerHTML = '<div class="notice info">Scoring across Java Core and Python XGBoost + Autoencoder + LSTM engines...</div>';
+      const outcome = document.getElementById('gatewayOutcome').value;
+      const geo = document.getElementById('shippingCorridor').value;
 
       const payload = {
         order_id: 'ORD_' + Math.random().toString(36).substring(2, 9).toUpperCase(),
         merchant_id: 'MERCHANT_D2C_101',
         customer_id: 'CUST_STORE_GUEST_' + Math.random().toString(36).substring(2, 6).toUpperCase(),
-        amount: selectedProduct.price,
+        items,
+        amount: totalAmount,
         payment_method: method,
-        product_id: selectedProduct.product_id,
-        quantity: 1,
+        card_token: outcome === 'DECLINED_CARD' ? 'tok_visa_0000' : 'tok_visa_4242',
+        upi_vpa: outcome === 'FAILED_UPI' ? 'fail@okaxis' : 'customer@okaxis',
+        latitude: geo === 'FOREIGN' ? 78.21 : 19.0760,
+        longitude: geo === 'FOREIGN' ? 162.40 : 72.8777,
         consent_given: true
       };
+
+      resDiv.innerHTML = '<div class="notice info">Scoring across Java 17 Core and Python XGBoost + Autoencoder + LSTM engines...</div>';
 
       try {
         const r = await fetch(JAVA_API + '/api/orders', {
@@ -1813,19 +2441,28 @@
         const d = await r.json();
         await Promise.all([fetchInventory(), fetchRecentOrders(), fetchMetrics()]);
 
-        if (r.status === 409) {
-          resDiv.innerHTML = `<div class="notice err"><strong>Out of stock:</strong> ${esc(d.error || 'Inventory exhausted')}</div>`;
+        if (r.status === 402) {
+          resDiv.innerHTML = `<div class="notice err"><strong>PaymentFailedException (HTTP 402):</strong> ${esc(d.error || 'Payment rejected by sandbox gateway')}</div>`;
           return;
         }
+        if (r.status === 409) {
+          resDiv.innerHTML = `<div class="notice err"><strong>OutOfStockException (HTTP 409):</strong> ${esc(d.error || 'Inventory exhausted')}</div>`;
+          return;
+        }
+        if (r.status >= 400 && r.status !== 403) {
+          resDiv.innerHTML = `<div class="notice err"><strong>Validation error (HTTP ${r.status}):</strong> ${esc(d.error || 'Rejected')}</div>`;
+          return;
+        }
+
         const dec = String(d.decision || '').toUpperCase();
         const score = Number(d.risk_score ?? 0).toFixed(4);
         const reasonsText = (d.reasons || []).join('; ');
 
         if (dec === 'BLOCK') {
-          resDiv.innerHTML = `<div class="notice err"><strong>Transaction blocked</strong> (Risk ${score})<br>${esc(reasonsText)}</div>`;
+          resDiv.innerHTML = `<div class="notice err"><strong>FraudBlockedException (Risk ${score})</strong><br>${esc(reasonsText)}</div>`;
         } else if (dec === 'VERIFY') {
           pendingOtpTxId = d.transaction_id;
-          document.getElementById('otpReasonText').textContent = `Risk score ${score}: ${reasonsText}. Complete OTP verification to approve ${d.transaction_id}.`;
+          document.getElementById('otpReasonText').textContent = `Risk score ${score}: ${reasonsText}. Enter sandbox OTP to approve ${d.transaction_id}.`;
           document.getElementById('otpModal').classList.add('active');
           resDiv.innerHTML = `<div class="notice warn"><strong>Step-up verification pending</strong> (Risk ${score}, TXN ${esc(d.transaction_id)})</div>`;
         } else {
@@ -1843,10 +2480,7 @@
     async function confirmOtp() {
       const otp = document.getElementById('otpInput').value.trim();
       const resDiv = document.getElementById('orderResult');
-      if (!pendingOtpTxId) {
-        closeOtpModal();
-        return;
-      }
+      if (!pendingOtpTxId) { closeOtpModal(); return; }
       try {
         const r = await fetch(JAVA_API + '/api/orders/verify', {
           method: 'POST',
@@ -1866,7 +2500,7 @@
       }
     }
 
-    // ======= ATTACK SIMULATOR =======
+    // ======= ATTACK & STRESS LAB =======
     function logSimLine(msg) {
       const pre = document.getElementById('simLog');
       pre.textContent += `\n[${new Date().toLocaleTimeString()}] ${msg}`;
@@ -1874,7 +2508,7 @@
     }
 
     function clearSimLog() {
-      document.getElementById('simLog').textContent = '[READY] Log cleared.';
+      document.getElementById('simLog').textContent = '[READY] Trace cleared.';
     }
 
     async function fireSimulatedOrder(payload, label) {
@@ -1887,7 +2521,7 @@
         });
         const d = await r.json();
         if (r.status === 409) {
-          logSimLine(`${label} -> HTTP 409 OUT_OF_STOCK (${d.error})`);
+          logSimLine(`${label} -> HTTP 409 OutOfStockException (${d.error})`);
           return 'OUT_OF_STOCK';
         }
         if (r.status >= 400 && r.status !== 403) {
@@ -1895,9 +2529,11 @@
           return 'ERROR';
         }
         const eb = d.engine_breakdown || {};
-        const ebTxt = eb.xgboost_prob !== undefined
-          ? `XGB=${Number(eb.xgboost_prob).toFixed(3)} AE_MSE=${Number(eb.autoencoder_mse).toFixed(2)} LSTM=${Number(eb.lstm_prob).toFixed(3)}`
-          : (d.fallback_used ? 'JAVA_FALLBACK' : '');
+        const ebTxt = d.fallback_used
+          ? `JAVA_FALLBACK_RULES (reason=${(d.reasons || [])[0] || 'RuleBasedScorer'})`
+          : (eb.xgboost_prob !== undefined
+              ? `XGB=${Number(eb.xgboost_prob).toFixed(3)} AE_MSE=${Number(eb.autoencoder_mse).toFixed(2)} LSTM=${Number(eb.lstm_prob).toFixed(3)}`
+              : 'SCORED');
         logSimLine(`${label} -> score=${Number(d.risk_score).toFixed(4)} decision=${d.decision} [${ebTxt}] (${d.latency_ms}ms)`);
         return d.decision;
       } catch (err) {
@@ -1906,14 +2542,53 @@
       }
     }
 
+    async function runRaceConditionDemo() {
+      logSimLine('[CONCURRENCY] Invoking POST /api/demo/race-condition (50 JVM threads vs 10 units)...');
+      try {
+        const r = await fetch(JAVA_API + '/api/demo/race-condition', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ threads: 50, initial_stock: 10 })
+        });
+        const d = await r.json();
+        const u = d.unsynchronized;
+        const s = d.synchronized;
+        document.getElementById('raceResultPanel').style.display = 'block';
+        document.getElementById('raceResultBody').innerHTML = `
+          <tr>
+            <td><strong>Unsynchronized (broken race)</strong></td>
+            <td class="n num">${d.threads}</td>
+            <td class="n num">${u.succeeded}</td>
+            <td class="n num">${u.rejected_out_of_stock}</td>
+            <td class="n num">${u.final_stock}</td>
+            <td class="n"><span class="pill neg">${u.oversold_units} oversold</span></td>
+            <td class="n num">${u.elapsed_ms} ms</td>
+          </tr>
+          <tr>
+            <td><strong>Synchronized (atomic lock fix)</strong></td>
+            <td class="n num">${d.threads}</td>
+            <td class="n num">${s.succeeded}</td>
+            <td class="n num">${s.rejected_out_of_stock}</td>
+            <td class="n num">${s.final_stock}</td>
+            <td class="n"><span class="pill pos">${s.oversold_units} oversold</span></td>
+            <td class="n num">${s.elapsed_ms} ms</td>
+          </tr>
+        `;
+        logSimLine(`[CONCURRENCY RESULT] Unsynchronized sold ${u.succeeded}/10 (oversold ${u.oversold_units}); Synchronized sold exact ${s.succeeded}/10, threw ${s.rejected_out_of_stock} OutOfStockExceptions, remaining stock=${s.final_stock}.`);
+      } catch (err) {
+        logSimLine(`[CONCURRENCY ERROR] ${err.message}`);
+      }
+    }
+
     async function simulateAttack(type) {
       if (type === 'CARD_BURST') {
-        logSimLine('[CARD_BURST] Sending 5 sequential orders from CUST_BURST_FP49A8 (1899 INR)...');
+        logSimLine('[CARD_BURST] Firing 5 rapid orders from one card/device (₹1,899 each)...');
+        const cid = 'CUST_BURST_FP49A8_' + String(Date.now()).slice(-4);
         for (let i = 1; i <= 5; i++) {
           await fireSimulatedOrder({
             order_id: 'ATK_BURST_' + i + '_' + Math.random().toString(36).slice(2, 6).toUpperCase(),
             merchant_id: 'MERCHANT_D2C_101',
-            customer_id: 'CUST_BURST_FP49A8_' + String(Date.now()).slice(-4),
+            customer_id: cid,
             device_fingerprint: 'FP_49A8',
             amount: 1899,
             payment_method: 'CARD',
@@ -1922,10 +2597,23 @@
             recent_tx_count_1h: i,
             consent_given: true
           }, `Burst ${i}/5 (vel=${i})`);
-          await new Promise(res => setTimeout(res, 250));
+          await new Promise(res => setTimeout(res, 220));
         }
+      } else if (type === 'FALLBACK_TEST') {
+        logSimLine('[FALLBACK_TEST] Simulating Python ML timeout inside Java FallbackScorer...');
+        await fireSimulatedOrder({
+          order_id: 'ATK_FB_' + Math.random().toString(36).slice(2, 7).toUpperCase(),
+          merchant_id: 'MERCHANT_D2C_101',
+          customer_id: 'CUST_FB_' + Math.random().toString(36).slice(2, 6).toUpperCase(),
+          amount: 4499,
+          payment_method: 'CARD',
+          product_id: 'PROD_SHOES',
+          quantity: 1,
+          force_fallback: true,
+          consent_given: true
+        }, 'AI-Outage Fallback (₹4,499)');
       } else if (type === 'NIGHT_ANOMALY') {
-        logSimLine('[HIGH_TICKET] Dispatching 14,500 INR outlier order...');
+        logSimLine('[HIGH_TICKET] Dispatching ₹14,500 outlier card order...');
         await fireSimulatedOrder({
           order_id: 'ATK_HIGH_' + Math.random().toString(36).slice(2, 7).toUpperCase(),
           merchant_id: 'MERCHANT_D2C_101',
@@ -1937,7 +2625,7 @@
           consent_given: true
         }, 'Outlier ₹14,500');
       } else if (type === 'GEO_SPOOF') {
-        logSimLine('[GEO_SPOOF] Sending coordinates lat=78.21, lon=162.40 (4,000+ km anomaly)...');
+        logSimLine('[GEO_SPOOF] Sending out-of-corridor coordinates lat=78.21, lon=162.40...');
         await fireSimulatedOrder({
           order_id: 'ATK_GEO_' + Math.random().toString(36).slice(2, 7).toUpperCase(),
           merchant_id: 'MERCHANT_D2C_101',
@@ -1950,30 +2638,13 @@
           longitude: 162.40,
           consent_given: true
         }, 'GeoSpoof (78.21,162.40)');
-      } else if (type === 'CONCURRENCY_STRESS') {
-        logSimLine('[CONCURRENCY] Firing 20 simultaneous Promise.all orders on PROD_SHIRT...');
-        const calls = Array.from({ length: 20 }, (_, i) => fireSimulatedOrder({
-          order_id: 'ATK_CONC_' + i + '_' + Math.random().toString(36).slice(2, 5).toUpperCase(),
-          merchant_id: 'MERCHANT_D2C_101',
-          customer_id: 'CUST_CONC_' + i,
-          amount: 1899,
-          payment_method: 'CARD',
-          product_id: 'PROD_SHIRT',
-          quantity: 1,
-          consent_given: true
-        }, `Thread-${i + 1}`));
-        const results = await Promise.all(calls);
-        const okCount = results.filter(x => x === 'APPROVE' || x === 'VERIFY').length;
-        const oosCount = results.filter(x => x === 'OUT_OF_STOCK').length;
-        logSimLine(`[CONCURRENCY DONE] Approved=${okCount}, OutOfStockException(409)=${oosCount}, zero overselling.`);
       }
       await refreshAll();
     }
 
     // ======= MODEL BENCHMARKS VIEW =======
     function renderBenchmarksView() {
-      const tbody1 = document.getElementById('stratifiedBenchBody');
-      tbody1.innerHTML = STRATIFIED_BENCHMARKS.map((r, i) => `
+      document.getElementById('stratifiedBenchBody').innerHTML = STRATIFIED_BENCHMARKS.map((r, i) => `
         <tr>
           <td><strong>${esc(r.model)}</strong>${i === 0 ? ' <span class="pill pos">Primary</span>' : ''}</td>
           <td class="n num">${r.prAuc.toFixed(4)}</td>
@@ -1984,8 +2655,7 @@
         </tr>
       `).join('');
 
-      const tbody2 = document.getElementById('chronoDlBenchBody');
-      tbody2.innerHTML = CHRONO_BENCHMARKS.map((r, i) => `
+      document.getElementById('chronoDlBenchBody').innerHTML = CHRONO_BENCHMARKS.map((r, i) => `
         <tr>
           <td><strong>${esc(r.model)}</strong>${i === 0 ? ' <span class="pill pos">Temporal winner</span>' : ''}</td>
           <td class="n num">${r.n.toLocaleString('en-US')}</td>
@@ -1996,11 +2666,11 @@
         </tr>
       `).join('');
 
-      const gallery = document.getElementById('figuresGallery');
-      gallery.innerHTML = FIGURES.map(f => `
-        <div class="fig-card" onclick="openFigureModal('${esc(f.title)}', 'figures/${esc(f.file)}')">
+      document.getElementById('figuresGallery').innerHTML = FIGURES.map(f => `
+        <div class="fig-card" onclick="openFigureModal('${esc(f.title)}', 'figures/${esc(f.file)}', '${esc(f.note)}')">
           <img src="figures/${esc(f.file)}" alt="${esc(f.title)}" loading="lazy">
           <div class="fig-caption">${esc(f.title)}</div>
+          <div class="fig-takeaway">${esc(f.note)}</div>
         </div>
       `).join('');
 
@@ -2049,8 +2719,7 @@
     function updateThresholdView() {
       const thr = document.getElementById('thrSelect').value;
       const d = THRESHOLD_TABLE[thr];
-      const box = document.getElementById('thresholdMetricsStrip');
-      box.innerHTML = `
+      document.getElementById('thresholdMetricsStrip').innerHTML = `
         <div class="kpi"><div class="kpi-label">Precision at ${thr}</div><div class="kpi-value">${(d.precision * 100).toFixed(2)}%</div><div class="kpi-note">False Positives: ${d.fp}</div></div>
         <div class="kpi"><div class="kpi-label">Recall at ${thr}</div><div class="kpi-value">${(d.recall * 100).toFixed(2)}%</div><div class="kpi-note">Caught: ${d.tp} / 98 frauds</div></div>
         <div class="kpi"><div class="kpi-label">F1-score</div><div class="kpi-value">${d.f1.toFixed(4)}</div><div class="kpi-note">Missed (FN): ${d.fn}</div></div>
@@ -2058,10 +2727,40 @@
       `;
     }
 
-    function openFigureModal(title, src) {
+    function openFigureModal(title, src, note) {
       document.getElementById('figModalTitle').textContent = title;
       document.getElementById('figModalImg').src = src;
+      document.getElementById('figModalNote').textContent = note || '';
       document.getElementById('figModal').classList.add('active');
+    }
+
+    // ======= STARTUP ROI CALCULATOR =======
+    function calcRoi() {
+      const orders = Number(document.getElementById('roiOrders')?.value || 1200);
+      const aov = Number(document.getElementById('roiAov')?.value || 1800);
+      const ratePct = Number(document.getElementById('roiRiskRate')?.value || 2.0);
+
+      document.getElementById('roiOrdersVal').textContent = orders.toLocaleString('en-IN') + ' orders/mo';
+      document.getElementById('roiAovVal').textContent = '₹' + aov.toLocaleString('en-IN');
+      document.getElementById('roiRiskRateVal').textContent = ratePct.toFixed(1) + '%';
+
+      const monthlyRiskLoss = orders * aov * (ratePct / 100.0);
+      const saved = Math.round(monthlyRiskLoss * 0.80);
+
+      let planName = 'Starter';
+      let planCost = 999;
+      if (orders > 5000) {
+        planName = 'Pro';
+        planCost = 9999;
+      } else if (orders > 1000) {
+        planName = 'Growth';
+        planCost = 3499;
+      }
+
+      const mult = (saved / planCost).toFixed(1);
+      document.getElementById('roiSavedVal').textContent = '₹' + saved.toLocaleString('en-IN');
+      document.getElementById('roiPlanCost').textContent = '₹' + planCost.toLocaleString('en-IN') + '/mo';
+      document.getElementById('roiMultiple').textContent = `Net ROI multiple: ${mult}x (${planName} tier hypothesis)`;
     }
 
     // ======= DPDP SECTION 12 ERASURE =======
@@ -2092,12 +2791,28 @@
       }
     }
 
-    // ======= PLAYBOOKS ARCHIVE =======
+    // ======= VIVA Q&A & SKILLA INDEX =======
+    function renderVivaList() {
+      const q = (document.getElementById('vivaSearchInput')?.value || '').toLowerCase().trim();
+      const box = document.getElementById('vivaAccordionList');
+      const rows = VIVA_QA.filter(item => !q || item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q));
+      if (!rows.length) {
+        box.innerHTML = '<div class="empty-box">No viva questions match that search.</div>';
+        return;
+      }
+      box.innerHTML = rows.map((item, idx) => `
+        <details class="viva-item"${idx === 0 ? ' open' : ''}>
+          <summary><span>${esc(item.q)}</span><span class="pill">Prepared answer</span></summary>
+          <div class="viva-ans">${esc(item.a)}</div>
+        </details>
+      `).join('');
+    }
+
     let allSkills = [];
     let filteredSkills = [];
     let currentSkillCategory = 'all';
     let renderedSkillCount = 0;
-    const PAGE_SIZE = 25;
+    const PAGE_SIZE = 20;
     const TOP_21_IDS = [
       'ecc-monolith', 'frontend-design', 'ui-ux-pro-max', 'taste-skill', 'rayden-code',
       'hunt-host-header', 'firmware-analyst', 'opentofu-migration', 'logbrew-debug-production',
@@ -2171,8 +2886,9 @@
       btn.style.display = renderedSkillCount < filteredSkills.length ? 'inline-flex' : 'none';
     }
 
-    // Boot polling cycle
+    // Boot polling & initial setup
     refreshAll();
+    calcRoi();
     setInterval(() => {
       pollHealth();
       fetchMetrics();

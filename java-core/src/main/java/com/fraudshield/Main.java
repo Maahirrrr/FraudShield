@@ -10,10 +10,19 @@ import com.fraudshield.service.OrderService;
 import com.fraudshield.service.PaymentService;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            Properties props = new Properties();
+            try (InputStream is = Main.class.getResourceAsStream("/config.properties")) {
+                if (is != null) {
+                    props.load(is);
+                }
+            }
+
             System.out.println("==================================================");
             System.out.println("          STARTING FRAUDSHIELD JAVA CORE          ");
             System.out.println("==================================================");
@@ -30,9 +39,12 @@ public class Main {
                     baseDataDir + "/analysis_export.csv"
             );
 
-            // 3. Initialize Fraud Scorers & Resilient Fallback Engine
-            String pythonServiceUrl = System.getProperty("model.service.url", "http://localhost:8000");
-            RemoteModelScorer remoteScorer = new RemoteModelScorer(pythonServiceUrl);
+            // 3. Initialize Fraud Scorers & Resilient Fallback Engine from config.properties
+            String pythonServiceUrl = System.getProperty(
+                    "model.service.url", props.getProperty("model.service.url", "http://localhost:8000"));
+            long timeoutMs = Long.parseLong(System.getProperty(
+                    "model.timeout.ms", props.getProperty("model.service.timeout.ms", "500")));
+            RemoteModelScorer remoteScorer = new RemoteModelScorer(pythonServiceUrl, timeoutMs);
             RuleBasedScorer ruleBasedScorer = new RuleBasedScorer();
             FallbackScorer fallbackScorer = new FallbackScorer(remoteScorer, ruleBasedScorer);
 
@@ -40,13 +52,14 @@ public class Main {
             OrderService orderService = new OrderService(inventoryService, paymentService, fallbackScorer, fileStore);
 
             // 5. Start REST HTTP Server
-            int port = Integer.parseInt(System.getProperty("server.port", "8085"));
+            int port = Integer.parseInt(System.getProperty(
+                    "server.port", props.getProperty("port", "8085")));
             FraudShieldServer server = new FraudShieldServer(
                     port, orderService, inventoryService, fallbackScorer, fileStore);
             server.start();
 
             System.out.println("[+] HTTP REST Server listening on http://localhost:" + port);
-            System.out.println("[i] Endpoints: /api/orders, /api/orders/recent, /api/orders/verify, /api/metrics, /api/inventory, /api/override, /api/data/erase, /api/status");
+            System.out.println("[i] Endpoints: /api/orders, /api/orders/recent, /api/orders/verify, /api/metrics, /api/inventory, /api/demo/race-condition, /api/override, /api/data/erase, /api/status");
             System.out.println("==================================================");
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

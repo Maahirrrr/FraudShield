@@ -21,9 +21,9 @@ Small-to-medium Indian Direct-to-Consumer (D2C) brands experience high financial
 
 | # | Feature / Component | Architecture / Model | Practical Value Added |
 |---|---------------------|----------------------|-----------------------|
-| **1** | **Cost-Sensitive Fraud Classification** | XGBoost (Cost-Weighted) & SMOTE+Random Forest | Scores transactional vectors using Kaggle PCA benchmarks; achieves 0.8596 PR-AUC while penalizing false negatives \$250 vs \$15 for false positives. |
-| **2** | **Sequential Velocity Detection** | Deep Learning LSTM (PyTorch, seq_len=5) | Captures rapid card-testing bursts and rapid-fire authorizations across sequential time windows, maintaining 0.8366 PR-AUC. |
-| **3** | **Unsupervised Outlier Detection** | Bottleneck Autoencoder (30→6 Latent→30) | Detects zero-day fraud patterns and night-time anomalies without needing historical fraud labels (MSE reconstruction threshold). |
+| **1** | **Cost-Sensitive Fraud Classification** | XGBoost (Cost-Weighted) vs SMOTE+Random Forest | Scores transactional vectors using Kaggle PCA benchmarks; XGBoost achieves **0.8596 PR-AUC** (and SMOTE+RF minimizes cost to **\$3,845**) with \$250 FN vs \$15 FP weighting. |
+| **2** | **Sequential Velocity Detection** | Deep Learning LSTM (PyTorch, seq_len=5) | Captures rapid card-testing bursts across chronological windows, reaching **0.8088 PR-AUC** on unseen future hours (outperforming isolated XGBoost's **0.7933**). |
+| **3** | **Unsupervised Outlier Detection** | Bottleneck Autoencoder (30→6 Latent→30) | Detects zero-day fraud patterns without needing historical fraud labels (`79.59%` recall @ p99.5 MSE `2.8441`) and explains per-feature drift. |
 
 ---
 
@@ -31,10 +31,10 @@ Small-to-medium Indian Direct-to-Consumer (D2C) brands experience high financial
 - **Core Engine**: Java 17, `com.sun.net.httpserver`, multithreaded `ExecutorService` (worker pool + scheduler), thread-safe `ConcurrentHashMap` inventory, custom OOP exception hierarchy.
 - **AI Microservice**: Python FastAPI + Uvicorn, Scikit-Learn, XGBoost, PyTorch.
 - **Frontend Dashboard**: Responsive single-page web console with live transaction streaming, interactive attack simulator, and DPDP Act compliance audit.
-- **Dataset**: Kaggle Credit Card Fraud Detection (284,807 transactions, 31 features, CC0: Public Domain).
+- **Dataset**: Kaggle Credit Card Fraud Detection (284,807 transactions, 31 features, Open Database License / ODbL — anonymized real European cardholder transactions).
 
 ### 6. Expected Outcomes & Deliverables
-1. Working full-stack prototype with sub-20ms p95 scoring latency.
+1. Working full-stack prototype with sub-30ms Python inference (`~70ms` end-to-end p95 over HTTP).
 2. Production-grade resilience: Java fallback to local rule-based heuristics if the AI microservice fails.
 3. Zero-overselling guarantee under high concurrency (verified with 50 concurrent threads).
 4. Full startup feasibility documentation: Lean Canvas, 12-month MRR financial model, and DPDP Act 2023 legal compliance.

@@ -59,6 +59,7 @@ public class FraudShieldServer {
         server.createContext("/api/metrics", new MetricsHandler());
         server.createContext("/api/override", new OverrideHandler());
         server.createContext("/api/data/erase", new EraseHandler());
+        server.createContext("/api/demo/race-condition", new RaceConditionDemoHandler());
         server.createContext("/api/status", new StatusHandler());
 
         server.setExecutor(Executors.newFixedThreadPool(12));
@@ -121,21 +122,46 @@ public class FraudShieldServer {
                 int recentTx1h = json.has("recent_tx_count_1h") && !json.get("recent_tx_count_1h").isJsonNull()
                         ? Math.max(1, json.get("recent_tx_count_1h").getAsInt()) : 1;
                 boolean consentGiven = !json.has("consent_given") || json.get("consent_given").getAsBoolean();
+                boolean forceFallback = json.has("force_fallback") && !json.get("force_fallback").isJsonNull()
+                        && json.get("force_fallback").getAsBoolean();
 
-                List<OrderItem> items = List.of(new OrderItem(productId, quantity, amount / quantity));
+                List<OrderItem> items = new ArrayList<>();
+                double computedAmount = 0.0;
+                if (json.has("items") && json.get("items").isJsonArray() && json.getAsJsonArray("items").size() > 0) {
+                    for (var el : json.getAsJsonArray("items")) {
+                        JsonObject itemObj = el.getAsJsonObject();
+                        String pid = getStringOrDefault(itemObj, "product_id", "PROD_SHIRT");
+                        int qty = itemObj.has("quantity") && !itemObj.get("quantity").isJsonNull()
+                                ? Math.max(1, itemObj.get("quantity").getAsInt()) : 1;
+                        Product prod = inventoryService.getProduct(pid);
+                        double unitPrice = prod != null ? prod.getPrice() : (amount > 0 ? amount : 0.0);
+                        items.add(new OrderItem(pid, qty, unitPrice));
+                        computedAmount += unitPrice * qty;
+                    }
+                    if (amount <= 0.0) {
+                        amount = computedAmount;
+                    }
+                } else {
+                    items.add(new OrderItem(productId, quantity, amount / quantity));
+                }
+
                 Order order = new Order(
                         orderId, merchantId, customerId, items, amount,
                         ipAddress, deviceFingerprint, latitude, longitude,
-                        recentTx1h, consentGiven
+                        recentTx1h, consentGiven, forceFallback
                 );
 
                 Payment payment;
                 if ("UPI".equalsIgnoreCase(paymentMethod)) {
-                    payment = new UpiPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), "customer@okaxis");
+                    String upiVpa = getStringOrDefault(json, "upi_vpa", "customer@okaxis");
+                    payment = new UpiPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), upiVpa);
                 } else if ("COD".equalsIgnoreCase(paymentMethod)) {
-                    payment = new CodPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), "+919876543210");
+                    String phone = getStringOrDefault(json, "cod_phone", "+919876543210");
+                    payment = new CodPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), phone);
                 } else {
-                    payment = new CardPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), "tok_visa_4242", "4242");
+                    String cardToken = getStringOrDefault(json, "card_token", "tok_visa_4242");
+                    String last4 = cardToken.length() >= 4 ? cardToken.substring(cardToken.length() - 4) : "4242";
+                    payment = new CardPayment("PAY_" + UUID.randomUUID().toString().substring(0, 6), cardToken, last4);
                 }
 
                 Transaction tx = orderService.processOrder(order, payment);
@@ -251,6 +277,7 @@ public class FraudShieldServer {
                 Map<String, Object> item = new LinkedHashMap<>();
                 item.put("product_id", p.getId());
                 item.put("name", p.getName());
+                item.put("category", p.getCategory());
                 item.put("price", p.getPrice());
                 item.put("stock_available", p.getStock());
                 productList.add(item);
@@ -446,6 +473,39 @@ public class FraudShieldServer {
             resp.put("records_removed", removed);
             resp.put("compliance_basis", "DPDP Act 2023 Section 12");
             sendJsonResponse(exchange, 200, resp);
+        }
+    }
+
+    private class RaceConditionDemoHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            setCORSHeaders(exchange);
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, Map.of("error", "Method Not Allowed (use POST)"));
+                return;
+            }
+            int threads = 50;
+            int initialStock = 10;
+            try (InputStream is = exchange.getRequestBody()) {
+                String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                if (!body.isBlank()) {
+                    JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+                    if (json.has("threads") && !json.get("threads").isJsonNull()) {
+                        threads = json.get("threads").getAsInt();
+                    }
+                    if (json.has("initial_stock") && !json.get("initial_stock").isJsonNull()) {
+                        initialStock = json.get("initial_stock").getAsInt();
+                    }
+                }
+                Map<String, Object> result = inventoryService.runRaceConditionComparison(threads, initialStock);
+                sendJsonResponse(exchange, 200, result);
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, Map.of("error", e.getMessage() != null ? e.getMessage() : "Concurrency test failed"));
+            }
         }
     }
 

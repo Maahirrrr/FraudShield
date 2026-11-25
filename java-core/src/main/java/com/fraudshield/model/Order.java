@@ -15,6 +15,7 @@ public class Order {
     private final double shippingLongitude;
     private final int recentTxCount1h;
     private final boolean consentGiven;
+    private final boolean forceFallback;
     private final Instant createdAt;
     private String status;
 
@@ -22,13 +23,21 @@ public class Order {
                  double totalAmount, String ipAddress, String deviceFingerprint,
                  double shippingLatitude, double shippingLongitude) {
         this(id, merchantId, customerId, items, totalAmount, ipAddress, deviceFingerprint,
-                shippingLatitude, shippingLongitude, 1, true);
+                shippingLatitude, shippingLongitude, 1, true, false);
     }
 
     public Order(String id, String merchantId, String customerId, List<OrderItem> items,
                  double totalAmount, String ipAddress, String deviceFingerprint,
                  double shippingLatitude, double shippingLongitude,
                  int recentTxCount1h, boolean consentGiven) {
+        this(id, merchantId, customerId, items, totalAmount, ipAddress, deviceFingerprint,
+                shippingLatitude, shippingLongitude, recentTxCount1h, consentGiven, false);
+    }
+
+    public Order(String id, String merchantId, String customerId, List<OrderItem> items,
+                 double totalAmount, String ipAddress, String deviceFingerprint,
+                 double shippingLatitude, double shippingLongitude,
+                 int recentTxCount1h, boolean consentGiven, boolean forceFallback) {
         this.id = id;
         this.merchantId = merchantId;
         this.customerId = customerId;
@@ -40,6 +49,7 @@ public class Order {
         this.shippingLongitude = shippingLongitude;
         this.recentTxCount1h = Math.max(1, recentTxCount1h);
         this.consentGiven = consentGiven;
+        this.forceFallback = forceFallback;
         this.createdAt = Instant.now();
         this.status = "PENDING";
     }
@@ -55,6 +65,7 @@ public class Order {
     public double getShippingLongitude() { return shippingLongitude; }
     public int getRecentTxCount1h() { return recentTxCount1h; }
     public boolean isConsentGiven() { return consentGiven; }
+    public boolean isForceFallback() { return forceFallback; }
     public Instant getCreatedAt() { return createdAt; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

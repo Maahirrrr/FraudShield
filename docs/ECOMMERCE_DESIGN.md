@@ -43,7 +43,7 @@ sequenceDiagram
     Customer->>Store: Adds items to cart, enters shipping & payment info
     Store->>Java: POST /api/orders (Order Details + Card/UPI Metadata)
     Note over Java: Concurrency check: Deducts stock atomically
-    Java->>Python: POST /score (300ms timeout)
+    Java->>Python: POST /score (500ms timeout)
     alt Python Service Healthy
         Python-->>Java: HTTP 200 {score: 0.88, reasons: ["High Velocity", "Unusual Hour"]}
     else Timeout / Service Down
@@ -94,11 +94,11 @@ While FraudShield is delivered as pure cloud software, its primary commercial va
 2. **Channel Focus**:
    * Direct content marketing on LinkedIn and Twitter targeting D2C founders (*"How we caught a ₹40,000 card-testing attack before the gateway noticed"*).
    * Partnerships with local Shopify development agencies in tier-1 cities (Bengaluru, Mumbai, Delhi-NCR).
-3. **Acquisition Budget & CAC**:
+3. **Acquisition Budget & CAC (Projected Hypothesis)**:
    * Initial seed marketing budget: ₹25,000 / month.
-   * Projected Customer Acquisition Cost (CAC): ₹1,800 per onboarded merchant.
-   * Lifetime Value (LTV) at 10-month average retention: ₹35,000.
-   * **LTV / CAC Ratio**: $\mathbf{19.4x}$.
+   * Projected mature Customer Acquisition Cost (CAC): ₹1,800 per onboarded merchant.
+   * Gross-margin-adjusted Lifetime Value (LTV) at 10-month retention (`₹3,500 × 87.7% × 10`): **₹30,695**.
+   * **LTV / CAC Ratio**: $\mathbf{17.1x}$.
 
 ---
 
@@ -256,4 +256,4 @@ Python Microservice (Port 8000)
 | Deny-list device/address hashes | Until merchant deactivates | Merchant one-click clear in dashboard settings |
 
 **Right to Erasure (DPDP Act 2023, Section 12)**:  
-Any data principal (customer whose data was scored) may submit a deletion request via the merchant's store. FraudShield provides a programmatic deletion API (`DELETE /api/data/erase?order_id=<uuid>`) that removes the JSONL record and purges the hash from deny-lists within 72 hours — within the Act's mandated response window.
+Any data principal (customer whose data was scored) may submit a deletion request via the merchant's store. FraudShield provides a synchronous programmatic deletion API (`DELETE /api/data/erase?order_id=<uuid>`) that immediately purges matching records across `transactions.jsonl` and `analysis_export.csv` under `ReentrantLock` — executing well inside the Act's response window.

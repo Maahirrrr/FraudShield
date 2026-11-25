@@ -45,15 +45,15 @@ We incorporated two complementary deep learning architectures to solve specific 
 ### Q5. What does the sequence model catch that single-transaction models miss? Show an example.
 **Answer**:
 "Consider a fraudster conducting **card-testing**: they authorize 4 consecutive transactions of ₹150 across different products within 90 seconds. 
-* To an isolated tabular model like XGBoost, each ₹150 transaction looks completely normal (low amount, standard category).
-* The **LSTM Sequence Model** processes the temporal vector $(t_1, t_2, t_3, t_4)$. The recurrent hidden state captures the rapid inter-arrival velocity ($\Delta t < 25\text{s}$) and spikes the risk score to 0.89, triggering an automatic BLOCK."
+* To an isolated tabular model like XGBoost, each low-value transaction looks completely benign.
+* The **LSTM Sequence Model** processes the temporal vector $(t_1, t_2, t_3, t_4)$ and velocity feature. Across our live burst scenario (`BURST_4`), the hybrid ensemble spikes risk to **0.9962** (`XGB=0.9962`, `Autoencoder MSE=3.0263 > p99.5`, `LSTM=0.9909`), triggering an automatic **BLOCK**."
 
 ---
 
 ### Q6. How do you explain a blocked order to a seller and to the customer?
 **Answer**:
 * **To the Seller (in Dashboard)**: We provide granular diagnostic telemetry:
-  * *'Blocked: Risk Score 0.92. Reasons: (1) High cart value outlier (₹9,500), (2) Severe negative deflection in V14 (-5.5), (3) 4 orders attempted in 15 minutes.'*
+  * *'Blocked: Risk Score 0.9844. Reasons: (1) High transaction value outlier (₹9,500), (2) Primary PCA deflection on V14 (-5.5) and V12 (-4.8), (3) Autoencoder & LSTM sub-scores.'*
 * **To the Customer (at Checkout)**: To prevent adversarial reverse-engineering, we never reveal internal AI feature weights. We state:
   * *'Your transaction could not be processed due to a security verification requirement. If you believe this is an error, please click here to verify your identity via OTP or contact customer support.'*"
 
