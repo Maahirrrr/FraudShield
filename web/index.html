@@ -879,8 +879,8 @@
         </div>
       </div>
 
-      <div class="nav-group-label">Live platform</div>
-      <nav class="nav-list" aria-label="Live platform navigation">
+      <div class="nav-group-label">Live product</div>
+      <nav class="nav-list" aria-label="Live product navigation">
         <button class="nav-btn" aria-current="page" data-view="overview" onclick="switchView('overview', this)">
           <svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
           <span>Overview</span>
@@ -891,33 +891,33 @@
         </button>
         <button class="nav-btn" data-view="simulator" onclick="switchView('simulator', this)">
           <svg viewBox="0 0 16 16"><path d="M8.5 1.8L3.5 9h4.2l-.7 5.2 5.5-7.4H8.3l.2-5Z"/></svg>
-          <span>Attack &amp; stress lab</span>
+          <span>Security &amp; stress lab</span>
         </button>
       </nav>
 
-      <div class="nav-group-label">Academic defense</div>
-      <nav class="nav-list" aria-label="Academic defense navigation">
+      <div class="nav-group-label">Business &amp; architecture</div>
+      <nav class="nav-list" aria-label="Business and architecture navigation">
         <button class="nav-btn" data-view="analytics" onclick="switchView('analytics', this)">
           <svg viewBox="0 0 16 16"><path d="M2.5 13.5V9.5M6.2 13.5V5.5M9.8 13.5V7.5M13.5 13.5V2.5"/></svg>
           <span>ML &amp; DL benchmarks</span>
         </button>
         <button class="nav-btn" data-view="startup" onclick="switchView('startup', this)">
           <svg viewBox="0 0 16 16"><path d="M2.5 12.5L6 8.8l2.5 2.2 5-6"/><path d="M10.5 5h3v3"/></svg>
-          <span>Startup &amp; e-commerce</span>
+          <span>Business &amp; pitch</span>
         </button>
         <button class="nav-btn" data-view="legal" onclick="switchView('legal', this)">
           <svg viewBox="0 0 16 16"><path d="M8 2L13.5 4.2v4.3c0 3-2.3 5.2-5.5 6-3.2-.8-5.5-3-5.5-6V4.2L8 2Z"/></svg>
-          <span>Java, rubric &amp; legal</span>
+          <span>Architecture &amp; legal</span>
         </button>
         <button class="nav-btn" data-view="viva" onclick="switchView('viva', this)">
           <svg viewBox="0 0 16 16"><path d="M3 3.5h10M3 8h10M3 12.5h6"/></svg>
-          <span>Viva Q&amp;A &amp; skills</span>
+          <span>Technical FAQ &amp; stack</span>
         </button>
       </nav>
 
       <div class="sidebar-foot">
-        <div>5-Subject B.Tech Capstone</div>
-        <div>Java 17 + FastAPI + PyTorch</div>
+        <div>Team FraudShield · v2.0</div>
+        <div>Java 17 · FastAPI · PyTorch</div>
       </div>
     </aside>
 
@@ -935,7 +935,7 @@
           <span class="health-item"><span class="dot" id="dotPython"></span><span id="lblPython">Python :8000</span></span>
           <span class="health-item"><span class="dot" id="dotJava"></span><span id="lblJava">Java :8085</span></span>
           <span class="pill" id="engineModePill">Checking engine</span>
-          <button class="btn sm" onclick="openPresenterModal()">60s demo guide</button>
+          <button class="btn sm" onclick="openPresenterModal(0)">Pitch deck (12 slides)</button>
         </div>
       </header>
 
@@ -1200,11 +1200,11 @@
               </div>
 
               <div class="field">
-                <label class="field-label" for="gatewayOutcome">Sandbox gateway behavior (test PaymentFailedException)</label>
+                <label class="field-label" for="gatewayOutcome">Payment gateway scenario (test sandbox)</label>
                 <select id="gatewayOutcome" class="search-input" style="max-width: 100%;">
-                  <option value="AUTHORIZED">Authorized sandbox payment (normal flow)</option>
-                  <option value="DECLINED_CARD">Simulate Card Decline (tok_visa_0000 &rarr; HTTP 402)</option>
-                  <option value="FAILED_UPI">Simulate UPI Rejection (fail@okaxis &rarr; HTTP 402)</option>
+                  <option value="AUTHORIZED">Authorized sandbox payment (normal approval)</option>
+                  <option value="DECLINED_CARD">Declined Card (tok_visa_0000 &rarr; HTTP 402)</option>
+                  <option value="FAILED_UPI">Rejected UPI Collect (fail@okaxis &rarr; HTTP 402)</option>
                 </select>
               </div>
 
@@ -1230,12 +1230,12 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 3: ATTACK & STRESS LAB ================= -->
+        <!-- ================= VIEW 3: SECURITY & STRESS LAB ================= -->
         <section id="simulator" class="view">
           <div class="title-row">
             <div>
-              <h1>Adversarial, concurrency &amp; fallback lab</h1>
-              <p class="title-sub">Demonstrate every high-value viva test live: card-testing velocity bursts, Java 50-thread race condition proof, and graceful AI-outage fallback.</p>
+              <h1>Security, concurrency &amp; failover lab</h1>
+              <p class="title-sub">Real-time operational test bench verifying card-testing velocity blocking, JVM thread-safety locks, and automated AI-outage failover.</p>
             </div>
             <div class="title-actions">
               <button class="btn" onclick="restockCatalog()">Restock all SKUs</button>
@@ -1249,32 +1249,32 @@
                 <h3>1. Card-testing bot burst (5 calls)</h3>
                 <p>Sends 5 rapid ₹1,899 orders from one customer/device. First 3 approve (~0.006); calls 4–5 spike LSTM sequence + Autoencoder MSE &gt; p99.5 and block (~0.996).</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('CARD_BURST')">Run 5x burst attack</button>
+              <button class="btn primary" onclick="simulateAttack('CARD_BURST')">Run 5x burst test</button>
             </div>
 
             <div class="sim-card">
               <div>
                 <h3>2. Java 50-thread race condition</h3>
-                <p>Hits <code>POST /api/demo/race-condition</code> (50 threads racing for 10 units) showing broken unsynchronized oversell vs fixed atomic lock (10 OK / 40 rejected / 0 left).</p>
+                <p>Executes <code>POST /api/demo/race-condition</code> (50 concurrent JVM threads for 10 units), contrasting unsynchronized oversell against atomic lock safety.</p>
               </div>
-              <button class="btn primary" onclick="runRaceConditionDemo()">Run 50-thread benchmark</button>
+              <button class="btn primary" onclick="runRaceConditionDemo()">Run 50-thread concurrency</button>
             </div>
 
             <div class="sim-card">
               <div>
-                <h3>3. Graceful AI outage fallback</h3>
-                <p>Simulates Python ML microservice timeout inside Java <code>FallbackScorer</code>, catching <code>ModelServiceUnavailableException</code> and scoring via deterministic rules.</p>
+                <h3>3. Graceful AI outage failover</h3>
+                <p>Triggers a simulated ML service timeout inside Java <code>FallbackScorer</code>, catching <code>ModelServiceUnavailableException</code> and falling back to deterministic rules.</p>
               </div>
-              <button class="btn primary" onclick="simulateAttack('FALLBACK_TEST')">Simulate AI outage fallback</button>
+              <button class="btn primary" onclick="simulateAttack('FALLBACK_TEST')">Test ML outage failover</button>
             </div>
 
             <div class="sim-card">
               <div>
-                <h3>4. High-value &amp; geo-spoof vectors</h3>
-                <p>Tests out-of-corridor coordinates (<code>78.21, 162.40</code> &rarr; VERIFY) and high-ticket card outlier (<code>₹14,500</code> &rarr; BLOCK) live end-to-end.</p>
+                <h3>4. High-value &amp; geo-anomaly checks</h3>
+                <p>Dispatches out-of-corridor coordinates (<code>78.21, 162.40</code> &rarr; VERIFY) and high-ticket card outlier (<code>₹14,500</code> &rarr; BLOCK) live end-to-end.</p>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn" onclick="simulateAttack('GEO_SPOOF')">Geo spoof</button>
+                <button class="btn" onclick="simulateAttack('GEO_SPOOF')">Geo alert</button>
                 <button class="btn primary" onclick="simulateAttack('NIGHT_ANOMALY')">₹14,500 outlier</button>
               </div>
             </div>
@@ -1310,9 +1310,9 @@
           <div class="panel">
             <div class="panel-head">
               <h2>Live execution trace</h2>
-              <span class="panel-meta">Real HTTP responses from Java port 8085 &amp; Python port 8000</span>
+              <span class="panel-meta">Real HTTP telemetry from Java port 8085 &amp; Python port 8000</span>
             </div>
-            <pre id="simLog">[READY] Choose any viva experiment above to stream live telemetry.</pre>
+            <pre id="simLog">[READY] Select a scenario above to stream live backend telemetry.</pre>
           </div>
         </section>
 
@@ -1558,33 +1558,36 @@
             </div>
           </div>
 
-          <!-- 12-Slide Pitch Outline -->
+          <!-- 12-Slide Seed Pitch Deck -->
           <div class="panel">
             <div class="panel-head">
-              <h2>12-slide investor &amp; faculty pitch flow</h2>
-              <span class="panel-meta">Teammates present the modules they engineered and cross-explain integration</span>
+              <div>
+                <h2>Seed &amp; capstone pitch deck (12 slides)</h2>
+                <div class="panel-meta">Interactive slide presentation covering problem, architecture, benchmarks, unit economics, and seed ask</div>
+              </div>
+              <button class="btn primary" onclick="openPresenterModal(0)">Open pitch presentation</button>
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Slides</th><th>Section</th><th>Key proof presented live</th></tr></thead>
+                <thead><tr><th>Slides</th><th>Section</th><th>Key proof highlighted</th><th></th></tr></thead>
                 <tbody>
-                  <tr><td class="num">1–3</td><td><strong>Problem &amp; Target Seller</strong></td><td>Surat/Bengaluru seller interviews, 1.5–3.5% chargeback + ₹180 COD RTO margin loss</td></tr>
-                  <tr><td class="num">4–5</td><td><strong>Solution &amp; Architecture</strong></td><td>Live D2C Store &rarr; Java 17 Core (:8085) &rarr; FastAPI XGB+AE+LSTM (:8000) + Fallback</td></tr>
-                  <tr><td class="num">6–7</td><td><strong>AI Engine &amp; Honest Benchmarks</strong></td><td>Why 99.83% accuracy fails, XGBoost 0.8596 PR-AUC, Chronological LSTM 0.8088, $250/$15 cost curve</td></tr>
-                  <tr><td class="num">8–10</td><td><strong>Differentiation, Unit Economics &amp; GTM</strong></td><td>₹999–₹9,999 plans, 87.7% gross margin, 6-merchant break-even, Shopify/D2C content funnel</td></tr>
-                  <tr><td class="num">11–12</td><td><strong>Compliance, Ethics &amp; ₹20L Ask</strong></td><td>DPDP Act 2023 live erasure, RBI CoF non-storage, 18-mo SISFS runway for 150 merchants</td></tr>
+                  <tr><td class="num">1–3</td><td><strong>Problem &amp; Target Market</strong></td><td>Surat &amp; Bengaluru D2C interviews: 1.5–3.5% chargebacks + ₹180 COD RTO margin erosion</td><td class="n"><button class="btn sm" onclick="openPresenterModal(1)">View slide 2</button></td></tr>
+                  <tr><td class="num">4–5</td><td><strong>Solution &amp; Architecture</strong></td><td>D2C Store &rarr; Java 17 Core (:8085) &rarr; FastAPI XGBoost + Autoencoder + LSTM (:8000)</td><td class="n"><button class="btn sm" onclick="openPresenterModal(4)">View slide 5</button></td></tr>
+                  <tr><td class="num">6–7</td><td><strong>ML Benchmarks &amp; Deep Learning</strong></td><td>PR-AUC 0.8596 vs LogReg baseline, Chronological LSTM 0.8088, $250/$15 financial cost curve</td><td class="n"><button class="btn sm" onclick="openPresenterModal(5)">View slide 6</button></td></tr>
+                  <tr><td class="num">8–10</td><td><strong>Resilience, Edge &amp; Unit Economics</strong></td><td>50-thread atomic locks, 500ms failover, ₹999–₹9,999 tiers, 87.7% estimated gross margin</td><td class="n"><button class="btn sm" onclick="openPresenterModal(9)">View slide 10</button></td></tr>
+                  <tr><td class="num">11–12</td><td><strong>Governance, DPIIT &amp; ₹20L Ask</strong></td><td>DPDP Act 2023 live Section 12 erasure, RBI tokenization, 18-mo SISFS runway for 150 stores</td><td class="n"><button class="btn sm" onclick="openPresenterModal(10)">View slide 11</button></td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- ================= VIEW 6: JAVA, RUBRIC & LEGAL ================= -->
+        <!-- ================= VIEW 6: ARCHITECTURE & LEGAL ================= -->
         <section id="legal" class="view">
           <div class="title-row">
             <div>
-              <h1>Java architecture, rubric coverage &amp; compliance</h1>
-              <p class="title-sub">Complete technical traceability across all 5 B.Tech subjects, plus DPDP Act 2023 right-to-erasure and dataset ethics.</p>
+              <h1>System architecture, governance &amp; compliance</h1>
+              <p class="title-sub">Cross-disciplinary engineering architecture across backend Java concurrency, hybrid AI inference, and India DPDP Act 2023 / RBI compliance.</p>
             </div>
           </div>
 
@@ -1592,7 +1595,7 @@
           <div class="panel">
             <div class="panel-head">
               <h2>End-to-end system flow</h2>
-              <span class="panel-meta">Java owns checkout business rules and never fails even if AI is offline</span>
+              <span class="panel-meta">Java owns checkout business rules and stays online even if AI fails over</span>
             </div>
             <div class="table-wrap">
               <svg viewBox="0 0 920 155" width="920" height="155" role="img" aria-label="FraudShield system architecture flow diagram" style="min-width: 720px; width: 100%; height: auto;">
@@ -1631,22 +1634,21 @@
             </div>
           </div>
 
-          <!-- 100-Mark + 5-Bonus Rubric Checklist -->
+          <!-- 5-Discipline Engineering Matrix -->
           <div class="panel">
             <div class="panel-head">
-              <h2>100-mark + 5-bonus integrated rubric scorecard</h2>
-              <span class="panel-meta">Direct code and test proof across all 5 subjects</span>
+              <h2>5-discipline integrated engineering matrix</h2>
+              <span class="panel-meta">End-to-end production architecture combining business viability, Java core, ML, and DL</span>
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Subject component</th><th class="n">Marks</th><th>Verified code &amp; deliverable evidence</th><th>Live proof</th></tr></thead>
+                <thead><tr><th>Discipline</th><th>Architectural role</th><th>Verified system implementation</th><th>Inspect live</th></tr></thead>
                 <tbody>
-                  <tr><td><strong>Startup Policies</strong></td><td class="n num">10</td><td>Lean Canvas, 9-Block BMC, SWOT/PESTEL, DPIIT checklist, Seller interviews, ₹20L SISFS plan (<code>docs/STARTUP_BRIEF.md</code>)</td><td><button class="btn sm" onclick="goToView('startup')">Open business case</button></td></tr>
-                  <tr><td><strong>E-Commerce &amp; Legal</strong></td><td class="n num">10</td><td>3-tier SaaS model (87.7% margin), COD RTO 5-step protocol, DPDP consent + erasure, RBI CoF sandbox (<code>docs/ECOMMERCE_DESIGN.md</code>)</td><td><button class="btn sm" onclick="goToView('store')">Open D2C checkout</button></td></tr>
-                  <tr><td><strong>Java Core Engine</strong></td><td class="n num">20</td><td>Framework-free Java 17, <code>Payment</code> inheritance, 6 custom exceptions, <code>BlockingQueue</code> + <code>ExecutorService</code>, 7 JUnit tests passing</td><td><button class="btn sm" onclick="goToView('simulator')">Open stress lab</button></td></tr>
-                  <tr><td><strong>Data Science</strong></td><td class="n num">15</td><td>284,807 Kaggle ULB transactions (ODbL), train-only <code>RobustScaler</code>, stats/EDA, 5 models vs LogReg baseline, cost matrix</td><td><button class="btn sm" onclick="goToView('analytics')">Open benchmarks</button></td></tr>
-                  <tr><td><strong>Deep Learning</strong></td><td class="n num">20</td><td>PyTorch Bottleneck Autoencoder (`@p99.5` MSE + drift attribution) + chronological `FraudLSTM` (`0.8088` PR-AUC &gt; XGBoost)</td><td><button class="btn sm" onclick="goToView('analytics')">Open DL curves</button></td></tr>
-                  <tr><td><strong>Integration, Pitch &amp; Bonus</strong></td><td class="n num">25+5</td><td>Java↔FastAPI live 500ms timeout + automatic rule fallback, 12-slide outline, Razorpay/Stripe payment sandbox</td><td><button class="btn sm" onclick="openPresenterModal()">Open demo script</button></td></tr>
+                  <tr><td><strong>Startup Strategy</strong></td><td>Commercial viability &amp; seed plan</td><td>Lean Canvas, 9-Block BMC, SWOT/PESTEL, DPIIT checklist, Seller interviews, ₹20L SISFS plan (<code>docs/STARTUP_BRIEF.md</code>)</td><td><button class="btn sm" onclick="goToView('startup')">Business &amp; pitch</button></td></tr>
+                  <tr><td><strong>E-Commerce Platform</strong></td><td>Checkout rail &amp; revenue model</td><td>3-tier SaaS model (87.7% margin), COD RTO protocol, DPDP consent + erasure, RBI CoF sandbox (<code>docs/ECOMMERCE_DESIGN.md</code>)</td><td><button class="btn sm" onclick="goToView('store')">D2C store</button></td></tr>
+                  <tr><td><strong>Java 17 Core</strong></td><td>Transactional orchestration</td><td>Framework-free Java HTTP server, <code>Payment</code> inheritance, 6 custom exceptions, <code>BlockingQueue</code>, 7 passing JUnit tests</td><td><button class="btn sm" onclick="goToView('simulator')">Stress lab</button></td></tr>
+                  <tr><td><strong>Data Science</strong></td><td>Tabular risk &amp; cost modeling</td><td>284,807 Kaggle ULB rows (ODbL), train-only <code>RobustScaler</code>, stats/EDA, 5 models vs LogReg baseline, $250/$15 cost sweep</td><td><button class="btn sm" onclick="goToView('analytics')">ML benchmarks</button></td></tr>
+                  <tr><td><strong>Deep Learning &amp; Resilience</strong></td><td>Zero-day &amp; burst intelligence</td><td>PyTorch Bottleneck Autoencoder (MSE drift residuals) + chronological <code>FraudLSTM</code> (<code>0.8088</code> PR-AUC) + 500ms rule failover</td><td><button class="btn sm" onclick="openPresenterModal(6)">Pitch slides</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1691,19 +1693,19 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 7: VIVA Q&A & SKILLS ================= -->
+        <!-- ================= VIEW 7: TECHNICAL FAQ & PLAYBOOKS ================= -->
         <section id="viva" class="view">
           <div class="title-row">
             <div>
-              <h1>Viva defense Q&amp;A &amp; engineering playbooks</h1>
-              <p class="title-sub">All 14 core viva questions from the Assignment Brief prepared for rapid teammate recall, plus the indexed engineering skills library.</p>
+              <h1>Technical FAQ &amp; engineering playbooks</h1>
+              <p class="title-sub">Architectural answers covering dataset imbalance, ML/DL calibration, JVM concurrency, failover, unit economics, and regulatory design.</p>
             </div>
           </div>
 
           <div class="panel" style="margin-bottom: var(--gap);">
             <div class="panel-head">
-              <h2>14-question examiner viva defense guide</h2>
-              <input type="search" id="vivaSearchInput" class="search-input" style="max-width: 260px;" placeholder="Filter viva questions..." oninput="renderVivaList()">
+              <h2>Technical architecture &amp; risk FAQ</h2>
+              <input type="search" id="vivaSearchInput" class="search-input" style="max-width: 260px;" placeholder="Filter FAQ topics..." oninput="renderVivaList()">
             </div>
             <div id="vivaAccordionList"></div>
           </div>
@@ -1762,30 +1764,25 @@
     </div>
   </div>
 
-  <!-- 60-SECOND PRESENTER GUIDE MODAL -->
-  <div id="presenterModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="presenterTitle" onclick="if (event.target === this) this.classList.remove('active')">
+  <!-- INTERACTIVE 12-SLIDE SEED & CAPSTONE PITCH DECK MODAL -->
+  <div id="presenterModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="slideTitle" onclick="if (event.target === this) this.classList.remove('active')">
     <div class="modal-dialog wide">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h2 id="presenterTitle" style="font-size: 17px;">60-second faculty presentation flow</h2>
-        <button class="btn sm" onclick="document.getElementById('presenterModal').classList.remove('active')">Close</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="pill pos" id="slideCounter">Slide 1 / 12</span>
+          <span class="pill" id="slideTag">Executive Pitch</span>
+        </div>
+        <button class="btn sm" onclick="closePresenterModal()">Close</button>
       </div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-k"><strong>Step 1 &mdash; Overview (10s)</strong><span class="cell-sub">Click the blocked ₹9,500 order on the left table.</span></span>
-          <span class="kv-v">Show plain-English summary + live XGBoost, Autoencoder MSE, and LSTM scores. Slide the Threshold Policy control.</span>
+      <h2 id="slideTitle" style="font-size: 20px; font-weight: 600; margin-bottom: 8px; line-height: 1.3;"></h2>
+      <p id="slideLead" style="font-size: 14px; color: var(--accent); font-weight: 500; margin-bottom: 14px; line-height: 1.45;"></p>
+      <div id="slidePoints" class="kv-list" style="background: var(--ground); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; gap: 8px;">
+          <button class="btn" id="slidePrevBtn" onclick="stepSlide(-1)">Previous</button>
+          <button class="btn primary" id="slideNextBtn" onclick="stepSlide(1)">Next slide</button>
         </div>
-        <div class="kv-row">
-          <span class="kv-k"><strong>Step 2 &mdash; D2C Store (15s)</strong><span class="cell-sub">Show DPDP consent error first, then check &amp; buy Trail Runner Pro.</span></span>
-          <span class="kv-v">Proves unticked consent protection (<code>400</code>) + Step-up 2FA OTP (<code>482910</code>) + optional card decline (<code>402</code>).</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-k"><strong>Step 3 &mdash; Attack &amp; Stress Lab (20s)</strong><span class="cell-sub">Run Card-testing burst, 50-thread race, and AI Outage Fallback.</span></span>
-          <span class="kv-v">Proves LSTM catches rapid bursts, Java locks prevent overselling, and checkout stays 100% online if AI drops.</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-k"><strong>Step 4 &mdash; Benchmarks, Startup &amp; Erase (15s)</strong><span class="cell-sub">Open ML &amp; DL + Startup ROI + Java/Legal tabs.</span></span>
-          <span class="kv-v">Explain PR-AUC vs accuracy, show interactive merchant ROI, and run live DPDP Section 12 deletion.</span>
-        </div>
+        <button class="btn" id="slideActionBtn" style="display: none;"></button>
       </div>
     </div>
   </div>
@@ -1853,21 +1850,86 @@
     ];
 
     const VIVA_QA = [
-      { q: 'Q1. Why is accuracy useless here and what metric did you use instead?', a: 'Only 492 of 284,807 rows (0.173%) are fraud. Predicting all legitimate gives 99.83% accuracy with 0% fraud caught. We evaluate using PR-AUC (blind to overwhelming true negatives), Precision/Recall at fixed thresholds, and the business Financial Loss formula (FN * $250 + FP * $15).' },
-      { q: 'Q2. How do you guarantee zero data leakage?', a: 'Three controls in src/preprocess.py: (1) train/test split happens before scaling, (2) RobustScaler fits strictly on X_train only, and (3) SMOTE runs inside imblearn Pipeline training folds only while FraudLSTM validates strictly on chronologically later Time hours.' },
-      { q: 'Q3. Your public dataset is anonymized/European. Why should results hold for D2C India?', a: 'Kaggle ULB preserves real transaction covariance structure; in production we align INR checkout totals via FX parity scaling (Amount / 85) and continuously collect verified local ground-truth labels through merchant dashboard overrides and COD RTO outcomes.' },
-      { q: 'Q4. Why run Deep Learning if XGBoost wins tabular PR-AUC (0.8596)?', a: 'XGBoost treats every order in isolation. PyTorch Autoencoder detects zero-day outliers for brand-new shoppers without history (79.59% unsupervised recall @ p99.5), and PyTorch LSTM catches temporal burst sequences — actually beating XGBoost on future chronological hours (0.8088 vs 0.7933 PR-AUC).' },
-      { q: 'Q5. Show an attack the sequence model catches that single-row models miss.', a: 'A card-testing bot fires 5 rapid low-value orders (₹1,899 each) in under 60 seconds. Single-row inspection sees small routine baskets on burst 1–3 (0.0064), while burst 4–5 trigger 1h velocity + 5-step LSTM hidden state + Autoencoder V17 drift, spiking risk to 0.9962 BLOCK (testable live in Attack & stress lab).' },
-      { q: 'Q6. How do you explain a blocked order differently to the seller vs buyer?', a: 'Sellers see full sub-model telemetry (XGBoost p, Autoencoder MSE drift vector, LSTM burst window) to audit decisions. Shoppers only receive a polite verification/dispute message without leaking thresholds adversaries could reverse-engineer.' },
-      { q: 'Q7. What happens if the Python AI service crashes or times out?', a: 'Java RemoteModelScorer enforces a 500ms timeout (config.properties) and throws ModelServiceUnavailableException. FallbackScorer catches it immediately and delegates to local deterministic RuleBasedScorer (amount, night window, 1h velocity >=4, geo bounds) so checkout never drops.' },
-      { q: 'Q8. Show the Java multithreading race condition and your synchronized fix.', a: 'Two threads calling check-then-act on stock=10 can both pass p.getStock() >= 1 simultaneously and oversell. Making decrementStockSynchronized() atomic inside synchronized prevents oversell: verified by 50 concurrent threads in JUnit & live API (10 succeed, 40 throw OutOfStockException, stock=0).' },
-      { q: 'Q9. Who pays, how much, and why not Stripe Radar or Razorpay Thirdwatch?', a: 'Indian D2C merchants doing 300–25,000 orders/month pay ₹999–₹9,999/mo (87.7% estimated margin, break-even at 6 merchants). Unlike Stripe Radar (gateway lock-in, no INR/COD) or Thirdwatch (higher entry commit), FraudShield works across COD + UPI + Card with sub-model explainability.' },
-      { q: 'Q10. What personal data do you store and under what DPDP Act 2023 consent?', a: 'Zero raw card PAN, CVV, full name, phone, or postal address. Checkout requires an un-ticked DPDP consent checkbox enforced in Java (HTTP 400 if unchecked), and Section 12 DELETE /api/data/erase purges JSONL + CSV records immediately.' },
-      { q: 'Q11. How did you choose 0.35 Verify and 0.70 Block thresholds?', a: 'Using our threshold sweep (notebooks/threshold_analysis.py), setting Block at 0.70 cuts false alarms down to 28 out of 56,864 genuine buyers while routing the 0.35–0.69 gray zone to cheap 2FA OTP instead of lost sales.' },
-      { q: 'Q12. What failed during development and what would you build next?', a: 'Class-weighted Logistic Regression triggered 1,388 false alarms ($22,820 loss), and an Autoencoder latent size of 16 reconstructed fraud too easily until narrowed to 6. Next step: merchant Graph Neural Network across shared device hashes and a one-click Shopify app.' },
-      { q: 'Q13. How does Java BlockingQueue and ScheduledExecutorService work in production?', a: 'OrderService persists JSONL immediately for dashboard reads while pushing transactions into a 1,000-slot LinkedBlockingQueue drained asynchronously to analysis_export.csv by a 2-thread worker pool, plus a ScheduledExecutorService pruning 1h velocity windows every 60s.' },
-      { q: 'Q14. How do you ensure all 6 custom Java exceptions perform real recovery?', a: 'Every exception changes control flow and maps cleanly in HTTP: InvalidInputException -> 400 DPDP block, OutOfStockException -> 409 lock protection, FraudBlockedException -> 403 block response, PaymentFailedException -> 402 Card/UPI decline, and ModelServiceUnavailableException -> live fallback activation.' }
+      { tag: 'Data Science', q: 'Why is accuracy invalid for fraud detection, and why use PR-AUC?', a: 'Only 492 of 284,807 rows (0.173%) are fraud. Predicting all legitimate gives 99.83% accuracy with 0% fraud caught. We evaluate using PR-AUC (blind to overwhelming true negatives), Precision/Recall at fixed thresholds, and the business Financial Loss formula (FN * $250 + FP * $15).' },
+      { tag: 'Data Science', q: 'How does FraudShield guarantee zero train/test data leakage?', a: 'Three controls in src/preprocess.py: (1) train/test split happens before scaling, (2) RobustScaler fits strictly on X_train only, and (3) SMOTE runs inside imblearn Pipeline training folds only while FraudLSTM validates strictly on chronologically later Time hours.' },
+      { tag: 'Data Science', q: 'How do anonymized European PCA features translate to Indian D2C stores?', a: 'Kaggle ULB preserves real transaction covariance structure; in production we align INR checkout totals via FX parity scaling (Amount / 85) and continuously collect verified local ground-truth labels through merchant dashboard overrides and COD RTO outcomes.' },
+      { tag: 'Deep Learning', q: 'Why run Autoencoder & LSTM if XGBoost wins tabular PR-AUC (0.8596)?', a: 'XGBoost treats every order in isolation. PyTorch Autoencoder detects zero-day outliers for brand-new shoppers without history (79.59% unsupervised recall @ p99.5), and PyTorch LSTM catches temporal burst sequences — actually beating XGBoost on future chronological hours (0.8088 vs 0.7933 PR-AUC).' },
+      { tag: 'Deep Learning', q: 'What attack does the LSTM sequence model catch that single-row models miss?', a: 'A card-testing bot fires 5 rapid low-value orders (₹1,899 each) in under 60 seconds. Single-row inspection sees small routine baskets on burst 1–3 (0.0064), while burst 4–5 trigger 1h velocity + 5-step LSTM hidden state + Autoencoder V17 drift, spiking risk to 0.9962 BLOCK.' },
+      { tag: 'Product UX', q: 'How are blocked transactions explained differently to sellers vs buyers?', a: 'Sellers see full sub-model telemetry (XGBoost p, Autoencoder MSE drift vector, LSTM burst window) to audit decisions. Shoppers only receive a clear verification or dispute message without leaking thresholds adversaries could reverse-engineer.' },
+      { tag: 'Java Core', q: 'What happens if the Python AI microservice crashes or times out?', a: 'Java RemoteModelScorer enforces a 500ms timeout (config.properties) and throws ModelServiceUnavailableException. FallbackScorer catches it immediately and delegates to local deterministic RuleBasedScorer (amount, night window, 1h velocity >=4, geo bounds) so checkout never drops.' },
+      { tag: 'Java Core', q: 'How does synchronized locking prevent overselling in InventoryService?', a: 'Two threads calling check-then-act on stock=10 can both pass p.getStock() >= 1 simultaneously and oversell. Making decrementStockSynchronized() atomic prevents oversell: verified by 50 concurrent threads (10 succeed, 40 throw OutOfStockException, stock=0).' },
+      { tag: 'Business', q: 'What is the revenue model and why not Stripe Radar or Razorpay Thirdwatch?', a: 'Indian D2C merchants doing 300–25,000 orders/month pay ₹999–₹9,999/mo (87.7% estimated margin, break-even at 6 merchants). Unlike Stripe Radar (gateway lock-in, no INR/COD) or Thirdwatch (higher entry commit), FraudShield works across COD + UPI + Card with sub-model explainability.' },
+      { tag: 'Compliance', q: 'What user telemetry is persisted and how is DPDP Act 2023 consent enforced?', a: 'Zero raw card PAN, CVV, full name, phone, or postal address. Checkout requires an un-ticked DPDP consent checkbox enforced in Java (HTTP 400 if unchecked), and Section 12 DELETE /api/data/erase purges JSONL + CSV records immediately.' },
+      { tag: 'Data Science', q: 'How were the 0.35 Verify and 0.70 Block thresholds selected?', a: 'Using our cost-weighted threshold sweep (notebooks/threshold_analysis.py), setting Block at 0.70 cuts false alarms down to 28 out of 56,864 genuine buyers while routing the 0.35–0.69 gray zone to low-friction 2FA OTP instead of lost sales.' },
+      { tag: 'Deep Learning', q: 'What bottlenecks did the team encounter and what is on the post-MVP roadmap?', a: 'Class-weighted Logistic Regression triggered 1,388 false alarms ($22,820 loss), and an Autoencoder latent size of 16 reconstructed fraud too easily until narrowed to 6. Next milestone: shared device graph clustering and a 1-click Shopify app.' },
+      { tag: 'Java Core', q: 'How do BlockingQueue and ScheduledExecutorService operate inside OrderService?', a: 'OrderService persists JSONL immediately for dashboard reads while pushing transactions into a 1,000-slot LinkedBlockingQueue drained asynchronously to analysis_export.csv by a worker pool, plus a ScheduledExecutorService pruning 1h velocity windows every 60s.' },
+      { tag: 'Java Core', q: 'How do the custom Java exceptions translate into actionable API behavior?', a: 'Every exception changes control flow: InvalidInputException -> HTTP 400 DPDP block, OutOfStockException -> HTTP 409 lock protection, FraudBlockedException -> HTTP 403 block response, PaymentFailedException -> HTTP 402 Card/UPI decline, and ModelServiceUnavailableException -> live fallback activation.' }
     ];
+
+    const PITCH_SLIDES = [
+      { tag: 'Title', title: 'FraudShield — Explainable Fraud Defense for D2C Commerce', lead: 'We cost less than the chargebacks we prevent, and tell the seller why an order was flagged.', points: [
+        ['Target customer', 'Indian D2C & Shopify merchants doing 300–25,000 orders/month'],
+        ['Core promise', 'Sub-80ms risk score (Approve / OTP Verify / Block) + plain-English attribution'],
+        ['Tech stack', 'Java 17 Core (:8085) + Python FastAPI Hybrid AI (:8000) + Zero-fallback downtime']
+      ], view: 'overview', cta: 'Open Live Overview' },
+      { tag: 'Problem', title: 'Sellers Bleed Margin to Chargebacks & Fake COD Bounce-Backs', lead: 'Small merchants pay ₹150–₹200 double courier fees per RTO and lose 1.5–3.5% GMV to fraud.', points: [
+        ['Surat Apparel (1,200/mo)', 'Reports ~₹180 reverse shipping loss on every fake Cash-on-Delivery bounce-back'],
+        ['Bengaluru Electronics', 'Hit by 60 automated card-testing attempts in 30 minutes with opaque $15 dispute penalties'],
+        ['Delhi Cosmetics', 'Locked out of enterprise fraud suites demanding $500/mo minimums and US cards only']
+      ], view: 'startup', cta: 'Open Seller ROI Calculator' },
+      { tag: 'Market', title: 'Underserved D2C Segment Built Around UPI, Card & COD', lead: 'Enterprise risk tools ignore bootstrapped brands selling on Instagram, WooCommerce & Shopify India.', points: [
+        ['India-first payment mix', 'Full risk coverage across Credit/Debit Cards, UPI VPAs, and Cash-on-Delivery limits'],
+        ['Self-serve entry point', 'Starts at ₹999/month (10+ orders/day) vs ₹8,500+ enterprise contracts'],
+        ['Conversion rescue', 'Middle risk band (0.35–0.69) triggers step-up OTP instead of turning away good buyers']
+      ], view: 'store', cta: 'Open 12-SKU D2C Store' },
+      { tag: 'Product', title: 'How a Live Order Clears FraudShield in Milliseconds', lead: 'Atomic inventory locking, consent enforcement, 3-engine AI scoring, and human override flywheel.', points: [
+        ['1. DPDP Gate', 'Checkout enforces explicit opt-in consent before any telemetry is scored'],
+        ['2. Java Dispatch', 'Java 17 decrements stock atomically and computes sliding 1h velocity'],
+        ['3. Hybrid Decision', 'XGBoost + Autoencoder + LSTM return score, decision, and top feature reasons']
+      ], view: 'store', cta: 'Test Live Checkout' },
+      { tag: 'Architecture', title: 'Framework-Free Java Core Driving FastAPI Microservices', lead: 'Clean OOP separation: Java owns business rules and never trusts the ML endpoint blindly.', points: [
+        ['OOP & Polymorphism', 'Abstract Payment hierarchy extended cleanly by CardPayment, UpiPayment, CodPayment'],
+        ['6 Custom Exceptions', 'InvalidInput (400), PaymentFailed (402), FraudBlocked (403), OutOfStock (409), ModelUnavailable'],
+        ['Async Persistence', 'LinkedBlockingQueue + ReentrantLock writes dual JSONL ledger and analysis_export.csv']
+      ], view: 'legal', cta: 'Inspect System Diagram' },
+      { tag: 'Data Science', title: '284,807 Transactions: Why Accuracy Lies & PR-AUC Wins', lead: 'Predicting zero fraud hits 99.83% accuracy; honest evaluation uses PR-AUC and Dollar Cost.', points: [
+        ['Zero-leakage pipeline', 'Train/test split prior to RobustScaler fit and pipeline-only SMOTE resampling'],
+        ['Stratified winner', 'Cost-sensitive XGBoost reaches 0.8596 PR-AUC (vs 0.7175 LogReg losing $22,820)'],
+        ['Minimum cost policy', 'Calibrated thresholds ($250 FN / $15 FP) reduce test-set financial loss by >80%']
+      ], view: 'analytics', cta: 'Open ML Benchmarks' },
+      { tag: 'Deep Learning', title: 'Bottleneck Autoencoder & Chronological LSTM Add Signal', lead: 'Tested strictly on unseen future Time hours — FraudLSTM outperforms single-row XGBoost.', points: [
+        ['PyTorch FraudLSTM', 'Achieves 0.8088 PR-AUC vs XGBoost 0.7933 on strict future-hour holdout ($4,435 vs $4,770 loss)'],
+        ['Bottleneck Autoencoder', 'Unsupervised 30-to-6 compression catches 79.59% of frauds @ p99.5 with V17/V14 drift attribution'],
+        ['Live sequence memory', 'Thread-safe 5-step sliding window in Python catches rapid card-testing bursts']
+      ], view: 'analytics', cta: 'Inspect DL Curves' },
+      { tag: 'Engineering Proof', title: 'Verified Thread Safety & 500ms Automatic Failover', lead: 'Checkout never oversells inventory and never crashes even if Python ML goes offline.', points: [
+        ['50-thread proof', 'Unsynchronized stock check oversells under load; synchronized lock grants exact 10/10 & throws 40 OOS'],
+        ['Resilience SLA', 'RemoteModelScorer enforces 500ms timeout; FallbackScorer switches cleanly to RuleBasedScorer'],
+        ['Automated suite', 'Verified live via 7 JUnit 5 tests (mvn clean test) and interactive Stress Lab']
+      ], view: 'simulator', cta: 'Run Race & Failover Tests' },
+      { tag: 'Edge', title: 'Honest Competitive Position in Indian Checkout Security', lead: 'Purpose-built where Stripe Radar and heavy enterprise tools leave SMB D2C sellers exposed.', points: [
+        ['Gateway-agnostic', 'Works across Razorpay, Stripe, Cashfree test rails and independent COD shipments'],
+        ['Lower barrier', '₹999/mo entry with transparent per-order scaling above included volume'],
+        ['Explainability first', 'Merchant overrides feed real ground-truth labels back into retraining loops']
+      ], view: 'startup', cta: 'Compare Competitors' },
+      { tag: 'Economics', title: 'SaaS Revenue Model & Projected Unit Economics', lead: 'Projected 87.7% gross margin with break-even at 6 active merchant stores.', points: [
+        ['Blended ARPM & COGS', '₹3,500/mo projected ARPM minus ₹430 compute/storage/SMS COGS = ₹3,070 contribution'],
+        ['Capital efficiency', 'Projected LTV ₹30,695 vs mature ₹1,800 referral CAC (17.1x LTV/CAC, 0.6 mo payback)'],
+        ['12-month trajectory', 'Projected scaling from 6 to 70 stores reaches ₹8.39L annualized run-rate (hypothesis)']
+      ], view: 'startup', cta: 'Simulate Merchant ROI' },
+      { tag: 'Compliance', title: 'Built for India DPDP Act 2023 & RBI Tokenisation', lead: 'Zero sensitive card credentials stored; immediate right-to-erasure across ledger & CSV.', points: [
+        ['Privacy by design', 'Strict opt-in consent gate (unticked default), zero PAN/CVV/phone persistence'],
+        ['Live Sec. 12 Erasure', 'DELETE /api/data/erase synchronously scrubs matching rows under ReentrantLock'],
+        ['AI fairness & ethics', 'No demographic features (gender/age/address) and contestable manual overrides']
+      ], view: 'legal', cta: 'Test DPDP Erasure' },
+      { tag: 'Seed Ask', title: 'Roadmap & ₹20 Lakh Startup India (SISFS) Funding Plan', lead: '18-month runway targeting 150 active Indian D2C stores and native Shopify integration.', points: [
+        ['Allocation', '40% R&D & engineering (₹8L) · 25% cloud compute (₹5L) · 20% GTM (₹4L) · 15% compliance (₹3L)'],
+        ['DPIIT readiness', 'Original code/IP, turnover below ₹100 Cr ceiling, private limited incorporation staged'],
+        ['Post-MVP milestones', 'One-click Shopify app plugin, Courier WhatsApp COD confirmation, cross-store device graph']
+      ], view: 'startup', cta: 'Close & Explore Live App' }
+    ];
+
+    let activeSlideIdx = 0;
 
     function esc(v) {
       return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
@@ -1906,9 +1968,52 @@
       }
     }
 
-    function openPresenterModal() {
+    function openPresenterModal(idx) {
+      if (typeof idx === 'number') activeSlideIdx = Math.max(0, Math.min(PITCH_SLIDES.length - 1, idx));
+      renderPitchSlide();
       document.getElementById('presenterModal').classList.add('active');
     }
+
+    function closePresenterModal() {
+      document.getElementById('presenterModal').classList.remove('active');
+    }
+
+    function stepSlide(delta) {
+      activeSlideIdx = Math.max(0, Math.min(PITCH_SLIDES.length - 1, activeSlideIdx + delta));
+      renderPitchSlide();
+    }
+
+    function renderPitchSlide() {
+      const s = PITCH_SLIDES[activeSlideIdx];
+      document.getElementById('slideCounter').textContent = `Slide ${activeSlideIdx + 1} / ${PITCH_SLIDES.length}`;
+      document.getElementById('slideTag').textContent = s.tag;
+      document.getElementById('slideTitle').textContent = s.title;
+      document.getElementById('slideLead').textContent = s.lead;
+      document.getElementById('slidePoints').innerHTML = s.points.map(([k, v]) => `
+        <div class="kv-row">
+          <span class="kv-k"><strong>${esc(k)}</strong></span>
+          <span class="kv-v" style="max-width: 48ch; text-align: right;">${esc(v)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('slidePrevBtn').disabled = activeSlideIdx === 0;
+      document.getElementById('slideNextBtn').disabled = activeSlideIdx === PITCH_SLIDES.length - 1;
+      const actBtn = document.getElementById('slideActionBtn');
+      actBtn.style.display = 'inline-flex';
+      actBtn.textContent = s.cta || 'Inspect live';
+      actBtn.onclick = () => {
+        closePresenterModal();
+        if (s.view) goToView(s.view);
+      };
+    }
+
+    document.addEventListener('keydown', e => {
+      const modal = document.getElementById('presenterModal');
+      if (!modal || !modal.classList.contains('active')) return;
+      if (e.key === 'ArrowRight') stepSlide(1);
+      else if (e.key === 'ArrowLeft') stepSlide(-1);
+      else if (e.key === 'Escape') closePresenterModal();
+    });
 
     // ======= HEALTH CHECKS =======
     async function pollHealth() {
@@ -2791,18 +2896,18 @@
       }
     }
 
-    // ======= VIVA Q&A & SKILLA INDEX =======
+    // ======= TECHNICAL FAQ & PLAYBOOKS =======
     function renderVivaList() {
       const q = (document.getElementById('vivaSearchInput')?.value || '').toLowerCase().trim();
       const box = document.getElementById('vivaAccordionList');
-      const rows = VIVA_QA.filter(item => !q || item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q));
+      const rows = VIVA_QA.filter(item => !q || item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q) || item.tag.toLowerCase().includes(q));
       if (!rows.length) {
-        box.innerHTML = '<div class="empty-box">No viva questions match that search.</div>';
+        box.innerHTML = '<div class="empty-box">No technical FAQ items match that search.</div>';
         return;
       }
       box.innerHTML = rows.map((item, idx) => `
         <details class="viva-item"${idx === 0 ? ' open' : ''}>
-          <summary><span>${esc(item.q)}</span><span class="pill">Prepared answer</span></summary>
+          <summary><span>${esc(item.q)}</span><span class="pill">${esc(item.tag)}</span></summary>
           <div class="viva-ans">${esc(item.a)}</div>
         </details>
       `).join('');
