@@ -846,6 +846,28 @@
       justify-content: center;
       align-items: flex-start;
     }
+    .pres-progress {
+      width: 100%;
+      height: 3px;
+      background: var(--border);
+      flex: none;
+    }
+    .pres-progress-bar {
+      height: 100%;
+      width: 6.25%;
+      background: var(--accent);
+      transition: width 180ms var(--ease-out);
+    }
+    .pres-simple {
+      padding: 10px 14px;
+      background: #f2f8fa;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-control) var(--radius-control) 0;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
     .pres-stage {
       width: 100%;
       max-width: 1100px;
@@ -1727,24 +1749,25 @@
             </div>
           </div>
 
-          <!-- Full 14-Slide Interactive Presentation Launcher -->
+          <!-- Full 16-Slide Complete Presentation Launcher -->
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h2>Full project presentation (14 slides)</h2>
-                <div class="panel-meta">Complete presentation covering startup viability, e-commerce rails, Java 17 concurrency, Data Science, Deep Learning, and compliance</div>
+                <h2>Complete project presentation (16 slides)</h2>
+                <div class="panel-meta">Simple plain-English presentation covering problem, BMC, SWOT/PESTEL, marketing, Java concurrency, ML/DL proof, and compliance</div>
               </div>
-              <button class="btn primary" onclick="openPresenterModal(0)">Launch Presentation</button>
+              <button class="btn primary" onclick="openPresenterModal(0)">Presentation</button>
             </div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Slides</th><th>Section</th><th>Key proof covered</th><th></th></tr></thead>
                 <tbody>
-                  <tr><td class="num">1–3</td><td><strong>Cover, Problem &amp; Market Gap</strong></td><td>Executive thesis, Surat/Bengaluru/Delhi interviews, competitor comparison matrix</td><td class="n"><button class="btn sm" onclick="openPresenterModal(1)">Slide 2</button></td></tr>
-                  <tr><td class="num">4–5</td><td><strong>Product Workflow &amp; COD Protocol</strong></td><td>Tri-state Approve/OTP/Block gate, Gateway rails, 5-step COD RTO protection</td><td class="n"><button class="btn sm" onclick="openPresenterModal(3)">Slide 4</button></td></tr>
-                  <tr><td class="num">6–7</td><td><strong>System Architecture &amp; Java 17 Core</strong></td><td>Inline SVG flow, OOP Payment inheritance, 6 custom exceptions, 50-thread race fix</td><td class="n"><button class="btn sm" onclick="openPresenterModal(5)">Slide 6</button></td></tr>
-                  <tr><td class="num">8–10</td><td><strong>Data Science &amp; Deep Learning</strong></td><td>284k Kaggle ODbL dataset, zero-leakage PR curves, Autoencoder &amp; Chronological LSTM plots</td><td class="n"><button class="btn sm" onclick="openPresenterModal(8)">Slide 9</button></td></tr>
-                  <tr><td class="num">11–14</td><td><strong>Economics, Compliance &amp; Seed Ask</strong></td><td>87.7% margin, ₹8.39L ARR projection, DPIIT, DPDP Sec. 12 erasure, ₹20L SISFS runway</td><td class="n"><button class="btn sm" onclick="openPresenterModal(10)">Slide 11</button></td></tr>
+                  <tr><td class="num">1–3</td><td><strong>Cover, Problem &amp; Competitors</strong></td><td>Simple elevator pitch, Surat/Bengaluru/Delhi interviews, competitor pricing table</td><td class="n"><button class="btn sm" onclick="openPresenterModal(1)">Slide 2</button></td></tr>
+                  <tr><td class="num">4–5</td><td><strong>Product Workflow, COD &amp; Marketing</strong></td><td>Traffic-light OTP policy, Card/UPI/COD rails, 5-step RTO flow, ₹25k GTM funnel</td><td class="n"><button class="btn sm" onclick="openPresenterModal(3)">Slide 4</button></td></tr>
+                  <tr><td class="num">6–7</td><td><strong>BMC, SWOT, PESTEL &amp; MVP Plan</strong></td><td>9-block Business Model Canvas, SWOT/PESTEL strategy decisions, built vs deferred</td><td class="n"><button class="btn sm" onclick="openPresenterModal(5)">Slide 6</button></td></tr>
+                  <tr><td class="num">8–9</td><td><strong>Architecture &amp; Java 17 Core</strong></td><td>SVG diagram + 500ms failover, Payment polymorphism, 6 exceptions, 50-thread proof</td><td class="n"><button class="btn sm" onclick="openPresenterModal(7)">Slide 8</button></td></tr>
+                  <tr><td class="num">10–12</td><td><strong>Data Science &amp; Deep Learning</strong></td><td>Why 99.83% accuracy fails, cleaning &amp; PR curves, Autoencoder + LSTM plots &amp; overfitting</td><td class="n"><button class="btn sm" onclick="openPresenterModal(9)">Slide 10</button></td></tr>
+                  <tr><td class="num">13–16</td><td><strong>Economics, Legal, Team &amp; Ask</strong></td><td>87.7% margin, 12-mo MRR table, ₹20L seed plan, DPDP Sec. 12, 5 team roles</td><td class="n"><button class="btn sm" onclick="openPresenterModal(12)">Slide 13</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1933,7 +1956,7 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN 14-SLIDE PROJECT PRESENTATION STAGE -->
+  <!-- FULL-SCREEN 16-SLIDE PROJECT PRESENTATION STAGE -->
   <div id="presenterModal" class="pres-overlay" role="dialog" aria-modal="true" aria-labelledby="slideTitle">
     <div class="pres-topbar">
       <div class="pres-topbar-left">
@@ -1942,14 +1965,17 @@
           <path d="M11.5 16.5L14.5 19.5L20.8 13" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <strong style="font-size: 14px; white-space: nowrap;">FraudShield Presentation</strong>
-        <span class="pill pos" id="slideCounter">Slide 1 / 14</span>
+        <span class="pill pos" id="slideCounter">Slide 1 / 16</span>
         <span class="pill" id="slideTag">Cover</span>
       </div>
       <div class="pres-topbar-right">
-        <button class="btn sm" id="agendaToggleBtn" onclick="toggleSlideAgenda()">All slides (14)</button>
+        <button class="btn sm" id="presFullscreenBtn" onclick="togglePresentationFullscreen()">Full screen</button>
+        <button class="btn sm" id="agendaToggleBtn" onclick="toggleSlideAgenda()">All slides (16)</button>
         <button class="btn sm" onclick="closePresenterModal()">Exit presentation</button>
       </div>
     </div>
+
+    <div class="pres-progress" aria-hidden="true"><div class="pres-progress-bar" id="presProgressBar"></div></div>
 
     <div class="pres-agenda" id="presAgendaPanel">
       <div class="pres-agenda-grid" id="presAgendaGrid"></div>
@@ -1963,8 +1989,8 @@
           <div id="slideBody"></div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--rule); padding-top: 12px; font-size: 12px; color: var(--faint); flex-wrap: wrap; gap: 8px;">
-          <span>Team FraudShield · Integrated Risk Intelligence Platform</span>
-          <span>Use Left / Right arrows or Esc to navigate</span>
+          <span>Team FraudShield · Integrated B.Tech Startup &amp; AI Platform</span>
+          <span>Shortcuts: Left / Right arrows to change slides · F for full screen · Esc to close</span>
         </div>
       </article>
     </div>
@@ -2066,123 +2092,149 @@
 
       return [
         {
-          tag: 'Slide 1 · Cover',
-          title: 'FraudShield: Explainable Fraud Defense for D2C E-Commerce',
-          lead: 'We cost less than the chargebacks we prevent, and explain every single decision in plain language.',
+          tag: '01 · Overview',
+          title: 'FraudShield: Simple, Explainable Security for Online Stores',
+          lead: 'We stop costly fake orders and chargebacks under 80 ms, while telling store owners why in plain language.',
           html: `
-            <div class="kpis" style="margin-bottom: 20px;">
+            <div class="pres-simple"><strong>In simple words:</strong> Think of FraudShield as a smart checkout guard. Every online order is checked in milliseconds so honest shoppers breeze through, doubtful orders confirm with an OTP, and attackers get blocked cleanly.</div>
+            <div class="kpis" style="margin-bottom: 18px;">
               <div class="kpi"><div class="kpi-label">Tabular Champion (PR-AUC)</div><div class="kpi-value">0.8596</div><div class="kpi-note">Cost-sensitive XGBoost on 284,807 tx</div></div>
-              <div class="kpi"><div class="kpi-label">Chronological Temporal Leader</div><div class="kpi-value">0.8088</div><div class="kpi-note">PyTorch FraudLSTM vs 0.7933 XGB</div></div>
-              <div class="kpi"><div class="kpi-label">SaaS Gross Margin Target</div><div class="kpi-value">87.7%</div><div class="kpi-note">₹999/mo starter · Break-even 6 stores</div></div>
+              <div class="kpi"><div class="kpi-label">Time-Sequence Winner</div><div class="kpi-value">0.8088</div><div class="kpi-note">PyTorch LSTM beats XGBoost (0.7933)</div></div>
+              <div class="kpi"><div class="kpi-label">Target Gross Margin</div><div class="kpi-value">87.7%</div><div class="kpi-note">₹999/mo starter · Break-even 6 stores</div></div>
               <div class="kpi"><div class="kpi-label">Live Session Telemetry</div><div class="kpi-value">${total ? fmtInr(savedAmt) : '₹9,500'}</div><div class="kpi-note">${total} scored · ${blk} blocked live</div></div>
             </div>
             <div class="pres-three">
-              <div class="pres-card"><h3>Java 17 Core (:8085)</h3><p>Framework-free OOP orchestration, polymorphic Card/UPI/COD rails, atomic concurrency locks, 6 handled custom exceptions.</p></div>
-              <div class="pres-card"><h3>Hybrid Python AI (:8000)</h3><p>Runs XGBoost, PyTorch Autoencoder (zero-day MSE), and PyTorch LSTM (5-step sequence window) together under 80 ms E2E.</p></div>
-              <div class="pres-card"><h3>India-First Commerce &amp; Legal</h3><p>Solves COD RTO bounce-backs, enforces DPDP Act 2023 opt-in consent &amp; Section 12 deletion, zero raw PAN/PII stored.</p></div>
+              <div class="pres-card"><h3>Java 17 Core (:8085)</h3><p>Handles cart stock safely across concurrent buyers, custom errors, payments (Card/UPI/COD), and audit files.</p></div>
+              <div class="pres-card"><h3>3-Engine Python AI (:8000)</h3><p>Combines XGBoost (tabular patterns), Autoencoder (weird anomalies), and LSTM (rapid burst memory).</p></div>
+              <div class="pres-card"><h3>Startup &amp; Legal Built-In</h3><p>Built for Indian COD &amp; UPI commerce with un-ticked DPDP opt-in consent and instant data erasure.</p></div>
             </div>`,
           view: 'overview', cta: 'Open Live Risk Overview'
         },
         {
-          tag: 'Slide 2 · The Problem',
-          title: 'Indian D2C Brands Lose 1.5–3.5% GMV to Chargebacks & Fake COD',
-          lead: 'Every fake Cash-on-Delivery bounce-back costs ₹150–₹200 in double freight; card-testing bots trigger $15 dispute penalties per authorization.',
+          tag: '02 · The Problem',
+          title: 'Small Online Brands Lose Margin to Chargebacks & Fake COD',
+          lead: 'A fake Cash-on-Delivery order costs ₹150–₹200 in wasted two-way courier fees; stolen-card tests trigger $15 penalty fines per swipe.',
           html: `
-            <div class="pres-three" style="margin-bottom: 18px;">
+            <div class="pres-simple"><strong>In simple words:</strong> Big marketplaces like Amazon afford expensive security teams. Small Shopify and Instagram sellers do not, leaving them stuck between shipping fake orders or turning away honest buyers.</div>
+            <div class="pres-three" style="margin-bottom: 14px;">
               <div class="pres-card">
-                <h3>Seller A · D2C Apparel (Surat)</h3>
-                <p><strong>~1,200 orders/mo (₹8.5L GMV)</strong><br>"We lose nearly ₹180 on courier charges every time a fake COD order bounces back. Flagging risky orders before dispatch protects our entire net margin."</p>
+                <h3>Surat D2C Apparel</h3>
+                <p><strong>~1,200 orders/mo (₹8.5L GMV)</strong><br>"We lose nearly ₹180 in courier charges every time a fake COD parcel comes back undelivered. Stopping risky orders before dispatch saves our margin."</p>
               </div>
               <div class="pres-card">
-                <h3>Seller B · Electronics (Bengaluru)</h3>
-                <p><strong>~450 high-ticket orders/mo (₹22L)</strong><br>"A scammer tested 60 stolen cards in 30 minutes on our store. Stripe passed $15 chargebacks back to us without explaining the risk spike."</p>
+                <h3>Bengaluru Electronics</h3>
+                <p><strong>~450 high-ticket orders/mo (₹22L)</strong><br>"A scammer tested 60 stolen cards in 30 minutes on our site. Each chargeback cost $15 plus lost stock with zero explanation."</p>
               </div>
               <div class="pres-card">
-                <h3>Seller C · Cosmetics (Delhi)</h3>
-                <p><strong>~800 orders/mo (₹4L GMV)</strong><br>"Enterprise fraud suites ask $500+/month minimum retainers. Growing brands need transparent pay-as-you-grow pricing in INR."</p>
+                <h3>Delhi Organic Cosmetics</h3>
+                <p><strong>~800 orders/mo (₹4L GMV)</strong><br>"Global tools want $500+ monthly minimums before even starting. Bootstrapped Indian brands need pay-as-you-grow pricing."</p>
               </div>
-            </div>
-            <div class="callout-band" style="margin-bottom: 0;">Core gap: Growing D2C sellers on Shopify, WooCommerce, and Instagram storefronts lack an affordable, explainable defense that covers both cards and Cash-on-Delivery abuse.</div>`,
+            </div>`,
           view: 'startup', cta: 'Open Seller ROI Calculator'
         },
         {
-          tag: 'Slide 3 · Market & Competitors',
-          title: 'Underserved D2C Entry Tier vs Global Enterprise Gateways',
-          lead: 'FraudShield targets merchants processing 300–25,000 orders/month, 4 to 8 times more accessible than enterprise tools.',
+          tag: '03 · Competitors & Gap',
+          title: 'Why Existing Fraud Tools Miss Small Indian D2C Stores',
+          lead: 'Competitors focus on enterprise contracts or foreign cards. FraudShield serves growing stores starting at 10 orders/day.',
           html: `
-            <div class="table-wrap" style="margin-bottom: 16px;">
+            <div class="pres-simple"><strong>In simple words:</strong> Global tools like Stripe Radar do not understand Indian Cash-on-Delivery returns or UPI behavior, and enterprise suites price 5x to 8x above a growing brand budget.</div>
+            <div class="table-wrap" style="margin-bottom: 14px;">
               <table>
-                <thead><tr><th>Platform</th><th class="n">Entry Monthly Price</th><th>Min Order Volume</th><th>UPI + COD Support</th><th>Attribution Transparency</th></tr></thead>
+                <thead><tr><th>Platform</th><th class="n">Starting Price</th><th>Min Order Scale</th><th>UPI + COD Support</th><th>Plain Explanation</th></tr></thead>
                 <tbody>
-                  <tr><td><strong>Razorpay Thirdwatch</strong></td><td class="n num">₹2,000–₹5,000</td><td>50+ orders/day</td><td>Yes (gateway tied)</td><td>Opaque label flags</td></tr>
-                  <tr><td><strong>Stripe Radar</strong></td><td class="n num">~₹8,500</td><td>100+ orders/day</td><td>No COD / US-centric</td><td>Single numeric tier only</td></tr>
-                  <tr><td><strong>Seon / Signifyd</strong></td><td class="n num">₹6,000–₹8,000+</td><td>25–50+ orders/day</td><td>Limited / No COD</td><td>Enterprise configuration</td></tr>
-                  <tr><td><strong>FraudShield</strong></td><td class="n num"><strong>₹999</strong></td><td><strong>10+ orders/day</strong></td><td><strong>COD + UPI + Card</strong></td><td><strong>XGBoost + Autoencoder MSE + LSTM reasons</strong></td></tr>
+                  <tr><td><strong>Razorpay Thirdwatch</strong></td><td class="n num">₹2,000–₹5,000</td><td>50+ orders/day</td><td>Yes (gateway locked)</td><td>Basic label flags</td></tr>
+                  <tr><td><strong>Stripe Radar</strong></td><td class="n num">~₹8,500</td><td>100+ orders/day</td><td>No COD / US focused</td><td>Opaque risk band only</td></tr>
+                  <tr><td><strong>Seon / Signifyd</strong></td><td class="n num">₹6,000–₹8,000+</td><td>25–50+ orders/day</td><td>Limited / No COD</td><td>Enterprise setup</td></tr>
+                  <tr><td><strong>FraudShield</strong></td><td class="n num"><strong>₹999</strong></td><td><strong>10+ orders/day</strong></td><td><strong>COD + UPI + Card</strong></td><td><strong>Sub-model score + plain reasons</strong></td></tr>
                 </tbody>
               </table>
-            </div>
-            <div class="pres-two">
-              <div class="pres-card"><h3>Lean Canvas Value Prop</h3><p>Cheaper than the chargebacks and courier RTO losses prevented, gateway-agnostic across Razorpay/Stripe/Cashfree test rails.</p></div>
-              <div class="pres-card"><h3>Override Feedback Moat</h3><p>Merchant override actions persist to overrides.jsonl, building proprietary local ground-truth fraud labels over time.</p></div>
             </div>`,
-          view: 'startup', cta: 'Inspect Business Case'
+          view: 'startup', cta: 'Compare Business Strategy'
         },
         {
-          tag: 'Slide 4 · Solution & Order Flow',
-          title: 'Deterministic Tri-State Decisioning Without False Bans',
-          lead: 'Rather than blocking borderline shoppers outright, FraudShield isolates high-risk abuse cleanly while verifying gray-zone traffic via low-friction OTP.',
+          tag: '04 · Solution Policy',
+          title: 'How the Smart Traffic-Light Decision Protects Sales',
+          lead: 'Instead of blindly banning suspicious baskets, FraudShield approves safe orders, asks borderline orders for a 6-digit OTP, and blocks clear fraud.',
           html: `
-            <div class="pres-three" style="margin-bottom: 18px;">
+            <div class="pres-simple"><strong>In simple words:</strong> Every false alarm costs a merchant an angry legitimate customer. Adding an amber Verify step rescues honest buyers without opening the door to scammers.</div>
+            <div class="pres-three" style="margin-bottom: 16px;">
               <div class="pres-card" style="border-color: var(--positive);">
-                <h3>APPROVE (Score &lt; 0.35)</h3>
-                <p>Telemetry aligns with verified buyer behavior across XGBoost, Autoencoder reconstruction, and LSTM sequence checks. Instant capture.</p>
+                <h3>Green: APPROVE (&lt; 0.35)</h3>
+                <p>Matches normal customer patterns across all three models. Payment completes right away with zero extra clicks.</p>
               </div>
               <div class="pres-card" style="border-color: var(--warning);">
-                <h3>VERIFY OTP (0.35 – 0.69)</h3>
-                <p>Moderate basket or corridor deviation triggers a 6-digit sandbox 2FA prompt (POST /api/orders/verify), rescuing genuine sales.</p>
+                <h3>Amber: VERIFY OTP (0.35–0.69)</h3>
+                <p>Unusual basket size or unfamiliar location triggers a polite 6-digit OTP prompt (POST /api/orders/verify) before capture.</p>
               </div>
               <div class="pres-card" style="border-color: var(--negative);">
-                <h3>BLOCK (Score &ge; 0.70)</h3>
-                <p>Severe anomaly or card-testing burst raises FraudBlockedException (HTTP 403), logging sub-model drift codes for merchant review.</p>
+                <h3>Red: BLOCK (&ge; 0.70)</h3>
+                <p>High-confidence attack or bot burst stops fulfillment immediately (HTTP 403) and logs exact AI reasons for seller audit.</p>
               </div>
             </div>
-            <div class="pres-card">
-              <h3>End-to-End Store Verification Pipeline</h3>
-              <p>Unticked DPDP Opt-In Gate &rarr; Atomic Java 17 Stock Lock &rarr; 1h Customer Velocity Counter &rarr; Python 3-Engine AI Scoring (500ms timeout) &rarr; Payment Polymorphism (Card/UPI/COD) &rarr; Append-only JSONL + Async CSV Export.</p>
-            </div>`,
-          view: 'store', cta: 'Test Live 12-SKU D2C Store'
+            <div class="pres-card"><h3>Sellers Stay in Control</h3><p>If a store owner recognizes a blocked regular customer, clicking "Merchant override to Approve" rescues the order and saves a clean feedback label for future model updates.</p></div>`,
+          view: 'store', cta: 'Try 12-SKU Live D2C Store'
         },
         {
-          tag: 'Slide 5 · E-Commerce & COD Protocol',
-          title: 'Payment Polymorphism & 5-Step COD RTO Mitigation',
-          lead: 'All financial rails run strictly in Razorpay / Stripe test mode while addressing India’s largest D2C leakage: fake Cash-on-Delivery dispatches.',
+          tag: '05 · E-Commerce & Marketing',
+          title: 'Payment Sandbox, 5-Step COD Protocol & Marketing Funnel',
+          lead: 'Runs safely in Razorpay/Stripe test mode, halts fake Cash-on-Delivery bounce-backs before shipping, and acquires sellers via free risk audits.',
           html: `
             <div class="pres-two">
               <div class="pres-card">
-                <h3>Payment Sandbox Gateways</h3>
-                <p style="margin-bottom: 8px;">Abstract Payment superclass extended by CardPayment, UpiPayment, and CodPayment, enforcing simulated gateway failure paths:</p>
-                <p><strong>Card:</strong> Token tok_visa_0000 throws PaymentFailedException (402)<br><strong>UPI:</strong> Invalid VPA fail@okaxis throws ERR_UPI_REJECTED<br><strong>COD:</strong> Cart total &gt; ₹15,000 throws ERR_COD_LIMIT_EXCEEDED</p>
+                <h3>1. 5-Step COD Bounce-Back Protocol</h3>
+                <p><strong>Score upfront:</strong> High-risk COD (&ge;0.70) blocks before courier pickup (₹0 freight wasted). Medium COD (0.35–0.69) sends a WhatsApp confirmation link before releasing dispatch to Shiprocket/Delhivery.<br><strong>500 COD orders/mo impact:</strong> Drops estimated bounce-backs from 110 (₹17,600 lost) to ~40 (₹6,400), saving ~₹11,200/mo.</p>
               </div>
               <div class="pres-card">
-                <h3>Automated COD RTO Impact Model</h3>
-                <p>Flagged medium-risk COD orders queue WhatsApp verification before Shiprocket/Delhivery dispatch, while blocked orders stop reverse freight upfront.</p>
-                <p style="margin-top: 8px;"><strong>500 COD orders/mo baseline:</strong> Reduces projected bounce-backs from 110 (₹17,600 freight loss) to ~40 (₹6,400), <strong>saving ~₹11,200/mo</strong> vs the ₹999 plan.</p>
+                <h3>2. Payment Sandbox &amp; Marketing Plan</h3>
+                <p style="margin-bottom: 8px;"><strong>Test Payments Only:</strong> Uses sandbox card token (tok_visa_4242) and UPI VPA (customer@okaxis); declined token tok_visa_0000 tests HTTP 402 recovery.</p>
+                <p><strong>Digital Marketing (₹25,000/mo seed):</strong> Free Chargeback &amp; COD Risk Calculator lead magnet + LinkedIn case studies + Shopify agencies targeting ₹1,800 mature acquisition cost (CAC).</p>
               </div>
             </div>`,
-          view: 'store', cta: 'Open Store & Payment Rails'
+          view: 'store', cta: 'Inspect Checkout & Payment Rails'
         },
         {
-          tag: 'Slide 6 · System Architecture',
-          title: 'Decoupled Microservice Design Owned by the Java Core',
-          lead: 'Feature engineering lives in one shared Python pipeline (FX parity ₹85/unit + RobustScaler) while Java enforces business integrity and timeouts.',
+          tag: '06 · Business Model Canvas',
+          title: '9-Block Business Model Canvas & Lean Foundation',
+          lead: 'Every block links real technical assets (AI engines, Java core, override data) directly to merchant willingness to pay.',
           html: `
-            <div class="table-wrap" style="margin-bottom: 14px;">
+            <div class="pres-simple"><strong>In simple words:</strong> We connect to stores via plugins/APIs, earn predictable monthly SaaS subscriptions plus tiny per-order overages, and get smarter with every merchant decision.</div>
+            <div class="pres-three">
+              <div class="pres-card"><h3>Partners, Activities &amp; Resources</h3><p><strong>Partners:</strong> Razorpay/Stripe sandboxes, Shiprocket/Delhivery APIs, Shopify agencies.<br><strong>Activities:</strong> Real-time ML/DL inference, Java core orchestration.<br><strong>Resources:</strong> XGBoost, Autoencoder, LSTM weights + override label dataset.</p></div>
+              <div class="pres-card"><h3>Value, Channels &amp; Segments</h3><p><strong>Value Prop:</strong> Plain-English explainable risk scores cheaper than a single chargeback.<br><strong>Channels:</strong> Shopify app store, developer REST docs, D2C communities.<br><strong>Segments:</strong> Emerging Indian D2C fashion, audio, &amp; electronics stores.</p></div>
+              <div class="pres-card"><h3>Customers, Costs &amp; Revenue</h3><p><strong>Relationships:</strong> Self-serve onboarding + weekly threat digest.<br><strong>Costs:</strong> Graviton CPU inference (₹350/store), backups, DPDP audits.<br><strong>Revenue:</strong> Tiered SaaS (₹999–₹9,999/mo) + ₹0.50–₹1.20/tx overage.</p></div>
+            </div>`,
+          view: 'startup', cta: 'Open Business & Pitch Tab'
+        },
+        {
+          tag: '07 · SWOT, PESTEL & MVP',
+          title: 'Strategic SWOT, PESTEL Factors & Disciplined MVP Scope',
+          lead: 'Focused squarely on solving live store scoring and fallback reliability before adding heavy native mobile SDKs.',
+          html: `
+            <div class="pres-two">
+              <div class="pres-card">
+                <h3>SWOT Snapshot</h3>
+                <p><strong>Strengths:</strong> 3-engine hybrid + 500ms rule fallback (zero downtime), plain-language reasons.<br><strong>Weaknesses:</strong> Synthetic/EU PCA training baseline needs local merchant calibration.<br><strong>Opportunities:</strong> Rapid UPI &amp; quick-commerce growth, expensive COD bounce-backs.<br><strong>Threats:</strong> Gateway-bundled basic tools &amp; evolving card-testing scripts.</p>
+              </div>
+              <div class="pres-card">
+                <h3>PESTEL &amp; MVP Scope Discipline</h3>
+                <p><strong>PESTEL:</strong> Startup India incentives (P), working-capital squeeze from fraud (E), Tier-2/3 COD demand (S), CPU FastAPI speed (T), low-carbon quantized inference (E), DPDP Act 2023 &amp; RBI Card Tokenisation (L).<br><strong>In MVP:</strong> Live Java engine, 3 AI engines, 12-SKU store, simulator, compliance.<br><strong>Deferred Post-MVP:</strong> Native Android SDK, automated bank chargeback bots.</p>
+              </div>
+            </div>`,
+          view: 'startup', cta: 'View Commercial Plans'
+        },
+        {
+          tag: '08 · System Architecture',
+          title: 'Clean Microservice Design Where Java Owns Safety Rules',
+          lead: 'Features are built in one place only inside Python so training and live serving never drift apart.',
+          html: `
+            <div class="pres-simple"><strong>In simple words:</strong> Java manages the cash register, stock room, and laws; Python runs the AI brain. If the AI advisor ever takes more than 500 ms or shuts down, Java immediately uses safe backup rules so the store never crashes.</div>
+            <div class="table-wrap">
               <svg viewBox="0 0 920 155" width="920" height="155" role="img" aria-label="Architecture diagram" style="min-width: 680px; width: 100%; height: auto;">
                 <rect x="8" y="24" width="175" height="96" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
                 <text x="22" y="50" font-size="13" font-weight="600" fill="#131416">D2C Store &amp; UI (:5000)</text>
                 <text x="22" y="70" font-size="11.5" fill="#545759">DPDP Explicit Consent</text>
-                <text x="22" y="88" font-size="11.5" fill="#545759">Multi-item Cart + OTP</text>
-                <text x="22" y="106" font-size="11.5" fill="#1b6c80">Framed Sheet Console</text>
+                <text x="22" y="88" font-size="11.5" fill="#545759">12-SKU Cart + 2FA OTP</text>
+                <text x="22" y="106" font-size="11.5" fill="#1b6c80">Live Seller Console</text>
                 <line x1="183" y1="72" x2="225" y2="72" stroke="#1b6c80" stroke-width="1.8"/>
                 <polygon points="225,67 235,72 225,77" fill="#1b6c80"/>
                 <rect x="235" y="14" width="240" height="118" rx="8" fill="#ffffff" stroke="#1b6c80" stroke-width="1.5"/>
@@ -2196,7 +2248,7 @@
                 <text x="480" y="45" font-size="10.5" fill="#545759">500ms</text>
                 <rect x="535" y="14" width="210" height="84" rx="8" fill="#f9fbfc" stroke="#cdced1"/>
                 <text x="549" y="38" font-size="13" font-weight="600" fill="#131416">FastAPI AI (:8000)</text>
-                <text x="549" y="57" font-size="11.5" fill="#545759">XGBoost + RobustScaler</text>
+                <text x="549" y="57" font-size="11.5" fill="#545759">XGBoost + FX Parity Scaler</text>
                 <text x="549" y="74" font-size="11.5" fill="#545759">Autoencoder MSE + LSTM seq=5</text>
                 <path d="M 355 132 L 355 147 L 835 147 L 835 110" fill="none" stroke="#92400e" stroke-width="1.4" stroke-dasharray="4 3"/>
                 <rect x="765" y="24" width="145" height="84" rx="8" fill="#fffbeb" stroke="#e5c88c"/>
@@ -2204,177 +2256,183 @@
                 <text x="777" y="67" font-size="11" fill="#545759">500ms SLA failover</text>
                 <text x="777" y="83" font-size="11" fill="#545759">0% checkout crash</text>
               </svg>
-            </div>
-            <div class="pres-card"><h3>Clean Separation &amp; Persistence Bridge</h3><p>Java writes real-time events to data/transactions.jsonl while draining an asynchronous 1,000-slot LinkedBlockingQueue to data/analysis_export.csv for continuous Data Science retraining.</p></div>`,
-          view: 'legal', cta: 'View Architecture & Governance'
+            </div>`,
+          view: 'legal', cta: 'Open Full Architecture View'
         },
         {
-          tag: 'Slide 7 · Java 17 Core Engineering',
-          title: 'Object-Oriented Hierarchy, Thread Safety & Exception Recovery',
-          lead: 'Every Java requirement executes a real operational responsibility, backed by 7 passing JUnit 5 tests.',
+          tag: '09 · Java 17 Core Engineering',
+          title: 'OOP, Custom Exceptions, Async Queues & Thread-Safety Proof',
+          lead: 'Framework-free Java 17 backed by 7 passing JUnit 5 tests and live API chaos demonstrations.',
           html: `
+            <div class="pres-simple"><strong>In simple words:</strong> If 50 shoppers try to grab the last 10 shoes in the same millisecond without a thread lock, a store accidentally sells 50 pairs. Java synchronized locks prevent overselling cleanly.</div>
             <div class="pres-two">
               <div class="pres-card">
-                <h3>OOP, Exceptions &amp; Background Concurrency</h3>
-                <p style="margin-bottom: 8px;"><strong>Interfaces &amp; Composition:</strong> FraudScorer implemented by RemoteModelScorer and RuleBasedScorer, composed safely inside FallbackScorer.</p>
-                <p style="margin-bottom: 8px;"><strong>6 Handled Custom Exceptions:</strong> InvalidInputException (400), PaymentFailedException (402), FraudBlockedException (403), OutOfStockException (409), ModelServiceUnavailableException (triggers fallback), ScoringException.</p>
-                <p><strong>ExecutorService + ScheduledExecutorService:</strong> 2-thread CSV audit drain + 60s stale 1h velocity window pruner + config.properties SLA config.</p>
+                <h3>OOP Hierarchy, Exceptions &amp; Threads</h3>
+                <p><strong>Polymorphism:</strong> Abstract Payment &rarr; CardPayment, UpiPayment, CodPayment.<br><strong>Interface Composition:</strong> FallbackScorer wraps RemoteModelScorer + RuleBasedScorer.<br><strong>6 Custom Exceptions:</strong> InvalidInput (400), PaymentFailed (402), FraudBlocked (403), OutOfStock (409), ModelServiceUnavailable (failover).<br><strong>Async + Files:</strong> LinkedBlockingQueue exports analysis_export.csv + config.properties SLA settings.</p>
               </div>
               <div class="pres-card">
-                <h3>Live 50-Thread Race Condition Proof</h3>
-                <p style="margin-bottom: 10px;">Running 50 simultaneous JVM threads via CountDownLatch against 10 units of stock cleanly demonstrates why synchronization matters:</p>
-                <div class="table-wrap">
+                <h3>Live 50-Thread Concurrency Test (10 Stock)</h3>
+                <div class="table-wrap" style="margin-top: 8px;">
                   <table>
-                    <thead><tr><th>Method</th><th class="n">Granted</th><th class="n">OOS Exc</th><th class="n">Oversold</th></tr></thead>
+                    <thead><tr><th>Version Tested</th><th class="n">Sold</th><th class="n">Rejected (409)</th><th class="n">Oversold</th></tr></thead>
                     <tbody>
-                      <tr><td>Unsynchronized</td><td class="n num">50</td><td class="n num">0</td><td class="n"><span class="pill neg">40 oversold</span></td></tr>
-                      <tr><td>Synchronized lock</td><td class="n num">10</td><td class="n num">40</td><td class="n"><span class="pill pos">0 oversold</span></td></tr>
+                      <tr><td>Broken (Unsynchronized)</td><td class="n num">50</td><td class="n num">0</td><td class="n"><span class="pill neg">40 oversold</span></td></tr>
+                      <tr><td>Fixed (Synchronized lock)</td><td class="n num">10</td><td class="n num">40</td><td class="n"><span class="pill pos">0 oversold</span></td></tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>`,
-          view: 'simulator', cta: 'Run 50-Thread Test Live'
+          view: 'simulator', cta: 'Run Live 50-Thread & Failover Lab'
         },
         {
-          tag: 'Slide 8 · Data Science Pipeline',
-          title: '284,807 Kaggle Transactions: Imbalance & Zero Leakage',
-          lead: 'With only 492 frauds (0.173%, 577:1 ratio), predicting zero fraud everywhere scores 99.83% accuracy, so we rank strictly by PR-AUC.',
+          tag: '10 · Data Science & Leakage Control',
+          title: '284,807 Real Transactions: Cleaning & Why 99.83% Accuracy Fails',
+          lead: 'Dataset: Kaggle ULB (284,807 rows, 492 frauds, ODbL licence, anonymized EU card PCA features).',
           html: `
+            <div class="pres-simple"><strong>In simple words:</strong> Only 1.7 in 1,000 orders is fraud (0.173%). A lazy model predicting "everything is safe" gets 99.83% accuracy while catching zero thieves. So we never trust accuracy here.</div>
             <div class="pres-two" style="align-items: center;">
-              <div>
-                <div class="pres-card" style="margin-bottom: 12px;">
-                  <h3>3 Leakage Prevention Controls</h3>
-                  <p>1. Split dataset strictly before any feature scaling.<br>2. Fit RobustScaler on X_train only (median &amp; IQR shield against extreme basket outliers without deleting fraud).<br>3. Apply SMOTE strictly inside imblearn training folds and test LSTM on unseen future Time hours.</p>
-                </div>
-                <div class="pres-card">
-                  <h3>Verified Dataset Signals (ULB ODbL)</h3>
-                  <p>Top negative correlations with fraud: V17 (-0.3265), V14 (-0.3025), V12 (-0.2606). Fraud median basket is $9.25 vs legitimate $22.00, showing attackers hide behind small bursts.</p>
-                </div>
+              <div class="pres-card">
+                <h3>Justified Cleaning &amp; Leakage Defense</h3>
+                <p><strong>Kept extreme amounts:</strong> We use RobustScaler (median &amp; IQR) instead of deleting big transactions because big spikes are often fraud!<br><strong>3 Leakage Shields:</strong> (1) Split train/test first, (2) fit scalers on X_train only, (3) apply SMOTE inside training folds only.<br><strong>EDA Findings:</strong> Fraud correlates negatively with V17 (-0.3265), V14 (-0.3025), V12 (-0.2606); median fraud basket is $9.25 (small-value probes) vs $22.00 legit.</p>
               </div>
               <div class="pres-fig">
-                <img src="figures/class_distribution.png" alt="Class distribution 577:1 imbalance chart">
-                <div class="fig-cap">Class Imbalance Analysis: 0.173% Fraud Base Rate across 284,807 Transactions</div>
+                <img src="figures/class_distribution.png" alt="Class imbalance 577 to 1 plot">
+                <div class="fig-cap">Class Imbalance: 577 legitimate transactions per 1 fraud record</div>
               </div>
             </div>`,
-          view: 'analytics', cta: 'Inspect EDA & Benchmarks'
+          view: 'analytics', cta: 'Inspect EDA Plots & Metrics'
         },
         {
-          tag: 'Slide 9 · ML Benchmarks & Cost Model',
-          title: 'PR-AUC Selection & Financial Loss Optimization ($250 / $15)',
-          lead: 'Evaluating total cost = (FN × $250) + (FP × $15) proves why weighted tree ensembles save over $18,500 compared to linear baselines.',
+          tag: '11 · ML Benchmarks & Cost Model',
+          title: 'Choosing Thresholds by Financial Cost ($250 FN vs $15 FP)',
+          lead: 'Weighted XGBoost wins tabular PR-AUC (0.8596); simple Logistic Regression wastes $22,820 from 1,388 false alarms.',
           html: `
+            <div class="pres-simple"><strong>In simple words:</strong> Letting one scam slip through costs ~$250 (goods + chargeback fee); stopping an honest buyer for a quick check costs ~$15. Our cutoff balances both to save real rupees.</div>
             <div class="pres-two" style="align-items: center;">
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Model (Stratified N=56,962)</th><th class="n">PR-AUC</th><th class="n">FP</th><th class="n">Loss ($)</th></tr></thead>
+                  <thead><tr><th>Model (Test N=56,962)</th><th class="n">PR-AUC</th><th class="n">False Pos</th><th class="n">Total Cost</th></tr></thead>
                   <tbody>
-                    <tr><td><strong>XGBoost (Cost-Sensitive)</strong></td><td class="n num"><strong>0.8596</strong></td><td class="n num">53</td><td class="n num">$4,295</td></tr>
+                    <tr><td><strong>XGBoost (Weighted)</strong></td><td class="n num"><strong>0.8596</strong></td><td class="n num">53</td><td class="n num">$4,295</td></tr>
                     <tr><td>LightGBM (Balanced)</td><td class="n num">0.8474</td><td class="n num">47</td><td class="n num">$4,455</td></tr>
                     <tr><td>SMOTE + Random Forest</td><td class="n num">0.8410</td><td class="n num">73</td><td class="n num"><strong>$3,845</strong></td></tr>
                     <tr><td>Random Forest (Balanced)</td><td class="n num">0.8389</td><td class="n num">33</td><td class="n num">$4,745</td></tr>
                     <tr><td>Logistic Regression Baseline</td><td class="n num">0.7175</td><td class="n num"><strong>1,388</strong></td><td class="n num">$22,820</td></tr>
                   </tbody>
                 </table>
-                <p style="font-size: 12px; color: var(--muted); margin-top: 10px;">Raising hard Block threshold to 0.70 trims XGBoost false alarms down to just 28 out of 56,864 genuine buyers (0.05% FPR) while OTP handles 0.35–0.69.</p>
               </div>
               <div class="pres-fig">
-                <img src="figures/benchmark_pr_curves.png" alt="Precision Recall curves across all classifiers">
-                <div class="fig-cap">Stratified Holdout Precision-Recall Curves (XGBoost Primary Leader: 0.8596)</div>
+                <img src="figures/benchmark_pr_curves.png" alt="PR-AUC curves across classifiers">
+                <div class="fig-cap">PR-AUC focuses strictly on precision &amp; recall over the 0.173% fraud class</div>
               </div>
             </div>`,
-          view: 'analytics', cta: 'Open Interactive Cost Simulator'
+          view: 'analytics', cta: 'Try Threshold Sensitivity Slider'
         },
         {
-          tag: 'Slide 10 · Deep Learning Architecture',
-          title: 'Zero-Day Autoencoder & Chronological LSTM Sequence Advantage',
-          lead: 'Why run Deep Learning alongside XGBoost: unsupervised novelty detection for new buyers + sequential burst detection where LSTM beats XGBoost.',
+          tag: '12 · Deep Learning & Overfitting',
+          title: 'Bottleneck Autoencoder + Chronological LSTM Beat Single-Row Limits',
+          lead: 'Why run Deep Learning alongside XGBoost: zero-day detection for brand-new shoppers + temporal burst memory across ordered steps.',
           html: `
+            <div class="pres-simple"><strong>In simple words:</strong> Autoencoder learns normal habits and flags anything bizarre (even new zero-day scams); LSTM watches a shopper's last 5 clicks in time order to catch fast bot bursts.</div>
             <div class="pres-two">
               <div class="pres-fig">
-                <img src="figures/autoencoder_training.png" alt="Bottleneck Autoencoder training loss curve">
-                <div class="fig-cap"><strong>1. Bottleneck Autoencoder (30&rarr;6&rarr;30):</strong> Trained strictly on 217,451 legit orders. Flags 79.59% of frauds unsupervised @ p99.5 (MSE &ge; 2.8441) and attributes top-3 drifted PCA features live.</div>
+                <img src="figures/autoencoder_training.png" alt="Autoencoder validation curve">
+                <div class="fig-cap"><strong>1. Bottleneck Autoencoder (30&rarr;6&rarr;30):</strong> Trained ONLY on 217,451 legit orders with Dropout(0.1) + BatchNorm + narrow 6-unit bottleneck to prevent memorizing fraud. Flags 79.59% unsupervised @ p99.5 and explains top-3 weird features.</div>
               </div>
               <div class="pres-fig">
-                <img src="figures/lstm_training.png" alt="Chronological FraudLSTM training loss curve">
-                <div class="fig-cap"><strong>2. Chronological PyTorch FraudLSTM (seq=5):</strong> Trained with pos_weight=22.82 on future Time split. Hits <strong>0.8088 PR-AUC vs XGBoost 0.7933</strong> ($4,435 vs $4,770 loss).</div>
+                <img src="figures/lstm_training.png" alt="Chronological LSTM loss curve">
+                <div class="fig-cap"><strong>2. Chronological FraudLSTM (seq=5):</strong> Validated strictly on future hours with Dropout(0.2) + pos_weight=22.82. Achieves <strong>0.8088 PR-AUC vs XGBoost 0.7933</strong> ($4,435 vs $4,770 cost).</div>
               </div>
             </div>`,
-          view: 'simulator', cta: 'Trigger Live LSTM Burst Test'
+          view: 'simulator', cta: 'Trigger Live LSTM Bot Burst'
         },
         {
-          tag: 'Slide 11 · Economics & MRR Forecast',
-          title: 'Tiered SaaS Revenue & Unit Economics (87.7% Gross Margin)',
-          lead: 'Break-even occurs at 6 active merchants. Projected figures below are working hypotheses pending scale pilots.',
-          html: `
-            <div class="kpis" style="margin-bottom: 16px;">
-              <div class="kpi"><div class="kpi-label">Starter / Growth / Pro</div><div class="kpi-value">₹999–₹9.9k</div><div class="kpi-note">+₹0.50–₹1.20/tx overage</div></div>
-              <div class="kpi"><div class="kpi-label">Contribution Margin</div><div class="kpi-value">₹3,070</div><div class="kpi-note">₹3,500 ARPM &minus; ₹430 COGS (87.7%)</div></div>
-              <div class="kpi"><div class="kpi-label">Lifetime Value (10 mo)</div><div class="kpi-value">₹30,695</div><div class="kpi-note">17.1x LTV/CAC at ₹1,800 target CAC</div></div>
-              <div class="kpi"><div class="kpi-label">Month-12 ARR Forecast</div><div class="kpi-value">₹8.39L</div><div class="kpi-note">70 stores @ ₹999 (8% churn hyp.)</div></div>
-            </div>
-            <div class="pres-two">
-              <div class="pres-card"><h3>Monthly COGS Breakdown (₹430)</h3><p>AWS Graviton CPU inference (₹350) + JSONL/CSV storage &amp; backups (₹60) + OTP SMS step-up gateway at 2% rate (₹20).</p></div>
-              <div class="pres-card"><h3>6-Merchant Break-Even</h3><p>₹18,000 fixed monthly cloud overhead divided by ₹3,070 net contribution per active merchant equals 6 stores to reach cash break-even.</p></div>
-            </div>`,
-          view: 'startup', cta: 'Open Seller ROI Calculator'
-        },
-        {
-          tag: 'Slide 12 · GTM, DPIIT & Seed Ask',
-          title: 'Go-To-Market Funnel, DPIIT Readiness & ₹20 Lakh Seed Plan',
-          lead: 'Targeting 150 active Indian D2C brands over an 18-month seed runway via Startup India (SISFS) & MeitY TIDE 2.0.',
+          tag: '13 · Economics & 12-Month Growth',
+          title: 'SaaS Tiers, 87.7% Gross Margin & 12-Month Projection (Hypothesis)',
+          lead: 'Each active merchant contributes ~₹3,070/month after compute/SMS costs, reaching break-even at just 6 active stores.',
           html: `
             <div class="pres-two">
-              <div class="pres-card">
-                <h3>₹20,00,000 Runway Allocation (18 Months)</h3>
-                <p><strong>40% R&amp;D &amp; Engineering (₹8,00,000):</strong> Shopify plugin, courier webhook orchestration, continuous retraining.<br><strong>25% Cloud Infrastructure (₹5,00,000):</strong> Redundant inference &amp; logging clusters.<br><strong>20% Merchant Acquisition (₹4,00,000):</strong> Free Chargeback Risk Calculator lead magnet &amp; D2C outreach.<br><strong>15% Compliance &amp; Legal (₹3,00,000):</strong> Incorporation, DPDP &amp; PCI-DSS audits.</p>
+              <div>
+                <div class="kpis" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px;">
+                  <div class="kpi"><div class="kpi-label">Starter / Growth / Pro</div><div class="kpi-value">₹999–₹9.9k</div><div class="kpi-note">+₹0.50–₹1.20 extra orders</div></div>
+                  <div class="kpi"><div class="kpi-label">LTV / CAC Ratio</div><div class="kpi-value">17.1x</div><div class="kpi-note">₹30,695 LTV / ₹1,800 target CAC</div></div>
+                </div>
+                <div class="pres-card"><h3>Unit Margin Math</h3><p>₹3,500 blended ARPM minus ₹430 COGS (₹350 AWS Graviton CPU + ₹60 storage + ₹20 OTP SMS) = <strong>₹3,070 (87.7% margin)</strong>. ₹18,000 fixed cloud cost / ₹3,070 = <strong>6 stores to break even</strong>.</p></div>
               </div>
-              <div class="pres-card">
-                <h3>DPIIT Startup Recognition Checklist</h3>
-                <p>Entity &lt; 10 years old (Yes) &bull; Turnover &lt; ₹100 Cr ceiling (Yes) &bull; Original student IP not split from existing firm (Yes) &bull; Private Limited incorporation &amp; Form 2 filing staged in parallel with Shopify agency partnerships.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Quarter (Starter ₹999)</th><th class="n">Active Stores</th><th class="n">Net MRR (after 8% churn)</th><th class="n">Cumulative ARR</th></tr></thead>
+                  <tbody>
+                    <tr><td>Months 1–3</td><td class="n num">6</td><td class="n num">₹5,514</td><td class="n num">₹1,98,504</td></tr>
+                    <tr><td>Months 4–6</td><td class="n num">15</td><td class="n num">₹13,786</td><td class="n num">₹6,95,700</td></tr>
+                    <tr><td>Months 7–9</td><td class="n num">35</td><td class="n num">₹32,168</td><td class="n num">₹18,55,548</td></tr>
+                    <tr><td>Months 10–12</td><td class="n num"><strong>70</strong></td><td class="n num"><strong>₹64,336</strong></td><td class="n num"><strong>₹8.39L Annualized</strong></td></tr>
+                  </tbody>
+                </table>
+                <p style="font-size: 11.5px; color: var(--faint); margin-top: 6px;">Note: Financial trajectory figures are working startup hypotheses.</p>
               </div>
             </div>`,
-          view: 'startup', cta: 'Open Full Business & Pitch Tab'
+          view: 'startup', cta: 'Open Live ROI Calculator'
         },
         {
-          tag: 'Slide 13 · Privacy, Legal & AI Ethics',
-          title: 'DPDP Act 2023 Opt-In/Erasure, RBI CoF & Fairness Audits',
-          lead: 'Privacy and fairness enforced directly in application code rather than policy documents alone.',
+          tag: '14 · Funding, DPIIT & IP',
+          title: '₹20 Lakh Seed Plan, DPIIT Readiness & Intellectual Property',
+          lead: 'Bootstrapped working product today, structured for Startup India Seed Fund (SISFS) & MeitY TIDE 2.0 incubation.',
           html: `
             <div class="pres-two">
               <div class="pres-card">
-                <h3>India DPDP Act 2023 &amp; Dark Patterns</h3>
-                <p><strong>Section 6 Explicit Consent:</strong> Un-ticked checkout checkbox; Java throws HTTP 400 InvalidInputException if skipped.<br><strong>Section 8 Data Minimisation:</strong> Zero PAN, CVV, email, name, or postal address stored.<br><strong>Section 12 Right to Erasure:</strong> Live DELETE /api/data/erase scrubs matching JSONL &amp; CSV rows immediately.</p>
+                <h3>₹20,00,000 Seed Runway (18 Months to 150 Stores)</h3>
+                <p><strong>40% R&amp;D &amp; Engineering (₹8,00,000):</strong> Shopify plugin, courier COD webhooks, retraining jobs.<br><strong>25% Cloud Infrastructure (₹5,00,000):</strong> Redundant Java + FastAPI inference containers.<br><strong>20% Merchant Acquisition (₹4,00,000):</strong> Risk Calculator content funnel &amp; D2C community events.<br><strong>15% Compliance &amp; Legal (₹3,00,000):</strong> Entity incorporation, DPDP &amp; security audits.</p>
               </div>
               <div class="pres-card">
-                <h3>RBI CoF &amp; Responsible AI Safeguards</h3>
-                <p><strong>RBI Tokenisation:</strong> Operates solely on anonymized gateway tokens as a non-aggregator Risk Intelligence TSP.<br><strong>Zero Demographic Bias:</strong> Drops gender, age, and identity strings.<br><strong>Anti-Feedback Loop:</strong> Contestable manual overrides prevent permanent blind bans.</p>
+                <h3>DPIIT Criteria &amp; IP Protection</h3>
+                <p><strong>DPIIT Readiness:</strong> Original student product (&lt;10 years, &lt;₹100 Cr turnover, innovative ML defense, Pvt Ltd MoA/AoA staged).<br><strong>IP &amp; Credits:</strong> Proprietary Java/Python logic protected under Copyright; PyTorch, XGBoost, Scikit-Learn &amp; Kaggle ULB ODbL dataset explicitly credited.</p>
               </div>
             </div>`,
-          view: 'legal', cta: 'Test Live DPDP Section 12 Erasure'
+          view: 'startup', cta: 'View Startup Brief Tab'
         },
         {
-          tag: 'Slide 14 · Verification & Roadmap',
-          title: 'Proven End-to-End Integration, Lessons Learned & Next Build',
-          lead: 'Every critical path (normal order, OTP challenge, card decline, burst block, 50-thread race, and AI outage failover) verified live.',
+          tag: '15 · Law, Privacy & AI Ethics',
+          title: 'India DPDP Act 2023, RBI Card Tokenisation & Bias Safeguards',
+          lead: 'Zero personal identity or card PAN/CVV numbers are ever collected or persisted anywhere in the stack.',
+          html: `
+            <div class="pres-simple"><strong>In simple words:</strong> Privacy rules are enforced directly by Java code, not just written in a PDF. Skip consent &rarr; order rejected; click Erase &rarr; data removed across JSONL and CSV immediately.</div>
+            <div class="pres-two">
+              <div class="pres-card">
+                <h3>DPDP Act 2023 &amp; Dark-Pattern Free</h3>
+                <p><strong>Sec. 6 Explicit Opt-In:</strong> Un-ticked consent checkbox enforced by Java InvalidInputException (400).<br><strong>Sec. 8 Data Minimisation:</strong> Stores only order ID, amount, payment type, city delta, and device hash.<br><strong>Sec. 12 Right to Erasure:</strong> Live DELETE /api/data/erase purges logs under ReentrantLock.</p>
+              </div>
+              <div class="pres-card">
+                <h3>RBI Rules &amp; Responsible AI</h3>
+                <p><strong>RBI Tokenisation:</strong> Operates solely on anonymized test gateway tokens as a Risk Intelligence provider.<br><strong>Fairness &amp; Feedback:</strong> Drops gender, age, and identity strings; step-up OTP + manual merchant overrides avoid unfair blind bans.</p>
+              </div>
+            </div>`,
+          view: 'legal', cta: 'Test Live DPDP Section 12 Deletion'
+        },
+        {
+          tag: '16 · Team, Learnings & Live Demo',
+          title: 'Cross-Trained Founding Team, Honest Lessons & Live Controls',
+          lead: 'Every member built production code across core engineering, ML/DL evaluation, and startup strategy, verified end to end.',
           html: `
             <div class="pres-two">
               <div class="pres-card">
-                <h3>Honest Engineering Learnings</h3>
-                <p><strong>What failed:</strong> Standard weighted Logistic Regression caused 1,388 false alarms ($22,820 loss); an initial 16-unit Autoencoder bottleneck memorized anomalies until compressed to 6 dimensions.<br><strong>Post-MVP Next Steps:</strong> One-click Shopify App Extension, WhatsApp COD confirmation bot, and cross-store Graph Neural Network device linking.</p>
+                <h3>5-Role Shared Ownership &amp; Lessons Learned</h3>
+                <p><strong>Team Structure:</strong> Product &amp; Startup Lead &bull; Java Core Lead &bull; Data Science Lead &bull; Deep Learning &amp; AI Lead &bull; Marketing, UI &amp; Ops Lead (every module cross-explained).<br><strong>What failed honestly:</strong> Class-weighted LogReg caused 1,388 FPs ($22,820 loss); wide 16-unit Autoencoder memorized anomalies until compressed to 6 units.<br><strong>Next Milestone:</strong> Native Shopify app + shared cross-store device graph.</p>
               </div>
               <div class="pres-card">
-                <h3>Quick Navigation to Live Proofs</h3>
-                <p style="margin-bottom: 10px;">Jump directly from this presentation into any verified subsystem:</p>
+                <h3>Jump Straight Into Any Live System Check</h3>
+                <p style="margin-bottom: 10px;">Verified: 7/7 JUnit tests passing, zero console errors across viewports, sub-80ms E2E scoring.</p>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('store');">D2C Store &amp; Cart</button>
-                  <button class="btn sm" onclick="closePresenterModal(); goToView('simulator');">50-Thread &amp; Burst Lab</button>
+                  <button class="btn sm" onclick="closePresenterModal(); goToView('overview');">Overview</button>
+                  <button class="btn sm" onclick="closePresenterModal(); goToView('store');">12-SKU D2C Store</button>
+                  <button class="btn sm" onclick="closePresenterModal(); goToView('simulator');">50-Thread &amp; Failover</button>
                   <button class="btn sm" onclick="closePresenterModal(); goToView('analytics');">ML &amp; DL Plots</button>
                   <button class="btn sm" onclick="closePresenterModal(); goToView('legal');">DPDP Erase</button>
                 </div>
               </div>
             </div>`,
-          view: 'overview', cta: 'Return to Live Risk Dashboard'
+          view: 'overview', cta: 'Exit Presentation to Live Dashboard'
         }
       ];
     }
@@ -2423,12 +2481,34 @@
       if (typeof idx === 'number') activeSlideIdx = Math.max(0, Math.min(slides.length - 1, idx));
       renderPitchSlide();
       document.getElementById('presenterModal').classList.add('active');
+      syncFullscreenButton();
     }
 
     function closePresenterModal() {
       document.getElementById('presAgendaPanel').classList.remove('open');
       document.getElementById('presenterModal').classList.remove('active');
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
     }
+
+    function togglePresentationFullscreen() {
+      const overlay = document.getElementById('presenterModal');
+      if (!document.fullscreenElement) {
+        (overlay.requestFullscreen ? overlay.requestFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function syncFullscreenButton() {
+      const btn = document.getElementById('presFullscreenBtn');
+      if (btn) {
+        btn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', syncFullscreenButton);
 
     function toggleSlideAgenda() {
       document.getElementById('presAgendaPanel').classList.toggle('open');
@@ -2454,6 +2534,8 @@
       document.getElementById('slideTitle').textContent = s.title;
       document.getElementById('slideLead').textContent = s.lead;
       document.getElementById('slideBody').innerHTML = s.html;
+      const bar = document.getElementById('presProgressBar');
+      if (bar) bar.style.width = `${(((activeSlideIdx + 1) / slides.length) * 100).toFixed(2)}%`;
 
       document.getElementById('presAgendaGrid').innerHTML = slides.map((item, i) => `
         <button class="pres-agenda-item" aria-current="${i === activeSlideIdx ? 'true' : 'false'}" onclick="jumpToSlide(${i})">
@@ -2481,6 +2563,7 @@
       if (!modal || !modal.classList.contains('active')) return;
       if (e.key === 'ArrowRight') stepSlide(1);
       else if (e.key === 'ArrowLeft') stepSlide(-1);
+      else if (e.key === 'f' || e.key === 'F') togglePresentationFullscreen();
       else if (e.key === 'Escape') closePresenterModal();
     });
 
