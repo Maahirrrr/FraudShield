@@ -16,10 +16,10 @@ Instead, we evaluated models using:
 
 ### Q2. How do you know there is no data leakage?
 **Answer**:
-"We enforced three strict engineering controls against data leakage:
-1. **Time-Stratified Splitting**: We split transactions chronologically rather than with random shuffling, ensuring models never peek into future transaction trends.
-2. **Independent Scaler Fitting**: `RobustScaler` on `Amount` and `Time` was fit **exclusively** on the training partition (`X_train.fit()`), and subsequently applied to transform `X_test` without refitting.
-3. **Resampling Inside Cross-Validation Folds**: When testing SMOTE oversampling, we used `imblearn.pipeline.Pipeline`, which applies synthetic sampling strictly inside training cross-validation folds, guaranteeing zero synthetic sample contamination in the validation folds."
+"We enforced three strict engineering controls against data leakage in `src/preprocess.py`:
+1. **Strict Train/Test Split Before Scaling**: We verify models under both **Stratified 80/20 Split** (`stratify=y`, preserving exact 0.173% class ratio across train/test in tabular benchmarking) and **Chronological 80/20 Time Split** (`chronological_split_and_scale` sorted by `Time` for our `FraudLSTM` sequence validation so windows never cross future hours).
+2. **Independent Scaler Fitting**: `RobustScaler` on `Amount` and `Time` is fitted **exclusively** on `X_train` (`fit_transform`) and applied to `X_test` (`transform` only).
+3. **Resampling Strictly Inside Training Pipelines**: When testing SMOTE oversampling (`sampling_strategy=0.1` + `RandomUnderSampler(sampling_strategy=0.5)`), `imblearn.pipeline.Pipeline` executes resampling strictly within the training split / cross-validation folds, guaranteeing zero synthetic sample contamination in evaluation."
 
 ---
 
@@ -61,11 +61,11 @@ We incorporated two complementary deep learning architectures to solve specific 
 
 ### Q7. What happens when the model service is down, and have you tested it?
 **Answer**:
-"The Java Core implements the **Fallback Pattern** (`FallbackScorer` wrapping `RemoteModelScorer` and `RuleBasedScorer`) with a strict **300 ms SLA timeout**.
-If the Python microservice crashes or takes longer than 300 ms:
+"The Java Core implements the **Fallback Pattern** (`FallbackScorer` wrapping `RemoteModelScorer` and `RuleBasedScorer`) with a bounded **500 ms SLA timeout** (configurable via `-Dmodel.timeout.ms`).
+If the Python microservice crashes or stalls beyond the SLA timeout:
 1. `RemoteModelScorer` throws `ModelServiceUnavailableException`.
-2. `FallbackScorer` catches the exception without crashing the checkout and immediately delegates to `RuleBasedScorer` (built on our EDA findings: amounts $>₹8,000$, night hours 11 PM–4 AM, location discrepancies).
-3. The store continues processing orders seamlessly, marking `fallback_used = true` on the merchant dashboard. We proved this in JUnit via `FallbackScorerTest`!"
+2. `FallbackScorer` catches the exception without crashing checkout and delegates to `RuleBasedScorer` (built on deterministic rules: amounts `>₹8,000` `+0.70`, `>₹3,000` `+0.35`, night hours 23:00–04:00 `+0.25`, 1h velocity `>=4` `+0.45`, anomalous geo coordinates `+0.38`).
+3. Orders continue processing seamlessly, marking `fallbackUsed = true` on the dashboard ledger and `/api/metrics`. Verified automatically in JUnit via `FallbackScorerTest` and `RuleAndVelocityFallbackTest`."
 
 ---
 
@@ -119,38 +119,26 @@ Using our Precision-Recall curve, we established a **tri-state policy**:
 
 ---
 
-### Q13. Why did you choose XGBoost over a neural network for production scoring?
+### Q13. Why did you choose XGBoost as primary tabular scorer alongside Deep Learning models?
 **Answer**:
-"This is a deliberate engineering trade-off, not an arbitrary choice. We chose XGBoost as the **primary production scorer** for four concrete reasons:
+"Rather than an either/or choice, FraudShield runs all three engines live in `model-service/app.py` for distinct mathematical regimes:
 
-1. **Tabular Data Superiority**: The 2022 NeurIPS 'Why do tree-based models still outperform deep learning on tabular data?' paper demonstrated that gradient-boosted trees consistently outperform MLPs on structured tabular datasets with <1 million rows — exactly our domain. Our benchmark confirms this: XGBoost PR-AUC 0.8596 vs our custom MLP which scored 0.74.
-
-2. **Latency and Resource Footprint**: XGBoost inference on a single transaction takes **~1.2 milliseconds** on CPU. A comparable neural network with dropout and batch normalisation takes **8–15 ms** and requires GPU memory allocation for optimal throughput. For a sub-50ms SLA, XGBoost's headroom is essential.
-
-3. **Interpretability**: XGBoost's `feature_importances_` and SHAP (SHapley Additive exPlanations) values give us per-transaction, per-feature attribution — the backbone of our plain-English reason codes. Neural networks require expensive post-hoc approximations (LIME, Integrated Gradients) that add latency.
-
-4. **Fallback Alignment**: Our Java `RuleBasedScorer` fallback is derived from the same top-5 XGBoost features identified during EDA (V14 deviation, amount outlier, hour-of-day, velocity, location delta). The two scorers are conceptually aligned, so the fallback provides a consistent user experience.
-
-We **did** use neural networks — but for the problems they uniquely solve: LSTM for temporal sequence detection and Autoencoder for unsupervised zero-day anomaly detection. This is a **hybrid architecture**, not an either/or decision."
+1. **Tabular Feature Discrimination**: Consistent with Shwartz-Ziv & Armon (2022) and Grinsztajn et al. (NeurIPS 2022), gradient-boosted trees dominate structured tabular data at this scale: our cost-sensitive XGBoost achieves **0.8596 PR-AUC** on stratified holdout.
+2. **Real-Time Latency**: Combined XGBoost + PyTorch Autoencoder + PyTorch LSTM forward inference runs in **6–30 ms** on CPU per request (`latency_ms` reported live in `/score`), well inside payment gateway timeouts.
+3. **Explainability**: XGBoost `feature_importances_` (via `GET /api/explain`) combined with per-feature Autoencoder reconstruction residuals $\Delta_i = (x_i - \hat{x}_i)^2$ gives auditable diagnostic reasons for merchants.
+4. **Why DL Adds Real Measured Value**: Under strict chronological future-hour splitting, our **PyTorch `FraudLSTM` (`seq_len=5`) achieves PR-AUC 0.8088 vs XGBoost's 0.7933** (`$4,435` vs `$4,770` loss), proving that temporal modeling captures burst behavior that isolated rows miss, while `FraudAutoencoder` flags `79.59%` of frauds without any fraud training labels."
 
 ---
 
-### Q14. Explain the SMOTE algorithm and why you used it.
+### Q14. Explain the SMOTE algorithm and how you prevented resampling leakage.
 **Answer**:
-"SMOTE stands for **Synthetic Minority Over-Sampling Technique** (Chawla et al., 2002). Our dataset has 492 fraud cases out of 284,807 transactions — a **0.173% minority class**. Without rebalancing, the classifier would see 578 legitimate transactions for every 1 fraud case and simply learn to predict 'legitimate' for everything.
+"SMOTE (**Synthetic Minority Over-Sampling Technique**, Chawla et al., 2002) mitigates extreme `577:1` class imbalance (`492` frauds out of `284,807` transactions):
 
-**How SMOTE Works — Step by Step**:
-1. For each fraud sample `x` in the minority class, find its **k nearest neighbours** (we used k=5) in the feature space using Euclidean distance across all PCA components (V1–V28, Amount, Time).
-2. Randomly select one of those k neighbours: call it `x_neighbour`.
-3. Generate a synthetic point along the line segment between them:
-   `x_synthetic = x + λ × (x_neighbour − x)` where λ is a uniform random number in [0, 1].
-4. Repeat until the minority class reaches the desired ratio (we used 1:1 parity).
+1. For each minority sample $x$, locate its $k=5$ nearest minority neighbors.
+2. Interpolate along the connecting line segment: $x_{\text{syn}} = x + \lambda(x_{\text{nbr}} - x)$ for $\lambda \sim U(0,1)$.
+3. In `src/models.py`, we combine `SMOTE(sampling_strategy=0.1)` (raising minority ratio to 10%) with `RandomUnderSampler(sampling_strategy=0.5)` inside an **`imblearn.pipeline.Pipeline`** paired with `RandomForestClassifier(n_estimators=100, max_depth=10)`.
 
-**Why Not Simple Random Oversampling?** Random duplication of fraud samples causes the model to memorise specific fraud examples, leading to overfitting on exact feature combinations. SMOTE generates *interpolated* points in the neighbourhood, forcing the model to learn the **decision boundary region**, not individual data points.
-
-**Critical Engineering Detail**: We applied SMOTE **strictly inside `imblearn.pipeline.Pipeline`** so synthetic samples are generated only within training folds during cross-validation. If SMOTE were applied before the train-test split, synthetic fraud examples derived from test samples would leak into training — a classic data leakage error that inflates metrics by 15–20%.
-
-**Result**: SMOTE + Random Forest achieved the **lowest total financial loss ($3,845)** in our benchmark — beating even XGBoost on the cost metric."
+Wrapping sampling in `ImbPipeline` guarantees synthetic points are generated **strictly inside training folds**, leaving test data 100% untouched. In our stratified benchmark, `SMOTE + RF` reached the highest Recall (**88.78%**) and lowest total financial cost (**\$3,845**), though with **73 False Positives** vs XGBoost's **53**, which is why XGBoost leads primary PR-AUC (`0.8596`)."
 
 ---
 
@@ -198,18 +186,22 @@ If 50 threads read `stock = 10` before any thread has written the decrement, **5
 
 1. **`synchronized` Method**: The critical section (check + decrement) is wrapped in a `synchronized` block on the product object, making it an **atomic operation**. Only one thread can hold the monitor lock at a time.
 ```java
-public synchronized void decrementStockSynchronized(String productId, int qty) {
-    Product p = inventory.get(productId);
-    if (p.getStock() < qty) throw new OutOfStockException(productId);
-    p.setStock(p.getStock() - qty);
+public synchronized boolean decrementStockSynchronized(String productId, int quantity) throws OutOfStockException {
+    Product p = products.get(productId);
+    if (p == null) return false;
+    if (p.getStock() >= quantity) {
+        p.setStock(p.getStock() - quantity);
+        return true;
+    }
+    throw new OutOfStockException(productId, quantity, p.getStock());
 }
 ```
 
-2. **`ConcurrentHashMap`**: The inventory `Map<String, Product>` uses `ConcurrentHashMap` with segment-level locks so reads from different product IDs don't block each other, maximising throughput.
+2. **`ConcurrentHashMap`**: `InventoryService` uses `ConcurrentHashMap<String, Product>` for lock-free reads and safe concurrent registration.
 
-3. **`ExecutorService` with `BlockingQueue`**: Incoming order requests are submitted to a fixed thread pool via `ExecutorService`, with `BlockingQueue` back-pressure ensuring the system doesn't accept more concurrent requests than it can handle, preventing thread exhaustion.
+3. **`ExecutorService` with `BlockingQueue<Transaction>`**: `OrderService` offloads asynchronous CSV audit exports to a bounded `LinkedBlockingQueue(1000)` processed by worker threads while maintaining concurrent 1-hour sliding velocity windows per customer (`ConcurrentHashMap<String, Deque<Instant>>`).
 
-**Proof from JUnit Test `InventoryConcurrencyTest.java`**: 50 threads fire simultaneously targeting 10 units of `PROD_SHIRT`. Exactly **10 succeed**, **40 throw `OutOfStockException`**, and final stock is verified as **exactly 0** — no overselling, no data corruption."
+**Proof from JUnit Test `InventoryConcurrencyTest.java`**: 50 threads fire simultaneously via `CountDownLatch` targeting 10 units. Exactly **10 succeed**, **40 throw `OutOfStockException`**, and final stock is verified as **0**."
 
 ---
 
@@ -241,25 +233,18 @@ public synchronized void decrementStockSynchronized(String productId, int qty) {
 **Timeline: Python Microservice Becomes Unavailable**
 
 ```
-T+0ms:   Customer submits order → Java receives POST /api/orders
-T+1ms:   Java calls RemoteModelScorer.score()
-         → Opens HTTP connection to http://localhost:8000/score
-T+300ms: CONNECTION_REFUSED or no response within 300ms SLA timeout
-         → RemoteModelScorer throws ModelServiceUnavailableException
-T+301ms: FallbackScorer catches exception (try-catch in composition layer)
-         → Logs: "ML service unavailable — activating rule-based fallback"
-         → Delegates to RuleBasedScorer.score()
-T+302ms: RuleBasedScorer evaluates 5 deterministic EDA-derived rules:
-         Rule 1: amount > ₹8,000 → +0.35 risk contribution
-         Rule 2: hour ∈ [23, 4] (night) → +0.25 risk contribution
-         Rule 3: recent_tx_count_1h > 3 → +0.30 risk contribution
-         Rule 4: payment_method = COD AND amount > ₹3,000 → +0.15
-         Rule 5: is_new_device = true → +0.10 risk contribution
-         → Sums contributions, clamps to [0.0, 1.0]
-T+310ms: Java returns APPROVE / VERIFY / BLOCK decision to store
-         → Response includes: "fallback_used": true
-T+311ms: Merchant dashboard flags order with ⚠️ icon: "Scored by rule engine"
-         → Merchant knows ML service is down
+T+0ms:   Checkout submits order -> Java receives POST /api/orders
+T+1ms:   OrderService validates consent + deducts stock atomically + computes 1h velocity
+T+2ms:   RemoteModelScorer opens HTTP request to http://localhost:8000/score (500ms timeout)
+T+500ms: Connection refused or SLA timeout expires -> throws ModelServiceUnavailableException
+T+501ms: FallbackScorer catches exception cleanly and delegates to RuleBasedScorer:
+         - Baseline: 0.05
+         - Amount > ₹8,000 (+0.70) or > ₹3,000 (+0.35)
+         - Night window 23:00–04:00 (+0.25)
+         - 1h velocity >= 4 (+0.45)
+         - Extreme coordinates |lat|>60 or |lon|>130 (+0.38)
+         -> Clamped to [0.0, 1.0], mapped to APPROVE (<0.35) / VERIFY / BLOCK (>=0.70)
+T+502ms: Java persists JSONL, queues CSV audit, returns valid decision with fallback_used=true
 ```
 
 **What We Tested in `FallbackScorerTest.java`**: We point `RemoteModelScorer` to `localhost:9999` (unreachable). The test verifies:

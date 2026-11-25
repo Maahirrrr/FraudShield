@@ -1,0 +1,45 @@
+{
+  "autoencoder": {
+    "p95_mse": 0.789224,
+    "p99_mse": 1.949001,
+    "p995_mse": 2.844053,
+    "pr_auc": 0.4598,
+    "roc_auc": 0.9536,
+    "metrics": {
+      "Model": "Bottleneck Autoencoder (Unsupervised @ p99.5)",
+      "PR-AUC": 0.4598,
+      "ROC-AUC": 0.9536,
+      "Recall": 0.7959,
+      "Precision": 0.2021,
+      "F1-Score": 0.3223,
+      "TP": 78,
+      "FP": 308,
+      "TN": 56556,
+      "FN": 20,
+      "Financial Loss ($)": 9620.0,
+      "Test_Samples": 56962,
+      "Threshold": 2.8441
+    }
+  },
+  "lstm": {
+    "seq_len": 5,
+    "val_tuned_threshold": 0.6,
+    "pos_weight": 22.8204,
+    "split": "chronological_80_20",
+    "metrics": {
+      "Model": "LSTM Sequence Model (Chronological PyTorch)",
+      "PR-AUC": 0.8088,
+      "ROC-AUC": 0.9856,
+      "Recall": 0.7867,
+      "Precision": 0.6705,
+      "F1-Score": 0.7239,
+      "TP": 59,
+      "FP": 29,
+      "TN": 56854,
+      "FN": 16,
+      "Financial Loss ($)": 4435.0,
+      "Test_Samples": 56958,
+      "Threshold": 0.6
+    }
+  }
+}

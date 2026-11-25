@@ -7,46 +7,54 @@ import com.fraudshield.model.ScoreResult;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Local deterministic fallback scorer derived directly from Exploratory Data Analysis (EDA) findings.
- * Evaluates amount anomalies, night-time ordering, and geographic discrepancies without needing external AI services.
+ * Local deterministic fallback scorer derived from Exploratory Data Analysis (EDA) findings.
+ * Evaluates amount anomalies, night-time ordering, velocity bursts, and geographic discrepancies.
  */
 public class RuleBasedScorer implements FraudScorer {
 
     @Override
     public ScoreResult score(Order order) {
+        long startNs = System.nanoTime();
         double score = 0.05; // Baseline low risk
         List<String> reasons = new ArrayList<>();
 
-        // 1. Transaction Amount Anomaly (EDA: Fraud amounts have significant right skew)
+        // 1. Transaction Amount Anomaly (EDA: high-value outliers trigger secondary scrutiny)
         if (order.getTotalAmount() > 8000.0) {
             score += 0.70;
-            reasons.add("Critical transaction amount anomaly (₹" + order.getTotalAmount() + " > ₹8,000 threshold)");
+            reasons.add(String.format("High amount outlier (₹%,.2f > ₹8,000 threshold)", order.getTotalAmount()));
         } else if (order.getTotalAmount() > 3000.0) {
             score += 0.35;
-            reasons.add("Above-average cart value (₹" + order.getTotalAmount() + ")");
+            reasons.add(String.format("Above-average order value (₹%,.2f)", order.getTotalAmount()));
         }
 
-        // 2. High-Risk Night Hours (EDA: elevated fraud between 11 PM and 5 AM)
+        // 2. Temporal Window Risk (late night / early morning elevated risk)
         LocalDateTime ldt = LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.systemDefault());
         int hour = ldt.getHour();
         if (hour >= 23 || hour <= 4) {
             score += 0.25;
-            reasons.add("Unusual transaction hour (" + hour + ":00 IST - elevated fraud window)");
+            reasons.add("Elevated risk hour window (" + hour + ":00 local time)");
         }
 
-        // 3. Location coordinates anomaly (Distance from merchant/home)
-        if (Math.abs(order.getShippingLatitude()) > 70.0 || Math.abs(order.getShippingLongitude()) > 150.0) {
-            score += 0.35;
-            reasons.add("Geographic anomaly / synthetic location coordinates detected");
+        // 3. Velocity Spike / Card-Testing Burst
+        if (order.getRecentTxCount1h() >= 4) {
+            score += 0.45;
+            reasons.add("Velocity burst (" + order.getRecentTxCount1h() + " orders within 60 minutes)");
         }
 
-        // Cap score at 1.0
-        score = Math.min(1.0, score);
+        // 4. Geographic Coordinate Discrepancy
+        if (Math.abs(order.getShippingLatitude()) > 60.0 || Math.abs(order.getShippingLongitude()) > 130.0) {
+            score += 0.38;
+            reasons.add(String.format("Anomalous coordinate displacement (%.2f, %.2f)",
+                    order.getShippingLatitude(), order.getShippingLongitude()));
+        }
 
-        // Map to Decision
+        score = Math.min(1.0, Math.round(score * 10000.0) / 10000.0);
+
         Decision decision;
         if (score >= 0.70) {
             decision = Decision.BLOCK;
@@ -55,10 +63,16 @@ public class RuleBasedScorer implements FraudScorer {
         } else {
             decision = Decision.APPROVE;
             if (reasons.isEmpty()) {
-                reasons.add("Normal transaction metrics within legitimate baseline");
+                reasons.add("Deterministic baseline check passed (low amount and velocity)");
             }
         }
 
-        return new ScoreResult(score, decision, reasons, true);
+        double latencyMs = Math.round(((System.nanoTime() - startNs) / 1_000_000.0) * 100.0) / 100.0;
+        Map<String, Object> breakdown = new LinkedHashMap<>();
+        breakdown.put("engine", "JAVA_RULE_FALLBACK");
+        breakdown.put("recent_tx_count_1h", order.getRecentTxCount1h());
+        breakdown.put("rules_triggered", reasons.size());
+
+        return new ScoreResult(score, decision, reasons, true, latencyMs, breakdown);
     }
 }

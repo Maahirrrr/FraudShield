@@ -13,12 +13,22 @@ public class Order {
     private final String deviceFingerprint;
     private final double shippingLatitude;
     private final double shippingLongitude;
+    private final int recentTxCount1h;
+    private final boolean consentGiven;
     private final Instant createdAt;
     private String status;
 
     public Order(String id, String merchantId, String customerId, List<OrderItem> items,
                  double totalAmount, String ipAddress, String deviceFingerprint,
                  double shippingLatitude, double shippingLongitude) {
+        this(id, merchantId, customerId, items, totalAmount, ipAddress, deviceFingerprint,
+                shippingLatitude, shippingLongitude, 1, true);
+    }
+
+    public Order(String id, String merchantId, String customerId, List<OrderItem> items,
+                 double totalAmount, String ipAddress, String deviceFingerprint,
+                 double shippingLatitude, double shippingLongitude,
+                 int recentTxCount1h, boolean consentGiven) {
         this.id = id;
         this.merchantId = merchantId;
         this.customerId = customerId;
@@ -28,6 +38,8 @@ public class Order {
         this.deviceFingerprint = deviceFingerprint;
         this.shippingLatitude = shippingLatitude;
         this.shippingLongitude = shippingLongitude;
+        this.recentTxCount1h = Math.max(1, recentTxCount1h);
+        this.consentGiven = consentGiven;
         this.createdAt = Instant.now();
         this.status = "PENDING";
     }
@@ -41,6 +53,8 @@ public class Order {
     public String getDeviceFingerprint() { return deviceFingerprint; }
     public double getShippingLatitude() { return shippingLatitude; }
     public double getShippingLongitude() { return shippingLongitude; }
+    public int getRecentTxCount1h() { return recentTxCount1h; }
+    public boolean isConsentGiven() { return consentGiven; }
     public Instant getCreatedAt() { return createdAt; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

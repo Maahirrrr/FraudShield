@@ -222,7 +222,7 @@ classDiagram
 sequenceDiagram
     autonumber
     participant Client as Frontend Store / API Client
-    participant Server as FraudShieldServer (Port 8080)
+    participant Server as FraudShieldServer (Port 8085)
     participant OrderSvc as OrderService
     participant InvSvc as InventoryService
     participant Fallback as FallbackScorer
@@ -231,20 +231,20 @@ sequenceDiagram
     participant RuleEngine as RuleBasedScorer
     participant Payment as Payment Polymorphic
 
-    Client->>Server: POST /api/orders (JSON Order Payload)
+    Client->>Server: POST /api/orders (JSON Order Payload + Consent)
     Server->>OrderSvc: processOrder(order, payment)
     OrderSvc->>InvSvc: decrementStockSynchronized(productId, qty)
     Note over InvSvc: Thread-safe atomic lock avoids overselling
     
     OrderSvc->>Fallback: score(order)
     Fallback->>Remote: score(order)
-    Remote->>PyService: POST /score (HTTP with 300ms SLA timeout)
+    Remote->>PyService: POST /score (HTTP with 500ms SLA timeout)
     
-    alt Python Service Responds Within 300ms
-        PyService-->>Remote: HTTP 200 {risk_score: 0.12, decision: "APPROVE"}
-        Remote-->>Fallback: ScoreResult(0.12, APPROVE, false)
+    alt Python Service Responds Within 500ms
+        PyService-->>Remote: HTTP 200 {risk_score, decision, engine_breakdown}
+        Remote-->>Fallback: ScoreResult(score, decision, false)
         Fallback-->>OrderSvc: ScoreResult
-    else Timeout > 300ms OR Connection Refused
+    else Timeout > 500ms OR Connection Refused
         Remote-->>Fallback: throws ModelServiceUnavailableException
         Note over Fallback: Caught gracefully! Zero customer drop!
         Fallback->>RuleEngine: score(order)

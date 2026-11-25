@@ -5,22 +5,28 @@ import com.fraudshield.fraud.FraudScorer;
 import com.fraudshield.model.*;
 import com.fraudshield.payment.Payment;
 
-import java.util.UUID;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Core multithreaded order processor.
- * Buffers orders in a BlockingQueue, dispatches across an ExecutorService thread pool,
- * and maintains periodic background tasks via ScheduledExecutorService.
+ * Multithreaded order orchestrator.
+ * Tracks per-customer 1h velocity, enforces DPDP consent & atomic inventory,
+ * calls resilient ML/DL scorer, and dispatches async CSV audit writes via BlockingQueue.
  */
 public class OrderService {
     private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
 
-    private final BlockingQueue<Order> orderQueue = new LinkedBlockingQueue<>(1000);
-    private final ExecutorService workerPool = Executors.newFixedThreadPool(4);
+    private final BlockingQueue<Transaction> auditQueue = new LinkedBlockingQueue<>(1000);
+    private final ExecutorService workerPool = Executors.newFixedThreadPool(2);
     private final ScheduledExecutorService backgroundScheduler = Executors.newScheduledThreadPool(1);
+
+    // Tracks recent 1h timestamps per (customerId + deviceFingerprint) for real velocity enforcement
+    private final ConcurrentHashMap<String, Deque<Instant>> velocityMap = new ConcurrentHashMap<>();
+    // Tracks recent end-to-end scoring latencies (ms) for real p95 metrics
+    private final ConcurrentLinkedDeque<Double> latencySamples = new ConcurrentLinkedDeque<>();
 
     private final InventoryService inventoryService;
     private final PaymentService paymentService;
@@ -43,13 +49,13 @@ public class OrderService {
     }
 
     private void startWorkerPool() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             workerPool.submit(() -> {
-                while (running) {
+                while (running || !auditQueue.isEmpty()) {
                     try {
-                        Order order = orderQueue.poll(500, TimeUnit.MILLISECONDS);
-                        if (order != null) {
-                            LOGGER.info("[WORKER " + Thread.currentThread().getName() + "] Picked buffered order: " + order.getId());
+                        Transaction tx = auditQueue.poll(300, TimeUnit.MILLISECONDS);
+                        if (tx != null) {
+                            fileStore.appendCsvExport(tx);
                         }
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -61,10 +67,51 @@ public class OrderService {
     }
 
     private void startScheduledTasks() {
-        // Runs periodic velocity stats maintenance and analysis checkpointing every 60 seconds
         backgroundScheduler.scheduleAtFixedRate(() -> {
-            LOGGER.fine("[BACKGROUND SCHEDULER] Periodic velocity stats synced & analysis file refreshed.");
-        }, 30, 60, TimeUnit.SECONDS);
+            Instant cutoff = Instant.now().minus(1, ChronoUnit.HOURS);
+            velocityMap.values().forEach(deque -> {
+                synchronized (deque) {
+                    while (!deque.isEmpty() && deque.peekFirst().isBefore(cutoff)) {
+                        deque.pollFirst();
+                    }
+                }
+            });
+            LOGGER.fine("[SCHEDULER] Pruned stale 1h velocity windows.");
+        }, 60, 60, TimeUnit.SECONDS);
+    }
+
+    private int recordVelocityAndCount(String customerId, String deviceFingerprint, int callerHint) {
+        if (customerId == null || customerId.startsWith("CUST_STORE_GUEST")) {
+            return Math.max(1, callerHint);
+        }
+        String key = customerId + ":" + (deviceFingerprint != null ? deviceFingerprint : "fp");
+        Deque<Instant> deque = velocityMap.computeIfAbsent(key, k -> new ArrayDeque<>());
+        Instant now = Instant.now();
+        Instant cutoff = now.minus(1, ChronoUnit.HOURS);
+        int tracked;
+        synchronized (deque) {
+            while (!deque.isEmpty() && deque.peekFirst().isBefore(cutoff)) {
+                deque.pollFirst();
+            }
+            deque.addLast(now);
+            tracked = deque.size();
+        }
+        return Math.max(callerHint, tracked);
+    }
+
+    private void recordLatency(double ms) {
+        latencySamples.addLast(ms);
+        while (latencySamples.size() > 200) {
+            latencySamples.pollFirst();
+        }
+    }
+
+    public double getP95LatencyMs() {
+        List<Double> snapshot = new ArrayList<>(latencySamples);
+        if (snapshot.isEmpty()) return 0.0;
+        Collections.sort(snapshot);
+        int idx = Math.min(snapshot.size() - 1, (int) Math.ceil(0.95 * snapshot.size()) - 1);
+        return Math.round(snapshot.get(idx) * 100.0) / 100.0;
     }
 
     /**
@@ -73,12 +120,17 @@ public class OrderService {
     public Transaction processOrder(Order order, Payment payment)
             throws InvalidInputException, OutOfStockException, FraudBlockedException, PaymentFailedException, ScoringException {
 
-        // 1. Input Validation
+        long startNs = System.nanoTime();
+
+        // 1. Validation & DPDP Act 2023 Consent Enforcement
         if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
             throw new InvalidInputException("Order must contain at least one valid product item.");
         }
         if (order.getTotalAmount() <= 0) {
             throw new InvalidInputException("Order total amount must be strictly greater than 0.");
+        }
+        if (!order.isConsentGiven()) {
+            throw new InvalidInputException("DPDP Act 2023 explicit consent is required before transaction telemetry scoring.");
         }
 
         // 2. Thread-safe Stock Deduction
@@ -86,8 +138,21 @@ public class OrderService {
             inventoryService.decrementStockSynchronized(item.getProductId(), item.getQuantity());
         }
 
-        // 3. Multi-Engine Fraud Scoring with Automatic Fallback
-        ScoreResult scoreResult = fraudScorer.score(order);
+        // 3. Velocity Tracking & Multi-Engine Fraud Scoring with Automatic Fallback
+        int effectiveVelocity = recordVelocityAndCount(
+                order.getCustomerId(), order.getDeviceFingerprint(), order.getRecentTxCount1h());
+        Order enrichedOrder = (effectiveVelocity == order.getRecentTxCount1h())
+                ? order
+                : new Order(order.getId(), order.getMerchantId(), order.getCustomerId(),
+                        order.getItems(), order.getTotalAmount(), order.getIpAddress(),
+                        order.getDeviceFingerprint(), order.getShippingLatitude(),
+                        order.getShippingLongitude(), effectiveVelocity, order.isConsentGiven());
+
+        ScoreResult scoreResult = fraudScorer.score(enrichedOrder);
+
+        double totalMs = Math.round(((System.nanoTime() - startNs) / 1_000_000.0) * 100.0) / 100.0;
+        double reportedLatency = scoreResult.getLatencyMs() > 0 ? Math.max(totalMs, scoreResult.getLatencyMs()) : totalMs;
+        recordLatency(reportedLatency);
 
         String txId = "TXN_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         Transaction transaction = new Transaction(
@@ -99,28 +164,37 @@ public class OrderService {
                 scoreResult.getRiskScore(),
                 scoreResult.getDecision(),
                 scoreResult.getReasons(),
-                scoreResult.isFallbackUsed()
+                scoreResult.isFallbackUsed(),
+                reportedLatency,
+                scoreResult.getEngineBreakdown()
         );
 
-        // 4. Act on Fraud Decision
+        // 4. Persist JSONL immediately & queue async CSV export
+        fileStore.saveTransactionJsonl(transaction);
+        if (!auditQueue.offer(transaction)) {
+            fileStore.appendCsvExport(transaction);
+        }
+
+        // 5. Enforce Fraud Decision
         if (scoreResult.getDecision() == Decision.BLOCK) {
             order.setStatus("BLOCKED_FRAUD");
-            fileStore.saveTransaction(order, transaction);
             throw new FraudBlockedException(
                     "Order blocked by FraudShield risk policy. Score: " + scoreResult.getRiskScore(),
+                    transaction.getId(),
+                    order.getId(),
                     scoreResult.getRiskScore(),
-                    scoreResult.getReasons()
+                    scoreResult.getReasons(),
+                    scoreResult.isFallbackUsed(),
+                    reportedLatency,
+                    scoreResult.getEngineBreakdown()
             );
         }
 
-        // 5. Execute Payment Polymorphically (Card / UPI / COD)
+        // 6. Execute Payment Polymorphically (Card / UPI / COD)
         boolean paid = paymentService.executePayment(order, payment);
         if (paid) {
             order.setStatus(scoreResult.getDecision() == Decision.VERIFY ? "VERIFY_REQUIRED" : "CONFIRMED");
         }
-
-        // 6. Thread-safe Disk Persistence
-        fileStore.saveTransaction(order, transaction);
 
         return transaction;
     }

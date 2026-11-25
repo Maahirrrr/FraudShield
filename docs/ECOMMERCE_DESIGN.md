@@ -53,10 +53,10 @@ sequenceDiagram
     alt Score < 0.35 (Low Risk)
         Java-->>Store: DECISION: APPROVE -> Processes Sandbox Payment
         Store-->>Customer: Order Confirmed
-    else 0.35 <= Score < 0.75 (Moderate Risk)
-        Java-->>Store: DECISION: VERIFY -> Step-up OTP Prompt
+    else 0.35 <= Score < 0.70 (Moderate Risk)
+        Java-->>Store: DECISION: VERIFY -> Step-up OTP Prompt (POST /api/orders/verify)
         Store-->>Customer: Enters OTP to verify legitimate intent
-    else Score >= 0.75 (Critical Risk)
+    else Score >= 0.70 (Critical Risk)
         Java-->>Store: DECISION: BLOCK -> FraudBlockedException raised
         Store-->>Customer: Transaction Declined with helpful dispute link
     end

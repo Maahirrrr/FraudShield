@@ -63,6 +63,44 @@ def split_and_scale(df, test_size=0.2, random_state=42, scaler_type="robust"):
     
     return X_train, X_test, y_train, y_test, scalers
 
+def chronological_split_and_scale(df, test_size=0.2, scaler_type="robust"):
+    """
+    Perform chronological time-ordered split (first (1-test_size) by Time -> train, rest -> test)
+    followed by leakage-free RobustScaler fitting strictly on training rows.
+    """
+    df_sorted = df.sort_values("Time").reset_index(drop=True)
+    split_idx = int(len(df_sorted) * (1.0 - test_size))
+    train_df = df_sorted.iloc[:split_idx].copy()
+    test_df = df_sorted.iloc[split_idx:].copy()
+
+    X_train, y_train = get_feature_and_target(train_df)
+    X_test, y_test = get_feature_and_target(test_df)
+
+    scaler_time = RobustScaler() if scaler_type == "robust" else StandardScaler()
+    scaler_amount = RobustScaler() if scaler_type == "robust" else StandardScaler()
+
+    X_train = X_train.copy()
+    X_test = X_test.copy()
+
+    if "Time" in X_train.columns:
+        X_train["Scaled_Time"] = scaler_time.fit_transform(X_train[["Time"]])
+        X_test["Scaled_Time"] = scaler_time.transform(X_test[["Time"]])
+        X_train = X_train.drop(columns=["Time"])
+        X_test = X_test.drop(columns=["Time"])
+
+    if "Amount" in X_train.columns:
+        X_train["Scaled_Amount"] = scaler_amount.fit_transform(X_train[["Amount"]])
+        X_test["Scaled_Amount"] = scaler_amount.transform(X_test[["Amount"]])
+        X_train = X_train.drop(columns=["Amount"])
+        X_test = X_test.drop(columns=["Amount"])
+
+    scalers = {
+        "scaler_time": scaler_time if "Time" in df_sorted.columns else None,
+        "scaler_amount": scaler_amount if "Amount" in df_sorted.columns else None,
+    }
+    return X_train, X_test, y_train, y_test, scalers
+
+
 def get_stratified_cv(n_splits=5, random_state=42):
     """Return StratifiedKFold cross-validator for imbalanced data."""
     return StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)

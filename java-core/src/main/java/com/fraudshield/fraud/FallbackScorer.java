@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * Resilient Scorer implementing the Fallback Pattern.
  * Calls RemoteModelScorer first; upon timeout or network failure,
- * immediately routes to RuleBasedScorer with zero store downtime.
+ * routes immediately to RuleBasedScorer with zero checkout downtime.
  */
 public class FallbackScorer implements FraudScorer {
     private static final Logger LOGGER = Logger.getLogger(FallbackScorer.class.getName());
@@ -32,14 +32,16 @@ public class FallbackScorer implements FraudScorer {
             lastCallUsedFallback = false;
             return result;
         } catch (ModelServiceUnavailableException e) {
-            LOGGER.log(Level.WARNING, "[RESILIENCE] AI Model Service unavailable (Timeout / Down). Activating local RuleBasedScorer fallback: " + e.getMessage());
+            LOGGER.log(Level.WARNING, "[RESILIENCE] AI Model Service unavailable. Activating local RuleBasedScorer fallback: " + e.getMessage());
             lastCallUsedFallback = true;
             ScoreResult fallbackResult = ruleBasedScorer.score(order);
             return new ScoreResult(
                     fallbackResult.getRiskScore(),
                     fallbackResult.getDecision(),
                     fallbackResult.getReasons(),
-                    true // fallbackUsed = true
+                    true,
+                    fallbackResult.getLatencyMs(),
+                    fallbackResult.getEngineBreakdown()
             );
         }
     }

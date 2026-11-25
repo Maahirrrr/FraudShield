@@ -199,7 +199,7 @@ flowchart TD
 6. **Data Science & AI Engine**: Benchmark evaluation (PR-AUC 0.86), Autoencoder anomaly detection, and LSTM sequence modeling.
 7. **Empirical Results**: Demonstrating the financial cost function ($3,845 total loss vs $22,820 on naive baseline).
 8. **Competitive Differentiation**: Why FraudShield wins against Stripe Radar and Razorpay Thirdwatch (Explainability + Affordable Tiering + Low Latency Fallback).
-9. **Business Model & Unit Economics**: Tiered SaaS subscriptions (₹999 to ₹9,999/mo) with 78% gross margin.
+9. **Business Model & Unit Economics**: Tiered SaaS subscriptions (₹999 to ₹9,999/mo) with 87.7% gross margin.
 10. **Go-To-Market (GTM)**: Shopify app ecosystem, D2C community partnerships, and self-serve developer SDKs.
 11. **Regulatory & Compliance Readiness**: DPDP Act 2023, RBI non-storage tokenization compliance, and DPIIT roadmap.
 12. **Team & Ask**: ₹20 Lakhs seed grant ask for 18-month runway to reach 150 onboarded merchants.
